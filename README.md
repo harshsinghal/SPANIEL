@@ -1,6 +1,9 @@
-# pii_maker
+# SPANIEL 🐕
 
-Small, owned, guaranteed: a 0.6B-parameter PII extraction model that accepts
+**SPAN Identification from Everyday Language** — a small retriever that
+fetches any span you name.
+
+A 0.6B-parameter PII extraction model that accepts
 **free-form entity type names**, runs locally, and is structurally incapable
 of altering the text it annotates.
 

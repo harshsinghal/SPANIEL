@@ -1,6 +1,6 @@
 # A $2.50 fine-tune that beats a 120B model: the tagged-regeneration recipe
 
-*2026-07-08 — the founding experiment of the pii_maker project*
+*2026-07-08 — the founding experiment of the SPANIEL project*
 
 ## The task, and why generative
 
