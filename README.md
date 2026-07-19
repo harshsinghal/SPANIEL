@@ -23,6 +23,7 @@ Patient Brian Weaver (MRN BX-40912) called about his appointment...
 → Patient <person name>Brian Weaver</person name> (MRN <patient mrn>BX-40912</patient mrn>) called...
 ```
 
+**Repo**: [github.com/harshsinghal/SPANIEL](https://github.com/harshsinghal/SPANIEL) ·
 **Models**: [qwen3-0.6b-pii-sft-v2](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2)
 (current) · earlier checkpoints: v1-full, v1-50k, and a 1.7B variant.
 
