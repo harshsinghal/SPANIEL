@@ -78,6 +78,10 @@
   <p class="sub">Qwen3-1.7B fine-tune, running locally. Free-form entity types — try ones it never saw in training.</p>
 
   <div class="row">
+    <label for="example">Load an example</label>
+    <select id="example" style="width:100%;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 12px;font:13px ui-monospace,SFMono-Regular,Menlo,monospace;margin-bottom:14px">
+      <option value="">— pick one of 15 preloaded examples, or write your own below —</option>
+    </select>
     <label for="text">Text</label>
     <textarea id="text" placeholder="Paste or write the text to scan…">Patient Brian Weaver (MRN BX-40912) called from +1 415 555 0132 about his appointment on 2026-07-14 at 3:30pm. His insurance ID is HP-99801-B and he works as a marine electrician at Bayside Dry Dock LLC.</textarea>
   </div>
@@ -99,6 +103,25 @@
 
 <script>
 const $ = id => document.getElementById(id);
+
+fetch("/static/examples.json").then(r => r.json()).then(ex => {
+  window._examples = ex;
+  ex.forEach((e, i) => {
+    const o = document.createElement("option");
+    o.value = i; o.textContent = e.title;
+    $("example").appendChild(o);
+  });
+});
+$("example") && ($("example").onchange = () => {
+  const i = $("example").value;
+  if (i === "") return;
+  const e = window._examples[i];
+  $("text").value = e.text;
+  $("entities").value = e.entities;
+  $("status").textContent = "";
+  $("output").className = "empty"; $("output").textContent = "Tagged text appears here.";
+  $("viewtoggle").hidden = true;
+});
 let last = null, raw = false;
 
 function esc(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }

@@ -23,9 +23,14 @@ from pii_decode import CopyTagConstraint, VocabTrie
 
 import os
 
+MODEL_ID = os.environ.get("PII_MODEL_ID")          # HF repo id (docker path)
 MODEL_DIR = os.environ.get(
     "PII_MODEL_DIR",
-    str(Path(__file__).parent.parent / "models" / "qwen3-0.6b-pii-sft-v1-hf"))
+    str(Path(__file__).parent.parent / "models" / "qwen3-0.6b-pii-sft-v2-hf"))
+if MODEL_ID:
+    from huggingface_hub import snapshot_download
+    MODEL_DIR = snapshot_download(MODEL_ID, local_dir=os.environ.get(
+        "PII_MODEL_CACHE", "/models") + "/" + MODEL_ID.split("/")[-1])
 
 SYSTEM_PROMPT = (
     "You tag entities in text. Reproduce the user's text exactly, wrapping each "
@@ -34,7 +39,8 @@ SYSTEM_PROMPT = (
     "the text unchanged. Never alter, add, or omit any other characters."
 )
 
-DEVICE = "mps" if torch.backends.mps.is_available() else "cpu"
+DEVICE = ("cuda" if torch.cuda.is_available()
+          else "mps" if torch.backends.mps.is_available() else "cpu")
 print(f"loading {MODEL_DIR} on {DEVICE} ...")
 tokenizer = AutoTokenizer.from_pretrained(MODEL_DIR)
 model = AutoModelForCausalLM.from_pretrained(

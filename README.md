@@ -83,6 +83,31 @@ Large artifacts (converted datasets, training mixtures, model weights,
 predictions) are intentionally not in the repo; every one is reproducible
 from the seeded builders or downloadable from the HF hub.
 
+## Try it: the demo app
+
+One command, runs entirely on your machine — no data leaves your device:
+
+```bash
+docker run -p 8377:8377 -v spaniel-models:/models ghcr.io/harshsinghal/spaniel
+# open http://localhost:8377
+```
+
+The model (~1.2GB) is pulled from the Hugging Face hub on first start and
+cached in the named volume. On Linux with an NVIDIA GPU add `--gpus all`;
+on Mac/Windows it runs on CPU (a demo paragraph takes ~10-30s — the price of
+local-only). The UI ships with **15 preloaded examples** — medical forms,
+server logs, transcripts, invoices, an encyclopedic-prose case that
+demonstrates the attribute-semantics stance — each with editable free-form
+entity types. Every response is generated under the constrained decoder:
+the "copy-faithful" badge is a guarantee, not a check.
+
+Running from source instead:
+
+```bash
+cd pii_tagger && python -m venv .venv && .venv/bin/pip install torch transformers fastapi uvicorn huggingface_hub
+PII_MODEL_ID=Harsh/qwen3-0.6b-pii-sft-v2 .venv/bin/python -m uvicorn server:app --app-dir . --port 8377
+```
+
 ## Reproducing
 
 ```bash
