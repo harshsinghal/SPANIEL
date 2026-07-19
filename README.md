@@ -1,4 +1,6 @@
-# SPANIEL 🐕
+<p align="center"><img src="docs/spaniel_pic.png" width="360" alt="SPANIEL — SPAN Identification from Everyday Language"></p>
+
+# SPANIEL
 
 **SPAN Identification from Everyday Language** — a small retriever that
 fetches any span you name.
