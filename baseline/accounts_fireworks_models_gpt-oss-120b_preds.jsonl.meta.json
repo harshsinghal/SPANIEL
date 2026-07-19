@@ -1,0 +1,10 @@
+{
+  "model": "accounts/fireworks/models/gpt-oss-120b",
+  "n": 300,
+  "failures": 0,
+  "seconds": 104.8,
+  "usage": {
+    "prompt_tokens": 119387,
+    "completion_tokens": 123167
+  }
+}

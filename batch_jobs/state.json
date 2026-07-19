@@ -1,0 +1,27 @@
+{
+ "A": {
+  "file_id": "file-QhkWC9QvD2YxkqKE1XYVz3",
+  "batch_id": "batch_6a5bcf4b089c8190bd08fdb3725a9aeb",
+  "status": "validating"
+ },
+ "B": {
+  "file_id": "file-BRocFSNt42cJanaos76DMy",
+  "batch_id": "batch_6a5bcf6bbf588190b307cf792ebd7beb",
+  "status": "validating"
+ },
+ "C": {
+  "file_id": "file-F8Pim8eRzq5DHDxkHvuGBT",
+  "batch_id": "batch_6a5bcf6ced0c819098c11f61ab459980",
+  "status": "validating"
+ },
+ "D1": {
+  "file_id": "file-BdHrpSXBaAkRBKyY2DxNPm",
+  "batch_id": "batch_6a5bcfe0e3748190bd310af24b29b6cb",
+  "status": "validating"
+ },
+ "D2": {
+  "file_id": "file-4Ng8hSHCVkz4kYyj2roRHF",
+  "batch_id": "batch_6a5bcfe25ed08190953f35e700ad9762",
+  "status": "validating"
+ }
+}

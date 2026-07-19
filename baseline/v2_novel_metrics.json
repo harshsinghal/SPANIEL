@@ -1,0 +1,349 @@
+{
+  "ops": {
+    "rows": 300,
+    "malformed": 0,
+    "copy_drift": 0,
+    "unrequested_tags": 0
+  },
+  "strict_exact": {
+    "p": 0.878095238095238,
+    "r": 0.8497695852534562,
+    "f": 0.8637002341920375
+  },
+  "strict_relaxed": {
+    "p": 0.8976190476190476,
+    "r": 0.868663594470046,
+    "f": 0.882903981264637
+  },
+  "parseable_exact": {
+    "p": 0.878095238095238,
+    "r": 0.8497695852534562,
+    "f": 0.8637002341920375
+  },
+  "per_label": {
+    "nemotron:name given at birth": {
+      "p": 0.9433962264150944,
+      "r": 0.8032128514056225,
+      "f": 0.8676789587852495,
+      "support": 249
+    },
+    "nemotron:day someone was born": {
+      "p": 1.0,
+      "r": 0.972972972972973,
+      "f": 0.9863013698630138,
+      "support": 37
+    },
+    "nemotron:administrative county": {
+      "p": 0.782608695652174,
+      "r": 0.8571428571428571,
+      "f": 0.8181818181818182,
+      "support": 42
+    },
+    "nemotron:nation": {
+      "p": 1.0,
+      "r": 0.9655172413793104,
+      "f": 0.9824561403508771,
+      "support": 58
+    },
+    "nemotron:bank transit number": {
+      "p": 0.9166666666666666,
+      "r": 0.88,
+      "f": 0.8979591836734694,
+      "support": 25
+    },
+    "nemotron:payment card account number": {
+      "p": 0.9056603773584906,
+      "r": 1.0,
+      "f": 0.9504950495049505,
+      "support": 48
+    },
+    "nemotron:login handle": {
+      "p": 0.8888888888888888,
+      "r": 0.8421052631578947,
+      "f": 0.8648648648648649,
+      "support": 38
+    },
+    "nemotron:financial account reference": {
+      "p": 1.0,
+      "r": 0.8,
+      "f": 0.888888888888889,
+      "support": 45
+    },
+    "nemotron:residential street location": {
+      "p": 0.7096774193548387,
+      "r": 0.8627450980392157,
+      "f": 0.7787610619469026,
+      "support": 51
+    },
+    "nemotron:ethnic background": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 26
+    },
+    "nemotron:insurance member number": {
+      "p": 0.9473684210526315,
+      "r": 0.9,
+      "f": 0.9230769230769231,
+      "support": 20
+    },
+    "nemotron:inherited family surname": {
+      "p": 0.991869918699187,
+      "r": 0.8714285714285714,
+      "f": 0.9277566539923955,
+      "support": 140
+    },
+    "nemotron:electronic mail contact": {
+      "p": 1.0,
+      "r": 0.9801980198019802,
+      "f": 0.99,
+      "support": 101
+    },
+    "nemotron:calendar day": {
+      "p": 0.9428571428571428,
+      "r": 0.8375634517766497,
+      "f": 0.8870967741935484,
+      "support": 197
+    },
+    "nemotron:clock time": {
+      "p": 0.6301369863013698,
+      "r": 0.5679012345679012,
+      "f": 0.5974025974025974,
+      "support": 81
+    },
+    "nemotron:network interface hardware id": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 14
+    },
+    "nemotron:browser session token": {
+      "p": 0.8181818181818182,
+      "r": 0.6428571428571429,
+      "f": 0.7200000000000001,
+      "support": 14
+    },
+    "nemotron:federal benefits number": {
+      "p": 0.8461538461538461,
+      "r": 0.6285714285714286,
+      "f": 0.721311475409836,
+      "support": 35
+    },
+    "nemotron:age in years": {
+      "p": 0.9473684210526315,
+      "r": 0.75,
+      "f": 0.8372093023255814,
+      "support": 24
+    },
+    "nemotron:timestamped date": {
+      "p": 0.5,
+      "r": 0.7,
+      "f": 0.5833333333333334,
+      "support": 30
+    },
+    "nemotron:line of work": {
+      "p": 0.6634615384615384,
+      "r": 0.6330275229357798,
+      "f": 0.647887323943662,
+      "support": 109
+    },
+    "nemotron:numeric access code": {
+      "p": 0.7619047619047619,
+      "r": 0.8,
+      "f": 0.7804878048780488,
+      "support": 20
+    },
+    "nemotron:biometric record id": {
+      "p": 1.0,
+      "r": 0.88,
+      "f": 0.9361702127659575,
+      "support": 25
+    },
+    "nemotron:client reference code": {
+      "p": 0.8604651162790697,
+      "r": 1.0,
+      "f": 0.9249999999999999,
+      "support": 37
+    },
+    "nemotron:working arrangement": {
+      "p": 0.5641025641025641,
+      "r": 0.88,
+      "f": 0.6875,
+      "support": 25
+    },
+    "nemotron:citizen identity number": {
+      "p": 0.0,
+      "r": 0.0,
+      "f": 0.0,
+      "support": 0
+    },
+    "nemotron:staff reference number": {
+      "p": 0.8823529411764706,
+      "r": 1.0,
+      "f": 0.9375,
+      "support": 15
+    },
+    "nemotron:municipality": {
+      "p": 0.8974358974358975,
+      "r": 0.8333333333333334,
+      "f": 0.8641975308641975,
+      "support": 42
+    },
+    "nemotron:state or territory": {
+      "p": 0.6833333333333333,
+      "r": 0.9318181818181818,
+      "f": 0.7884615384615384,
+      "support": 44
+    },
+    "nemotron:highest qualification attained": {
+      "p": 0.95,
+      "r": 0.9047619047619048,
+      "f": 0.9268292682926829,
+      "support": 21
+    },
+    "nemotron:employer or business name": {
+      "p": 0.8934426229508197,
+      "r": 0.923728813559322,
+      "f": 0.9083333333333333,
+      "support": 118
+    },
+    "nemotron:website link": {
+      "p": 1.0,
+      "r": 0.9743589743589743,
+      "f": 0.9870129870129869,
+      "support": 78
+    },
+    "nemotron:secret login phrase": {
+      "p": 1.0,
+      "r": 0.8421052631578947,
+      "f": 0.9142857142857143,
+      "support": 19
+    },
+    "nemotron:abo blood classification": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 15
+    },
+    "nemotron:patient chart number": {
+      "p": 0.9444444444444444,
+      "r": 1.0,
+      "f": 0.9714285714285714,
+      "support": 34
+    },
+    "nemotron:telephone contact": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 58
+    },
+    "nemotron:professional credential number": {
+      "p": 0.9230769230769231,
+      "r": 0.9230769230769231,
+      "f": 0.9230769230769231,
+      "support": 13
+    },
+    "nemotron:mail routing code": {
+      "p": 0.0,
+      "r": 0.0,
+      "f": 0.0,
+      "support": 22
+    },
+    "nemotron:card security code": {
+      "p": 1.0,
+      "r": 0.8823529411764706,
+      "f": 0.9375,
+      "support": 17
+    },
+    "nemotron:sexual identity": {
+      "p": 0.8,
+      "r": 1.0,
+      "f": 0.888888888888889,
+      "support": 8
+    },
+    "nemotron:facsimile line": {
+      "p": 1.0,
+      "r": 0.8888888888888888,
+      "f": 0.9411764705882353,
+      "support": 18
+    },
+    "nemotron:international bank routing code": {
+      "p": 0.875,
+      "r": 1.0,
+      "f": 0.9333333333333333,
+      "support": 14
+    },
+    "nemotron:dotted quad network address": {
+      "p": 0.75,
+      "r": 1.0,
+      "f": 0.8571428571428571,
+      "support": 9
+    },
+    "nemotron:128-bit network address": {
+      "p": 1.0,
+      "r": 0.5,
+      "f": 0.6666666666666666,
+      "support": 4
+    },
+    "nemotron:spoken tongue": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 16
+    },
+    "nemotron:vehicle serial identifier": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 16
+    },
+    "nemotron:vehicle registration marker": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 10
+    },
+    "nemotron:political leaning": {
+      "p": 0.5357142857142857,
+      "r": 0.7894736842105263,
+      "f": 0.6382978723404255,
+      "support": 19
+    },
+    "nemotron:opaque record identifier": {
+      "p": 1.0,
+      "r": 0.3333333333333333,
+      "f": 0.5,
+      "support": 3
+    },
+    "nemotron:latitude longitude pair": {
+      "p": 1.0,
+      "r": 1.0,
+      "f": 1.0,
+      "support": 24
+    },
+    "nemotron:gender identity": {
+      "p": 0.9444444444444444,
+      "r": 0.7727272727272727,
+      "f": 0.85,
+      "support": 22
+    },
+    "nemotron:faith tradition": {
+      "p": 0.9166666666666666,
+      "r": 0.6875,
+      "f": 0.7857142857142857,
+      "support": 16
+    },
+    "nemotron:programmatic access credential": {
+      "p": 0.6666666666666666,
+      "r": 1.0,
+      "f": 0.8,
+      "support": 2
+    },
+    "nemotron:taxpayer reference": {
+      "p": 0.6666666666666666,
+      "r": 1.0,
+      "f": 0.8,
+      "support": 2
+    }
+  }
+}

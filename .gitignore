@@ -1,0 +1,21 @@
+# large reproducible artifacts — rebuild from seeded builders or pull from HF
+models/
+pii_xml/*.jsonl
+sft_data/
+sft_data_v2/
+baseline/*.jsonl
+batch_jobs/*.jsonl
+hf_dataset/
+
+# keep small metrics and state
+!baseline/*metrics.json
+!batch_jobs/state.json
+
+# runtime
+pii_tagger/.venv/
+__pycache__/
+*.pyc
+.DS_Store
+
+# packaged training data (reproducible from builders)
+vast_run/data/
