@@ -157,10 +157,36 @@ class CopyTagConstraint:
             allowed.append(self.eos)
         return list(set(allowed)) or [self.eos]
 
-    def make_fn(self, tokenizer, prompt_len):
-        """prefix_allowed_tokens_fn for transformers generate()."""
+    def make_fn(self, tokenizer, prompt_len, think=False, think_budget=512):
+        """prefix_allowed_tokens_fn for transformers generate().
+
+        When think=True the model reasons freely inside a <think>...</think>
+        block (all tokens allowed) before the copy-or-tag automaton engages on
+        the answer. The block is force-closed if it exceeds think_budget tokens.
+        The answer after </think> is fully constrained exactly as usual, so the
+        copy guarantee is intact regardless of what the reasoning contained.
+        """
+        if not think:
+            def fn(batch_id, input_ids):
+                gen = tokenizer.decode(input_ids[prompt_len:],
+                                       skip_special_tokens=True)
+                return self.allowed(gen)
+            return fn
+
+        all_ids = list(range(len(tokenizer)))
+        close_ids = tokenizer("</think>", add_special_tokens=False).input_ids
+
         def fn(batch_id, input_ids):
-            gen = tokenizer.decode(input_ids[prompt_len:],
-                                   skip_special_tokens=True)
-            return self.allowed(gen)
+            gen_ids = input_ids[prompt_len:]
+            gen = tokenizer.decode(gen_ids, skip_special_tokens=True)
+            close = gen.find("</think>")
+            if close == -1:
+                # still thinking: free generation, but force-close on budget
+                if len(gen_ids) >= think_budget:
+                    return close_ids
+                return all_ids
+            # answer phase: constrain only the text after the think block
+            answer = gen[close + len("</think>"):].lstrip("\n")
+            return self.allowed(answer)
+        return fn
         return fn
