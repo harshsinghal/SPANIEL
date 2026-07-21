@@ -125,17 +125,65 @@ Two findings are worth carrying forward:
 2. **Imitation is the wrong tool for reasoning here.** Imitation rewards
    *looking like you reasoned*. The remaining untried lever is reinforcement
    learning, which rewards *getting the answer right* and lets the model
-   discover whatever internal process — including none — actually helps, and
-   even *when* to think versus not. That is a materially different mechanism.
-   It is also slower, costlier, and — given three data points all pointing the
-   same way — a real gamble at 0.6B. If pursued, it belongs on a larger model
-   with more capacity to hold reasoning, as its own deliberate effort, not a
-   quick follow-on.
+   discover whatever internal process — including none — actually helps. That
+   is a materially different mechanism, and it was worth spending a run to
+   close the arc rather than argue about it.
 
-The product model is unchanged: the non-thinking v2 remains SPANIEL, exactly
-as good as before this detour began. The detour cost about $25 of API and GPU
-time and produced no improvement to the model — and one clean, documented fact
-about the limits of a 0.6B model that is worth more than another incremental
-win would have been.
+## Cycle 4: reinforcement learning, and the reward–generalization gap
 
-Total cost of being wrong, carefully: ~$25 and the knowledge of exactly why.
+Everything above is imitation — we showed the model reasoning and asked it to
+copy the style. RL discards the traces entirely: the model generates its own
+attempts, each is scored, and it is pushed toward whatever it did on the
+high-scoring ones. We used GRPO. The reward is our own span-F1 scorer (no LLM
+judge needed — these are labeled documents, so the answer key is exact, and a
+drifted or malformed answer scores zero automatically). Eight attempts per
+prompt, 300 steps, starting from the cycle-3 model (which already has thinking
+behavior to reshape and a protected core), on ~2,700 prompts including
+far-paraphrase-rewritten training rows. The model was free to think or to emit
+an empty think block and answer directly — the reward only grades the answer,
+so any route that improves tagging gets reinforced.
+
+**During training, the reward climbed** — mean 0.565 in the first half of the
+run to 0.612 in the second. RL was, unmistakably, optimizing. This is the
+thing imitation never produced: measurable self-improvement from outcome alone.
+
+**On the held-out exam, nothing moved.** Same three tiers, both modes,
+constrained decoding:
+
+| Tier | c3 OFF | **RL OFF** | c3 ON | RL ON |
+|:--|:-:|:-:|:-:|:-:|
+| Obvious | 0.915 | 0.916 | 0.398 | 0.384 |
+| Slightly-off | 0.911 | 0.909 | 0.325 | 0.318 |
+| Unusual | 0.853 | 0.852 | 0.340 | ~0.24 |
+
+Thinking-off is statistically identical to where it started. Thinking-on still
+collapses. RL reproduced the imitation conclusion by a completely independent
+method — and left behind a sharper finding than "it didn't work":
+
+**The reward went up and the capability didn't.** The model learned to score
+better on its *training prompts* without learning anything that transfers to
+held-out documents. That gap — trainable reward, untransferable skill — is the
+crisp diagnosis. It's not that the optimizer failed; it's that at 0.6B, on
+this task, the thing RL can grip (fit the training distribution) and the thing
+we want (a generalizing reasoning ability) are not the same thing, and
+optimizing the first doesn't produce the second. A larger model, with more
+capacity to hold a genuine reasoning procedure rather than memorize
+per-prompt reward, might close that gap. This one doesn't.
+
+## The whole chapter, honestly
+
+Two independent training paradigms — imitation (three cycles) and
+reinforcement learning (one) — both say the same thing: **the 0.6B model
+cannot productively think about this task.** Imitation gave a fluent-but-
+useless reasoning style; RL gave a trainable-but-non-transferring reward. The
+product model is unchanged: non-thinking v2 remains SPANIEL, exactly as good
+as before this detour began.
+
+What the detour produced instead of an improvement: a reusable safe-extension
+recipe, a working think-mode constrained decoder (kept for any future larger
+model), and two clean measurements of a real limit — one where the model
+imitates the form of reasoning without the benefit, one where it optimizes a
+reward without generalizing. Negative results, thoroughly earned.
+
+Total cost of being wrong, carefully, twice: ~$40 of API and GPU time, and the
+knowledge of exactly why — by two methods that agree.

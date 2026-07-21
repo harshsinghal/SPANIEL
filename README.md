@@ -125,7 +125,7 @@ Strict span-level exact-match F1 · 300-document held-out eval · constrained de
 | 3 | [Making drift unrepresentable](journal/2026-07-12-constrained-decoding.md) | The copy-or-tag automaton, the vocabulary trie, and two constrained-decoding bugs that generalize. |
 | 4 | [The $10 audit](journal/2026-07-18-ten-dollar-audit.md) | Frontier models in batch mode: gold was 9% wrong, the model had learned the noise, nano models can't judge. |
 | 5 | [v2: buying back the generalization gap](journal/2026-07-19-v2-generalization.md) | Four sources, ratified guidelines, +11.7 on unseen entity names. |
-| 6 | [Teaching a 0.6B model to think, three times](journal/2026-07-21-thinking-negative-result.md) | A negative result: distilled reasoning doesn't transfer at 0.6B — measured across three cycles and three difficulty tiers. |
+| 6 | [Teaching a 0.6B model to think — and measuring that it can't](journal/2026-07-21-thinking-negative-result.md) | A negative result by two independent methods: imitation (3 cycles) and RL both show reasoning doesn't transfer at 0.6B. The RL reward climbed while held-out capability didn't. |
 
 ## Repository layout
 
