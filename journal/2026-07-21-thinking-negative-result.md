@@ -1,0 +1,141 @@
+# Teaching a 0.6B model to think, three times, and measuring that it didn't help
+
+*2026-07-21 — a negative result, reported in full because negative results are data*
+
+## The hypothesis
+
+SPANIEL's one measured weakness is **far-paraphrase generalization**: ask for
+an entity using wording semantically distant from anything in training —
+"mail routing code" for a postal code — and the model often fails to make the
+connection. On the held-out unseen-name evaluation it scores 0.86, with a
+visible floor of paraphrases it never bridges.
+
+The intuition: this is a *reasoning* failure, not a pattern-matching one. A
+model that paused to reason — "a mail routing code is probably a postal
+code; the digits after the city are the ZIP" — should bridge the gap. Qwen3
+ships with a native thinking mode. So: teach SPANIEL to think, and turn it on
+for hard requests.
+
+This entry documents three cycles of trying, and the measurement that the
+approach does not work at this model size. It didn't fail for want of care —
+each cycle fixed the previous cycle's diagnosed flaw. It failed because the
+underlying bet — that distilled reasoning transfers to a 0.6B model for this
+task — is false, at least by the methods available to us.
+
+## Cycle 0: the model can't think, and doesn't know it
+
+First surprise: our fine-tuned model, asked to think, produces an **empty**
+`<think></think>` block and answers as before. Our earlier training —
+thousands of examples with no reasoning — didn't just skip the thinking
+ability, it actively trained the habit of opening the block and immediately
+closing it. The base model's reasoning content was gone. There was nothing to
+toggle on; there was something to rebuild from scratch.
+
+(Mechanism worth knowing: "thinking mode" is not a model feature. Qwen's chat
+template, with `enable_thinking=False`, *pre-fills* an empty
+`<think>\n\n</think>` into the prompt so the model skips the phase. With
+`True`, it leaves the slot open. The switch is prompt formatting; the behavior
+is trained.)
+
+## Cycle 1: distill reasoning traces (943 examples)
+
+We paid a larger model (gpt-5.4-mini, batch mode) to write reasoning traces
+for our tagging tasks, and fine-tuned on 943 of them. Result: **half a
+success.** The model now genuinely reasoned — and on the flagship failure case
+it wrote, in its trace, *"a mail routing code is a postal code."* The semantic
+hop happened.
+
+Then it didn't tag the ZIP code. The trace reached the right conclusion and
+the answer ignored it. A student writing the correct logic in the margin and
+the wrong answer in the box. We named it the **reasoning–action gap**.
+
+## Cycle 2: force the reasoning to commit (3,433 examples)
+
+Diagnosis of cycle 1: traces reasoned freely and the answer didn't have to
+honor them. Fix: every trace must **end with a commitment line** — "Tagging:
+X as type; Y as type" — and we mechanically threw out any trace whose
+commitment didn't match the answer that followed. We also demanded traces cite
+surrounding-text evidence, generated in four structural styles for diversity,
+and included a "solve it blind" variant (the writer never sees the answer;
+kept only when its answer is verified correct).
+
+On three probe questions, the reasoning–action gap **closed**: commitment now
+equalled answer. But the full 300-question exam told a different story — the
+model got *worse everywhere*, and a new failure appeared: it now confidently
+reasoned its way to *rejecting* correct answers ("78704 is a postal address,
+not a mail routing code, so it does not qualify"). Cause: our filters had kept
+63% elimination-style traces, and the model over-learned candidate rejection.
+Second lesson, more important: we had trained on thinking examples *only*, and
+the model drifted away from the tagging skill it started with. **Thinking-only
+training erodes the base skill.**
+
+## Cycle 3: the mixed diet, and the verdict
+
+Two fixes. First, rebalance the traces (cap the elimination style, add 701
+verified blind-solved traces on hard paraphrase cases — the "make the
+connection *and* act" behavior). Second, and decisive: **anchor the training
+with 10,000 ordinary no-think examples** so the model rehearses its core skill
+in the same run it learns to think. One model, two behaviors, both practiced;
+the prompt formatting distinguishes them (empty-think prefill → answer
+directly; blank slate → reason first).
+
+We also taught the constrained decoder about thinking mode so copy fidelity
+couldn't confound the measurement: reasoning flows free until `</think>`, then
+the copy-or-tag automaton guarantees the answer.
+
+Then the full exam — three difficulty tiers, both modes, constrained
+decoding, pass bars fixed **before** running:
+
+| Tier | thinking OFF | thinking ON |
+|:--|:-:|:-:|
+| Obvious wordings | **0.915** | 0.398 |
+| Slightly-off wordings | **0.911** | 0.325 |
+| Unusual wordings | **0.853** | 0.340 |
+
+*(strict span-level exact-match F1, 300 documents per cell; copy drift 0% in all
+OFF cells and ≤1% in all ON cells — the decoder held)*
+
+**Bar 1 — don't damage the workhorse: passed cleanly.** Thinking-OFF matches
+the previous model (0.93 / – / 0.86) tier for tier. The anchor mix completely
+prevented the cycle-2 erosion. This is a real, reusable result: you can extend
+this model with new material without wrecking its skill, provided you keep a
+large anchor of the old material in the mix.
+
+**Bar 2 — thinking must help: failed, decisively.** Thinking-ON collapsed to
+~0.34 everywhere — roughly *half* the OFF score, not better. Precision cratered
+to 0.26–0.31: when the model reasons first, it tags wildly. The reasoning is
+fluent and worthless; the answer follows the noise the reasoning introduced.
+
+## What we actually learned
+
+**At 0.6B, distilled reasoning does not transfer for this task.** Three cycles
+of increasingly careful trace curation moved the thinking-OFF behavior around
+but never once made thinking-ON help — it hurt every time, on every tier. The
+model can imitate the *form* of reasoning (fluent traces, correct commitments
+in isolation) without gaining the *benefit* (better answers at scale). This
+matches a known pattern — small models often can't usefully distill
+chain-of-thought — and now there is a controlled, three-tier, confound-removed
+measurement of it on a concrete task.
+
+Two findings are worth carrying forward:
+
+1. **The anchor-mix extension recipe** (cycle 3, bar 1) generalizes to *any*
+   future capability — new datasets, new registers, new output formats. Before
+   this, we didn't know how to add a skill without risking the core; now we do.
+2. **Imitation is the wrong tool for reasoning here.** Imitation rewards
+   *looking like you reasoned*. The remaining untried lever is reinforcement
+   learning, which rewards *getting the answer right* and lets the model
+   discover whatever internal process — including none — actually helps, and
+   even *when* to think versus not. That is a materially different mechanism.
+   It is also slower, costlier, and — given three data points all pointing the
+   same way — a real gamble at 0.6B. If pursued, it belongs on a larger model
+   with more capacity to hold reasoning, as its own deliberate effort, not a
+   quick follow-on.
+
+The product model is unchanged: the non-thinking v2 remains SPANIEL, exactly
+as good as before this detour began. The detour cost about $25 of API and GPU
+time and produced no improvement to the model — and one clean, documented fact
+about the limits of a 0.6B model that is worth more than another incremental
+win would have been.
+
+Total cost of being wrong, carefully: ~$25 and the knowledge of exactly why.
