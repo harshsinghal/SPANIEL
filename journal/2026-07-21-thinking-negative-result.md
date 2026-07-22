@@ -1,4 +1,4 @@
-# Teaching a 0.6B model to think, three times, and measuring that it didn't help
+# Teaching a small model to think — four experiments, two sizes, and a map of the limit
 
 *2026-07-21 — a negative result, reported in full because negative results are data*
 
@@ -170,20 +170,108 @@ optimizing the first doesn't produce the second. A larger model, with more
 capacity to hold a genuine reasoning procedure rather than memorize
 per-prompt reward, might close that gap. This one doesn't.
 
+At this point the honest conclusion was "the 0.6B cannot productively think
+about this task, shown two independent ways." That would have been a clean
+place to stop. It was also, it turned out, a premature one — because every
+experiment so far shared one variable we had not moved: **the model was always
+0.6B.** Two objections reopened the arc, and both produced findings.
+
+## Cycle 5: is it the size? — Qwen3-1.7B
+
+The objection: RL and SFT both failed, but every run started from a 0.6B whose
+thinking, when we could produce it at all, was garbage (~0.35, tagging
+wildly). Maybe the wall isn't "reasoning can't help this task" but "0.6B is
+too small to hold a reasoning procedure." Reinforcement learning refines
+existing behavior; it can't amplify a capability that was never there. So:
+run the *exact* cycle-3 recipe — same thinking-mix data, same ratios, same
+evaluation — on Qwen3-1.7B instead. Only the size changes.
+
+The wall broke, cleanly:
+
+| Tier (thinking-ON) | 0.6B | **1.7B** |
+|:--|:-:|:-:|
+| Obvious | 0.398 | **0.699** |
+| Slightly-off | 0.325 | **0.647** |
+| Unusual | 0.340 | **0.552** |
+
+Thinking roughly *doubled* in quality purely from tripling the parameters. At
+0.6B, thinking-on was incoherent; at 1.7B it is functional — it reasons, then
+tags, with drift near zero. The three-cycle 0.6B negative result was not
+"distilled reasoning can't work here." It was "0.6B is too small to hold it."
+The objection was right.
+
+**But functional is not the same as beneficial.** Even the good 1.7B
+thinking-on (0.55–0.70) stays *below* the same model's thinking-off
+(0.81–0.91) on every tier. The model can now reason coherently — and reasoning
+still costs more than it gains. Thinking became a real capability that does not
+earn its place over answering directly. (A caveat in its favor: the 1.7B was
+fine-tuned from a v1-quality task base with narrower alias coverage, which
+depresses its thinking-off numbers slightly; a v2-quality base would lift the
+whole column. It would not close a 0.26 gap.)
+
+## Cycle 6: is a *better* thinker better? — DeepSeek-R1-Distill-1.5B
+
+The second objection was sharper. Qwen3's reasoning is a general-purpose
+byproduct of its post-training. What if we start from a model whose *entire*
+post-training was reasoning distillation — DeepSeek-R1-Distill-Qwen-1.5B, a
+model built to think, at essentially the same size? If "better thinking →
+better thinking-on," this is the strongest possible test.
+
+A zero-shot probe tempered expectations first: R1-Distill, given our task with
+the constrained decoder handling the output format, scored a mean reward of
+0.062 — the same ballpark as an untrained base model. Its reasoning did not
+transfer to our task for free. But the real question was whether it would
+*after* the same SFT. We ran it: same mix (re-rendered for its template, with
+tagging examples wrapped in a brief think since R1-Distill always thinks — it
+has no thinking-off mode), same evaluation.
+
+It was not better. It was far worse:
+
+| Tier (thinking-ON) | Qwen3-1.7B | **R1-Distill-1.5B** |
+|:--|:-:|:-:|
+| Obvious | 0.699 | **0.184** |
+| Slightly-off | 0.647 | **0.142** |
+| Unusual | 0.552 | **0.121** |
+
+Nearly four times worse, at comparable size, on identical training. The
+specialist reasoner reasons at length in a math-and-code solving style that
+does not fit "which spans in this document are personal information," and all
+that off-target deliberation actively degrades its tagging. This is the most
+counterintuitive result of the arc, and the most useful:
+
+**Reasoning ability is not a general, transferable resource.** A model
+distilled to reason brilliantly about mathematics reasons *worse* about PII
+spans than a plain general model of the same size. "Better thinker" only helps
+if it is a better thinker *for your domain*; a reasoning specialist trained on
+the wrong domain is not a neutral prior, it is a harmful one.
+
 ## The whole chapter, honestly
 
-Two independent training paradigms — imitation (three cycles) and
-reinforcement learning (one) — both say the same thing: **the 0.6B model
-cannot productively think about this task.** Imitation gave a fluent-but-
-useless reasoning style; RL gave a trainable-but-non-transferring reward. The
-product model is unchanged: non-thinking v2 remains SPANIEL, exactly as good
-as before this detour began.
+Four training paradigms across two model sizes and two base models, and a
+coherent picture:
 
-What the detour produced instead of an improvement: a reusable safe-extension
-recipe, a working think-mode constrained decoder (kept for any future larger
-model), and two clean measurements of a real limit — one where the model
-imitates the form of reasoning without the benefit, one where it optimizes a
-reward without generalizing. Negative results, thoroughly earned.
+- **0.6B cannot hold thinking for this task** — three imitation cycles and one
+  RL run all fail; thinking-on is incoherent (~0.35).
+- **1.7B can hold it** — thinking becomes functional (~0.55–0.70), a clean
+  demonstration that the earlier wall was capacity, not method — **but it still
+  does not beat answering directly.**
+- **A same-size reasoning specialist is worse, not better** — domain-locked
+  reasoning is a liability, not an asset.
 
-Total cost of being wrong, carefully, twice: ~$40 of API and GPU time, and the
-knowledge of exactly why — by two methods that agree.
+The synthesis: what a niche reasoning task needs is *enough capacity plus
+general, adaptable reasoning* — not raw reasoning skill imported from another
+domain, and not a model too small to hold a procedure at all. And even when all
+of that is present, thinking has to *earn* its place against direct answering,
+which on this task — where most decisions are pattern-shaped and the hard ones
+are semantic-lookup rather than multi-step — it does not.
+
+The product model is unchanged through all of it: the non-thinking 0.6B (v2)
+remains SPANIEL, unbeaten by any thinking variant at any size. What the arc
+produced instead of a better model is a reusable safe-extension recipe, a
+think-mode constrained decoder kept for future use, and four measurements that
+together map the actual shape of a limit — which is worth more than another
+incremental win would have been.
+
+Total cost of being thorough about being wrong: roughly $60 of API and GPU
+time across six experiments, and a genuinely clear answer to a question most
+projects would have left as a hunch.
