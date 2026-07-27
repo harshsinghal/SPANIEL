@@ -25,6 +25,17 @@ def spans_to_xml(text: str, spans: list[dict]) -> str:
     Overlapping spans raise a ValueError since they can't be expressed
     as well-formed sibling tags.
     """
+    for span in spans:
+        start, end, label = span["start"], span["end"], span["label"]
+        if (isinstance(start, bool) or isinstance(end, bool)
+                or not isinstance(start, int) or not isinstance(end, int)):
+            raise ValueError(f"Span offsets must be integers: {span}")
+        if not 0 <= start < end <= len(text):
+            raise ValueError(
+                f"Span outside text or empty: {span} (text length {len(text)})")
+        if not isinstance(label, str) or not label:
+            raise ValueError(f"Span label must be a non-empty string: {span}")
+
     ordered = sorted(spans, key=lambda s: (s["start"], s["end"]))
     for prev, cur in zip(ordered, ordered[1:]):
         if cur["start"] < prev["end"]:

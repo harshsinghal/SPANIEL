@@ -53,11 +53,19 @@ SYSTEM_PROMPT = (
 DATE_FAMILY = {"date", "date_time", "date_of_birth", "time"}
 
 SOURCES = {
-    "gravitee": ("gravitee-io/pii-detection-dataset", {"train": "data.parquet"}),
-    "nemotron": ("nvidia/Nemotron-PII", {
-        "train": "data/train-00000-of-00001.parquet",
-        "test": "data/test-00000-of-00001.parquet",
-    }),
+    "gravitee": (
+        "gravitee-io/pii-detection-dataset",
+        "5b3d03212714c1c65fd07becba4aec92b8cab20f",
+        {"train": "data.parquet"},
+    ),
+    "nemotron": (
+        "nvidia/Nemotron-PII",
+        "b70ffaf5ff39e079776134c5bf4381f00a9fd1ed",
+        {
+            "train": "data/train-00000-of-00001.parquet",
+            "test": "data/test-00000-of-00001.parquet",
+        },
+    ),
 }
 
 ALIASES = json.loads(Path(__file__).with_name("label_aliases.json").read_text())
@@ -114,8 +122,9 @@ def build_request(rng, dataset, present):
 
 
 def iter_rows(dataset, split):
-    repo, files = SOURCES[dataset]
-    path = hf_hub_download(repo, files[split], repo_type="dataset")
+    repo, revision, files = SOURCES[dataset]
+    path = hf_hub_download(
+        repo, files[split], repo_type="dataset", revision=revision)
     for batch in pq.ParquetFile(path).iter_batches(batch_size=2048):
         for row in batch.to_pylist():
             spans = row["spans"]

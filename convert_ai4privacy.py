@@ -14,11 +14,13 @@ Usage:  python convert_ai4privacy.py [--split train] [--out pii_xml/ai4privacy_e
 import argparse
 import json
 from collections import Counter
+from pathlib import Path
 
 import requests
 from huggingface_hub import get_token
 
 REPO = "ai4privacy/pii-masking-openpii-1.5m"
+REVISION = "a785eb528e28be2693c3718a27e066970de5dadb"
 COLS = ["source_text", "privacy_mask", "language", "uid"]
 
 
@@ -28,7 +30,7 @@ def main():
     ap.add_argument("--out", default="pii_xml/ai4privacy_en.jsonl")
     args = ap.parse_args()
 
-    url = (f"https://huggingface.co/datasets/{REPO}/resolve/main/"
+    url = (f"https://huggingface.co/datasets/{REPO}/resolve/{REVISION}/"
            f"data/{args.split}.jsonl")
     print(f"streaming {url}")
 
@@ -36,6 +38,7 @@ def main():
     span_len_1 = 0
     bad_offsets = 0
     kept = 0
+    Path(args.out).parent.mkdir(parents=True, exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as out:
         with requests.get(url, stream=True, timeout=120,
                           headers={"Authorization": f"Bearer {get_token()}"}) as resp:

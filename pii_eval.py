@@ -35,10 +35,30 @@ from pathlib import Path
 
 
 def load_alias_to_slug():
-    path = Path(__file__).with_name("label_aliases.json")
-    aliases = json.loads(path.read_text())
-    return {ds: {name: slug for slug, names in aliases[ds].items() for name in names}
-            for ds in ("gravitee", "nemotron")}
+    """Load aliases that identify exactly one canonical label."""
+    candidates = {}
+    for filename in ("label_aliases.json", "label_aliases_v2.json"):
+        path = Path(__file__).with_name(filename)
+        if not path.exists():
+            continue
+        aliases = json.loads(path.read_text())
+        for dataset, labels in aliases.items():
+            if dataset.startswith("_"):
+                continue
+            target = candidates.setdefault(dataset, defaultdict(set))
+            for slug, names in labels.items():
+                if slug.startswith("_"):
+                    continue
+                for name in names:
+                    target[name].add(slug)
+    return {
+        dataset: {
+            name: next(iter(slugs))
+            for name, slugs in names.items()
+            if len(slugs) == 1
+        }
+        for dataset, names in candidates.items()
+    }
 
 
 ALIAS_TO_SLUG = load_alias_to_slug()
@@ -53,7 +73,7 @@ def parse_example(example):
 
 
 def parse_tagged(tagged, names):
-    """Parse tagged text into (recovered_text, spans, unrequested_count).
+    """Parse tagged text into ``(recovered_text, spans)``.
 
     spans are (start, end, name) in recovered-text coordinates. Only tags for
     the requested names are treated as markup; anything else (including
@@ -89,6 +109,29 @@ def parse_tagged(tagged, names):
 
 def canonical(source, name):
     return f"{source}:{ALIAS_TO_SLUG.get(source, {}).get(name, name)}"
+
+
+TAG_LIKE_RE = re.compile(r"</?[^<>\r\n]{1,100}>")
+
+
+def count_unrequested_tags(output, source_text, requested_names):
+    """Count tag-like strings introduced by the model outside the request."""
+    requested = {
+        tag
+        for name in requested_names
+        for tag in (f"<{name}>", f"</{name}>")
+    }
+    source_counts = defaultdict(int)
+    for match in TAG_LIKE_RE.finditer(source_text):
+        source_counts[match.group(0)] += 1
+    introduced = 0
+    seen = defaultdict(int)
+    for match in TAG_LIKE_RE.finditer(output):
+        tag = match.group(0)
+        seen[tag] += 1
+        if tag not in requested and seen[tag] > source_counts[tag]:
+            introduced += 1
+    return introduced
 
 
 class Tally:
@@ -136,8 +179,7 @@ def score(gold_rows, pred_rows, pred_field):
         per_source[source]["rows"] += 1
 
         output = pred[pred_field]
-        # tags outside the request list: count occurrences of <word-ish> pairs
-        # that our parser will treat as text but look like attempted tags
+        ops["unrequested_tags"] += count_unrequested_tags(output, text, names)
         row_bad = None
         try:
             recovered, pred_spans = parse_tagged(output, names)
@@ -182,8 +224,11 @@ def report(ops, strict, parseable, per_label, per_source):
     lines = []
     n = ops["rows"]
     lines.append(f"rows scored           {n}")
-    lines.append(f"malformed output      {ops['malformed']} ({ops['malformed']/n:.1%})")
-    lines.append(f"copy drift            {ops['copy_drift']} ({ops['copy_drift']/n:.1%})")
+    malformed_rate = ops["malformed"] / n if n else 0.0
+    drift_rate = ops["copy_drift"] / n if n else 0.0
+    lines.append(f"malformed output      {ops['malformed']} ({malformed_rate:.1%})")
+    lines.append(f"copy drift            {ops['copy_drift']} ({drift_rate:.1%})")
+    lines.append(f"unrequested tags      {ops['unrequested_tags']}")
     lines.append("")
     for name, tallies in (("STRICT (headline)", strict), ("parseable rows only", parseable)):
         p, r, f = tallies["exact"].prf()

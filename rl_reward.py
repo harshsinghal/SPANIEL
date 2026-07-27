@@ -13,13 +13,13 @@ import re
 
 
 def _parse_tags(text, names):
-    """Recover (start, end, name) spans from tagged text, in plain-text space.
+    """Recover spans and plain text as ``(spans, plain_text, valid)``.
 
-    Returns (spans, plain_text). Never raises: malformed structure just stops
-    parsing, which yields a low reward rather than a crash.
+    Never raises: malformed structure returns ``valid=False`` so the caller
+    can assign a zero reward without crashing a training worker.
     """
     if not names:
-        return [], text
+        return [], text, True
     token = re.compile(
         "<(/?)(" + "|".join(re.escape(n) for n in sorted(names, key=len, reverse=True))
         + ")>")
@@ -32,16 +32,16 @@ def _parse_tags(text, names):
         closing, name = m.group(1) == "/", m.group(2)
         if not closing:
             if open_name is not None:
-                return spans, "".join(out) + text[pos:]   # nested → bail
+                return spans, text, False
             open_name, open_at = name, length
         else:
             if open_name != name:
-                return spans, "".join(out) + text[pos:]    # mismatch → bail
+                return spans, text, False
             spans.append((open_at, length, name))
             open_name = None
         pos = m.end()
     out.append(text[pos:])
-    return spans, "".join(out)
+    return spans, "".join(out), open_name is None
 
 
 def _f1(gold, pred, relaxed=True):
@@ -66,9 +66,11 @@ def score_one(completion, gold_tagged, names, source_text):
     """Reward in [0,1] for a single completion string."""
     answer = re.sub(r"^[\s\S]*?</think>\s*", "", completion, count=1) \
         if "</think>" in completion else completion
-    gold_spans, gold_plain = _parse_tags(gold_tagged, names)
-    pred_spans, pred_plain = _parse_tags(answer, names)
-    if pred_plain != source_text:      # drift / malformed → forfeit
+    gold_spans, gold_plain, gold_valid = _parse_tags(gold_tagged, names)
+    pred_spans, pred_plain, pred_valid = _parse_tags(answer, names)
+    if not gold_valid or gold_plain != source_text:
+        raise ValueError("gold target is malformed or does not match source_text")
+    if not pred_valid or pred_plain != source_text:
         return 0.0
     return _f1(gold_spans, pred_spans, relaxed=True)
 

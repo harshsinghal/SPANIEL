@@ -61,7 +61,7 @@ compact model, and it remains the accuracy-per-millisecond benchmark for
 fixed-schema extraction. SPANIEL is inspired by that idea but takes the
 generative route to chase two properties an encoder can't offer: **tagged
 full-text output** (grounded, diffable, redaction-ready — with a constrained
-decoder making copy drift mathematically impossible), and a recipe that
+decoder making copy drift impossible for completed generations), and a recipe that
 **rides the small-LLM ecosystem** — every year's better 0.6B base model is a
 one-line upgrade. The bet, now measured: a $2.50 fine-tune of a 0.6B model
 beats a 120B model prompted zero-shot by 35 F1 points on this task.
@@ -77,24 +77,28 @@ docker run -p 8377:8377 -v spaniel-models:/models ghcr.io/harshsinghal/spaniel
 
 - The model (~1.2 GB) is pulled from the Hugging Face hub on first start and
   cached in the named volume.
-- On Linux with an NVIDIA GPU, add `--gpus all`. On Mac/Windows it runs on
-  CPU (a demo paragraph takes ~10–30 s — the price of local-only).
+- The published image is CPU-only on every platform (a demo paragraph takes
+  ~10–30 s). Run from source with a CUDA build of PyTorch for GPU inference.
 - The UI ships with **15 preloaded examples** — medical forms, server logs,
   transcripts, invoices, and an encyclopedic-prose case that demonstrates the
   attribute-semantics stance — each with editable free-form entity types.
-- Every response is generated under the constrained decoder: the
-  **copy-faithful ✓** badge is a guarantee, not a check.
+- Every successful response is generated under the constrained decoder. The
+  server rejects an incomplete generation instead of returning a false
+  **copy-faithful ✓** result.
 
 <details>
 <summary><strong>Running from source instead</strong></summary>
 
 ```bash
-cd pii_tagger
-python -m venv .venv
-.venv/bin/pip install torch transformers fastapi uvicorn huggingface_hub
+python3 -m venv .venv
+.venv/bin/pip install torch -r requirements-demo.txt
 PII_MODEL_ID=Harsh/qwen3-0.6b-pii-sft-v2 \
-  .venv/bin/python -m uvicorn server:app --app-dir . --port 8377
+PII_MODEL_REVISION=a58063469be8c7b929016d944d8d6d1545bc70a0 \
+  .venv/bin/python -m uvicorn server:app --app-dir pii_tagger --port 8377
 ```
+
+For CUDA, install the PyTorch wheel appropriate to the host before installing
+`requirements-demo.txt`.
 
 </details>
 
@@ -109,7 +113,10 @@ Strict span-level exact-match F1 · 300-document held-out eval · constrained de
 | **v2 (0.6B, 389k, 4 sources)** | 0.930 | 0.918 | **0.864** |
 
 - Copy drift and malformed output under the constrained decoder: **0.0%** —
-  not measured low, *grammatically impossible*.
+  incomplete generations are treated as failures, never as faithful output.
+- The 120B number is an end-to-end tagged-regeneration score: 141/300 of its
+  rows drifted or were malformed. Its conditional F1 on parseable rows was
+  0.891, separating semantic extraction quality from output-contract reliability.
 - The three columns are three measuring sticks over one inference procedure:
   the original (noisy) gold, an adjudicated and human-spot-checked gold, and
   requests phrased with entity names absent from all training aliases.
@@ -143,25 +150,51 @@ Strict span-level exact-match F1 · 300-document held-out eval · constrained de
 | `build_batch_jobs.py` | OpenAI batch-mode jobs (adjudication, audit, aliases, synthesis) |
 | `pii_tagger/` | The local web app (FastAPI, constrained by default) |
 | `vast_run/` | GPU training scripts (TRL SFT, env-configurable) |
+| `tests/` | Fast regression tests for decoding, scoring, and reward invariants |
+| `artifact_manifest.json` | Source revisions plus row counts and SHA-256 checksums |
 | `journal/` | The blog entries above |
 
 Large artifacts (converted datasets, training mixtures, model weights,
-predictions) are intentionally not in the repo; every one is reproducible
-from the seeded builders or downloadable from the Hugging Face hub.
+predictions) are intentionally not in the repo. Their expected hashes and
+upstream revisions are recorded in `artifact_manifest.json`.
 
 ## Reproducing
 
 ```bash
-# 1. Convert sources and build the v2 mixture (seeded — byte-identical rebuilds)
-python convert_ai4privacy.py --split train --out pii_xml/ai4privacy_en.jsonl
-python build_sft_dataset_v2.py --outdir sft_data_v2
+# 0. Create an environment. Install the appropriate CUDA PyTorch wheel
+# separately before the training requirements.
+python3 -m venv .venv
+.venv/bin/pip install -r requirements-data.txt
 
-# 2. Train (any CUDA box; ~11 h on one H100 NVL)
-SFT_MODEL=Qwen/Qwen3-0.6B SFT_BS=16 SFT_ACCUM=2 python vast_run/train_sft.py
+# 1. Rebuild the original held-out eval set and the v2 mixture.
+.venv/bin/python build_sft_dataset.py --outdir sft_data
+.venv/bin/python convert_ai4privacy.py \
+  --split train --out pii_xml/ai4privacy_en.jsonl
+.venv/bin/python build_sft_dataset_v2.py --outdir sft_data_v2
 
-# 3. Evaluate with the constrained decoder
-python run_constrained_eval.py --model <model_dir> --n 300 --out preds.jsonl
-python pii_eval.py --pred preds.jsonl --n 300
+# The published four-source mixture requires pii_xml/synth_docs.jsonl, the
+# 1,966-document batch-generated artifact. Use --skip-synth for the fully
+# public three-source mixture when that artifact is unavailable.
+
+# 2. Verify byte identity against the published artifacts.
+.venv/bin/python verify_artifacts.py
+
+# 3. Train (any CUDA box; ~11 h on one H100 NVL).
+.venv/bin/pip install -r requirements-train.txt
+SFT_MODEL=Qwen/Qwen3-0.6B \
+SFT_TRAIN=sft_data_v2/sft_train_v2.jsonl \
+SFT_VAL=sft_data/sft_eval.jsonl \
+SFT_RUN_DIR=runs/spaniel-v2 \
+SFT_BS=16 SFT_ACCUM=2 \
+  .venv/bin/python vast_run/train_sft.py
+
+# 4. Evaluate with the constrained decoder.
+.venv/bin/python run_constrained_eval.py \
+  --model runs/spaniel-v2/final --n 300 --out preds.jsonl
+.venv/bin/python pii_eval.py --pred preds.jsonl --n 300
+
+# Fast local validation that does not download models or datasets.
+make test
 ```
 
 ## Status & roadmap

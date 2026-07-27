@@ -31,14 +31,17 @@ from huggingface_hub import hf_hub_download
 
 from spans_to_xml import spans_to_xml
 
+ROOT = Path(__file__).resolve().parent
 SEED = 20260719
 GUIDE_P = 0.30
 AI4P_CAP = 110_000
 SYNTH_UPSAMPLE = 3
 NEG_ROW_CAP = 0.08
 TIME_RE = re.compile(r"\d{1,2}:\d{2}")
+GRAVITEE_REVISION = "5b3d03212714c1c65fd07becba4aec92b8cab20f"
+NEMOTRON_REVISION = "b70ffaf5ff39e079776134c5bf4381f00a9fd1ed"
 
-ALIASES = json.loads(Path("label_aliases_v2.json").read_text())
+ALIASES = json.loads((ROOT / "label_aliases_v2.json").read_text())
 REMOVED = {ds: set(l) for ds, l in ALIASES.get("_removed", {}).items()}
 VOCAB = {ds: [l for l in ALIASES[ds] if not l.startswith("_")]
          for ds in ("gravitee", "nemotron", "ai4privacy")}
@@ -79,10 +82,14 @@ def correct_nemotron(spans, text):
     return spans
 
 
-def iter_source(ds, limit):
+def iter_source(ds, limit, ai4privacy_path, synth_path):
     if ds == "gravitee":
-        path = hf_hub_download("gravitee-io/pii-detection-dataset", "data.parquet",
-                               repo_type="dataset")
+        path = hf_hub_download(
+            "gravitee-io/pii-detection-dataset",
+            "data.parquet",
+            repo_type="dataset",
+            revision=GRAVITEE_REVISION,
+        )
         n = 0
         for batch in pq.ParquetFile(path).iter_batches(batch_size=2048):
             for row in batch.to_pylist():
@@ -90,8 +97,12 @@ def iter_source(ds, limit):
                 n += 1
                 if limit and n >= limit: return
     elif ds == "nemotron":
-        path = hf_hub_download("nvidia/Nemotron-PII",
-                               "data/train-00000-of-00001.parquet", repo_type="dataset")
+        path = hf_hub_download(
+            "nvidia/Nemotron-PII",
+            "data/train-00000-of-00001.parquet",
+            repo_type="dataset",
+            revision=NEMOTRON_REVISION,
+        )
         n = 0
         for batch in pq.ParquetFile(path).iter_batches(batch_size=2048):
             for row in batch.to_pylist():
@@ -101,14 +112,16 @@ def iter_source(ds, limit):
                 if limit and n >= limit: return
     elif ds == "ai4privacy":
         rng = random.Random(SEED + 1)
-        rows = open("pii_xml/ai4privacy_en.jsonl", encoding="utf-8").readlines()
+        with open(ai4privacy_path, encoding="utf-8") as source:
+            rows = source.readlines()
         rng.shuffle(rows)
         cap = min(limit or AI4P_CAP, AI4P_CAP)
         for line in rows[:cap]:
             r = json.loads(line)
             yield r["text"], r["spans"]
     elif ds == "synth":
-        rows = open("pii_xml/synth_docs.jsonl", encoding="utf-8").readlines()
+        with open(synth_path, encoding="utf-8") as source:
+            rows = source.readlines()
         n = 0
         for _ in range(SYNTH_UPSAMPLE):
             for line in rows:
@@ -186,17 +199,39 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=None)
     ap.add_argument("--outdir", default="sft_data_v2")
+    ap.add_argument(
+        "--ai4privacy",
+        default=str(ROOT / "pii_xml" / "ai4privacy_en.jsonl"),
+    )
+    ap.add_argument(
+        "--synth",
+        default=str(ROOT / "pii_xml" / "synth_docs.jsonl"),
+    )
+    ap.add_argument(
+        "--skip-synth",
+        action="store_true",
+        help="build the three-source mixture when the synthetic artifact is unavailable",
+    )
     args = ap.parse_args()
-    outdir = Path(args.outdir); outdir.mkdir(exist_ok=True)
+    outdir = Path(args.outdir); outdir.mkdir(parents=True, exist_ok=True)
     rng = random.Random(SEED)
 
     examples = []
     stats = {}
-    for ds in ("gravitee", "nemotron", "ai4privacy", "synth"):
+    sources = ["gravitee", "nemotron", "ai4privacy"]
+    if not args.skip_synth:
+        if not Path(args.synth).exists():
+            raise SystemExit(
+                f"synthetic source not found: {args.synth}; "
+                "provide --synth or use --skip-synth"
+            )
+        sources.append("synth")
+    for ds in sources:
         st = {"rows": 0, "skip_overlap": 0, "skip_alias": 0, "neg_rows": 0,
               "neg_dropped": 0, "relabeled_subset": 0}
         vocab_ds = "nemotron" if ds == "synth" else ds
-        for text, spans in iter_source(ds, args.limit):
+        for text, spans in iter_source(
+                ds, args.limit, args.ai4privacy, args.synth):
             spans = [s for s in spans
                      if s["label"] in ALIASES[vocab_ds]
                      and s["label"] not in REMOVED.get(vocab_ds, set())

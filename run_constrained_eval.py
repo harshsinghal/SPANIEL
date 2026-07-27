@@ -14,6 +14,7 @@ import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from pii_decode import CopyTagConstraint, VocabTrie
+from tokenizer_compat import tokenizer_load_kwargs
 
 
 def main():
@@ -26,7 +27,8 @@ def main():
 
     device = ("cuda" if torch.cuda.is_available()
               else "mps" if torch.backends.mps.is_available() else "cpu")
-    tokenizer = AutoTokenizer.from_pretrained(args.model)
+    tokenizer = AutoTokenizer.from_pretrained(
+        args.model, **tokenizer_load_kwargs(args.model))
     model = AutoModelForCausalLM.from_pretrained(
         args.model, dtype=torch.bfloat16).to(device).eval()
     print("building vocab trie ...", flush=True)

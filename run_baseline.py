@@ -7,7 +7,8 @@ prompt the fine-tune will train on) and collects the tagged-text output.
 Usage:
     export OPENAI_API_KEY=...
     python run_baseline.py --model gpt-5-nano --n 300
-    python pii_eval.py --gold sft_data/sft_eval.jsonl --pred baseline/<model>_preds.jsonl --n-gold 300
+    python pii_eval.py --gold sft_data/sft_eval.jsonl \
+        --pred baseline/<model>_preds.jsonl --n 300
 
 Predictions are line-aligned with the first N gold rows. API failures after
 retries yield an empty output (scored as a total miss — honest accounting).
@@ -126,7 +127,8 @@ def main():
     Path(str(pred_path) + ".meta.json").write_text(json.dumps(meta, indent=2))
     print(json.dumps(meta, indent=2))
     print(f"\npredictions: {pred_path}")
-    print(f"score with: python pii_eval.py --gold <first {len(rows)} rows of gold> --pred {pred_path}")
+    print(f"score with: python pii_eval.py --gold {args.gold} "
+          f"--pred {pred_path} --n {len(rows)}")
 
 
 if __name__ == "__main__":

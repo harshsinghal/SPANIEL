@@ -36,11 +36,13 @@ from spans_to_xml import spans_to_xml
 DATASETS = {
     "gravitee": {
         "repo": "gravitee-io/pii-detection-dataset",
+        "revision": "5b3d03212714c1c65fd07becba4aec92b8cab20f",
         "files": {"train": "data.parquet"},
         "meta_cols": ["language", "source"],
     },
     "nemotron": {
         "repo": "nvidia/Nemotron-PII",
+        "revision": "b70ffaf5ff39e079776134c5bf4381f00a9fd1ed",
         "files": {
             "train": "data/train-00000-of-00001.parquet",
             "test": "data/test-00000-of-00001.parquet",
@@ -87,7 +89,12 @@ def main() -> None:
                  f"available: {list(cfg['files'])}")
 
     print(f"Downloading {cfg['repo']} :: {cfg['files'][args.split]} ...", flush=True)
-    path = hf_hub_download(cfg["repo"], cfg["files"][args.split], repo_type="dataset")
+    path = hf_hub_download(
+        cfg["repo"],
+        cfg["files"][args.split],
+        repo_type="dataset",
+        revision=cfg["revision"],
+    )
 
     outdir = Path(args.outdir)
     outdir.mkdir(exist_ok=True)

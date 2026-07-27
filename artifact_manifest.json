@@ -1,0 +1,27 @@
+{
+  "source_revisions": {
+    "gravitee-io/pii-detection-dataset": "5b3d03212714c1c65fd07becba4aec92b8cab20f",
+    "nvidia/Nemotron-PII": "b70ffaf5ff39e079776134c5bf4381f00a9fd1ed",
+    "ai4privacy/pii-masking-openpii-1.5m": "a785eb528e28be2693c3718a27e066970de5dadb",
+    "Qwen/Qwen3-0.6B": "c1899de289a04d12100db370d81485cdf75e47ca",
+    "Harsh/qwen3-0.6b-pii-sft-v2": "a58063469be8c7b929016d944d8d6d1545bc70a0"
+  },
+  "artifacts": {
+    "pii_xml/ai4privacy_en.jsonl": {
+      "rows": 163696,
+      "sha256": "6e009b79359eb12553e4b68125c128f5177ada3656e169e31995e02e8be779b4"
+    },
+    "pii_xml/synth_docs.jsonl": {
+      "rows": 1966,
+      "sha256": "06e9b5f71df7658232477b7f8fe53c765003c4b091abc2d94c5fe7b793e8f7be"
+    },
+    "sft_data/sft_eval.jsonl": {
+      "rows": 2000,
+      "sha256": "29f697789c80fd6ebe56abce0bd0bb62999caf449ecfc9a623c26a9653bad462"
+    },
+    "sft_data_v2/sft_train_v2.jsonl": {
+      "rows": 389521,
+      "sha256": "d08c6acfb282596c13a1116c201e4cb0cb7dc28ba905dbe980258c359545d868"
+    }
+  }
+}

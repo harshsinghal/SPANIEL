@@ -169,7 +169,10 @@ $("go").onclick = async () => {
       body: JSON.stringify({ text, entities }),
     });
     const d = await r.json();
-    if (d.error) { $("status").textContent = d.error; return; }
+    if (!r.ok || d.error) {
+      $("status").textContent = d.detail || d.error || `Request failed (${r.status})`;
+      return;
+    }
     last = d;
     $("viewtoggle").hidden = false;
     render();
