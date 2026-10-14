@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use SPANIEL, please cite this repository and the model revision used."
+type: software
+title: "SPANIEL: Local PII Detection for AI Prompts"
+authors:
+  - family-names: Singhal
+    given-names: Harsh
+    website: "https://www.linkedin.com/in/harshsinghal/"
+repository-code: "https://github.com/harshsinghal/SPANIEL"
+url: "https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2"
+keywords:
+  - AI governance
+  - AI security
+  - PII detection
+  - local inference
+  - supervised fine-tuning
+  - synthetic data
+  - constrained decoding

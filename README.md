@@ -1,30 +1,48 @@
 <p align="center">
-  <img src="docs/spaniel_pic.png" width="340" alt="SPANIEL — SPAN Identification from Everyday Language">
+  <img src="docs/spaniel_pic.png" width="300" alt="SPANIEL — local PII detection for AI prompts">
 </p>
 
-<h1 align="center">SPANIEL</h1>
+# SPANIEL — Local PII Detection for AI Prompts
 
-<p align="center">
-  <strong>SPAN Identification from Everyday Language</strong><br>
-  <em>A small retriever that fetches any span you name.</em>
-</p>
+**AI governance and AI security research by [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/): fine-tuning small language models to identify sensitive information before it is shared with AI services.**
 
-<p align="center">
-  <a href="https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2">Model</a> ·
-  <a href="#try-it-the-demo-app">Demo</a> ·
-  <a href="#results">Results</a> ·
-  <a href="#the-journey-as-blog-entries">Blog series</a>
-</p>
+SPANIEL (*SPAN Identification from Everyday Language*) is a 0.6B-parameter model for local personally identifiable information (PII) detection and named entity recognition. Give it text and natural-language entity types; it marks matching spans in the original text. The supported constrained decoder preserves the source exactly in completed outputs.
 
----
+The project connects **LLM fine-tuning, synthetic training data, evaluation, and local inference** to a practical data governance question: what information is present in a prompt before an application sends it to another system?
 
-SPANIEL is a 0.6B-parameter PII extraction model that accepts **free-form
-entity type names**, runs entirely on your own hardware, and is structurally
-incapable of altering the text it annotates.
+**Current release:** an English PII annotation model and local API. Applications can use its findings to support data loss prevention (DLP), prompt inspection, and redaction workflows. Policy enforcement, automatic redaction, and broader confidential-topic detection are development goals; annotation alone does not remove sensitive content.
 
-Give it a document and a list of types — including types it has never seen,
-like `patient mrn` or `severance amount` — and it returns the document
-byte-identical, with matching spans wrapped in XML tags:
+[Model on Hugging Face](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2) · [Try locally](#try-it-the-demo-app) · [Results](#results) · [Training data and evaluation](docs/training-data-and-evaluation.md) · [Research journal](#the-journey-as-blog-entries)
+
+## Why local sensitive-data detection matters
+
+Prompts can include personal records, customer details, employee information, and credentials. Retrieved passages and tool outputs can introduce the same information even when the user's original question contains none of it. A local detector lets an application inspect that content within its own environment.
+
+SPANIEL is the detection component of a proposed governance workflow:
+
+```text
+Prompt, retrieved context, or tool output
+                  |
+          Local SPANIEL inspection       [available]
+                  |
+      Application policy + destination   [integration work]
+                  |
+       Allow / redact / block / review   [integration work]
+```
+
+The model identifies spans; the application decides what to do with them. A name is not automatically prohibited information, and finding no spans is not proof that a document is safe to share. Useful deployment evidence includes missed sensitive items, false alerts on benign text, latency, and behavior when inference fails.
+
+The research focus is to make those decisions assessable: document the data, measure generalization, preserve exact evidence, and state where the detector can fail.
+
+## What SPANIEL does
+
+- **Natural-language entity requests:** request labels such as `person name`, `email`, or `patient mrn`, rather than selecting only from a fixed output classifier.
+- **Local inference:** run the model on your own machine or server. The demo processes submitted text locally; installation and initial model provisioning require downloads.
+- **Source-preserving annotation:** the copy-or-tag decoder restricts output to source text and the requested tags. The server rejects incomplete constrained output.
+- **Published evaluation:** separate results for original labels, adjudicated labels, and unfamiliar entity names.
+- **Inspectible fine-tuning:** dataset converters, a seeded mixture builder, annotation guidelines, training scripts, evaluation code, and source revisions.
+
+Example request:
 
 ```text
 Entity types:
@@ -32,154 +50,158 @@ Entity types:
 - patient mrn
 
 Text:
-Patient Brian Weaver (MRN BX-40912) called about his appointment...
+Patient Brian Weaver (MRN BX-40912) called about his appointment.
 ```
+
+Illustrative output:
 
 ```text
-Patient <person name>Brian Weaver</person name> (MRN <patient mrn>BX-40912</patient mrn>) called about his appointment...
+Patient <person name>Brian Weaver</person name> (MRN <patient mrn>BX-40912</patient mrn>) called about his appointment.
 ```
 
-<p align="center">
-  <img src="docs/spaniel-demo.gif" width="720" alt="SPANIEL demo: loading examples, tagging entities, copy-faithful output">
-</p>
+The tags locate evidence; the original values are still present. Detection accuracy is learned and imperfect. Copy fidelity is a separate property enforced by the decoder, not a guarantee supplied by the model weights alone.
 
-## Why this exists
-
-Two reasons, one personal and one technical.
-
-The personal one: [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/)
-wanted to scratch a long-standing itch — build a serious NER system on a
-*small* language model, end to end: data curation, fine-tuning, evaluation
-design, decoding, and serving, with every decision made deliberately rather
-than inherited. SPANIEL is that itch, scratched in public. The
-[journal entries](#the-journey-as-blog-entries) document every experiment,
-including the failures.
-
-The technical one: [GLiNER](https://github.com/urchade/GLiNER) showed that
-open-type NER — *name any entity type at inference* — is possible with a
-compact model, and it remains the accuracy-per-millisecond benchmark for
-fixed-schema extraction. SPANIEL is inspired by that idea but takes the
-generative route to chase two properties an encoder can't offer: **tagged
-full-text output** (grounded, diffable, redaction-ready — with a constrained
-decoder making copy drift impossible for completed generations), and a recipe that
-**rides the small-LLM ecosystem** — every year's better 0.6B base model is a
-one-line upgrade. The bet, now measured: a $2.50 fine-tune of a 0.6B model
-beats a 120B model prompted zero-shot by 35 F1 points on this task.
+![SPANIEL local PII detection demo with editable entity types and source-preserving highlights](docs/spaniel-demo.gif)
 
 ## Try it: the demo app
 
-One command, local-only — no data leaves your machine:
+Run the published CPU image, binding the service to your machine's loopback interface:
 
 ```bash
-docker run -p 8377:8377 -v spaniel-models:/models ghcr.io/harshsinghal/spaniel
-# open http://localhost:8377
+docker run --rm -p 127.0.0.1:8377:8377 \
+  -v spaniel-models:/models ghcr.io/harshsinghal/spaniel
+# Open http://127.0.0.1:8377
 ```
 
-- The model (~1.2 GB) is pulled from the Hugging Face hub on first start and
-  cached in the named volume.
-- The published image is CPU-only on every platform (a demo paragraph takes
-  ~10–30 s). Run from source with a CUDA build of PyTorch for GPU inference.
-- The UI ships with **15 preloaded examples** — medical forms, server logs,
-  transcripts, invoices, and an encyclopedic-prose case that demonstrates the
-  attribute-semantics stance — each with editable free-form entity types.
-- Every successful response is generated under the constrained decoder. The
-  server rejects an incomplete generation instead of returning a false
-  **copy-faithful ✓** result.
+The approximately 1.2 GB model downloads on first start and is cached in the named volume. The demo includes 15 examples covering forms, logs, medical records, transcripts, invoices, and prose. Published CPU paragraph timings are approximately 10–30 seconds; they are not an interactive-latency or throughput guarantee.
+
+The image installs CPU-only PyTorch on all platforms. Adding `--gpus all` does not make this image CUDA-enabled. For hardware acceleration, run from source with an appropriate PyTorch installation.
+
+### Call the constrained local API
+
+With the server running, this Python example uses only the standard library:
+
+```python
+import json
+from urllib.request import Request, urlopen
+
+payload = {
+    "text": "Reach Anita at anita@example.com.",
+    "entities": ["person name", "email"],
+    "constrained": True,
+}
+request = Request(
+    "http://127.0.0.1:8377/api/tag",
+    data=json.dumps(payload).encode("utf-8"),
+    headers={"Content-Type": "application/json"},
+    method="POST",
+)
+with urlopen(request, timeout=120) as response:
+    result = json.load(response)
+
+if not result["constrained"] or not result["faithful"]:
+    raise RuntimeError("No complete source-preserving annotation was returned")
+print(result["tagged"])
+```
+
+`faithful` means the source text was preserved, not that every sensitive span was found. Treat HTTP errors and timeouts as inspection failures; an integrating application must define its response to them.
 
 <details>
-<summary><strong>Running from source instead</strong></summary>
+<summary>Run from source</summary>
 
 ```bash
+git clone https://github.com/harshsinghal/SPANIEL.git
+cd SPANIEL
 python3 -m venv .venv
 .venv/bin/pip install torch -r requirements-demo.txt
 PII_MODEL_ID=Harsh/qwen3-0.6b-pii-sft-v2 \
 PII_MODEL_REVISION=a58063469be8c7b929016d944d8d6d1545bc70a0 \
-  .venv/bin/python -m uvicorn server:app --app-dir pii_tagger --port 8377
+PII_MODEL_CACHE=./models \
+  .venv/bin/python -m uvicorn server:app --app-dir pii_tagger \
+  --host 127.0.0.1 --port 8377
 ```
 
-For CUDA, install the PyTorch wheel appropriate to the host before installing
-`requirements-demo.txt`.
+For CUDA, install the suitable PyTorch build before the demo requirements. The source server selects CUDA, then Apple MPS, then CPU when available. Production integrations need their own authentication, access controls, and request/log retention policy.
 
 </details>
 
+## Fine-tuning with NVIDIA Nemotron-PII and a synthetic data mixture
+
+Harsh Singhal developed SPANIEL's data preparation, fine-tuning experiments, constrained decoder, and evaluation workflow. Version 2 fine-tunes **Qwen3-0.6B with full-parameter supervised fine-tuning (SFT)** using a recorded mixture of **389,521 training examples**.
+
+| Source | Approximate mixture share | Purpose in SPANIEL | Published dataset license |
+|---|---:|---|---|
+| [Gravitee PII Detection](https://huggingface.co/datasets/gravitee-io/pii-detection-dataset) | 44.6% | Broad PII coverage and varied text formats | Apache-2.0; upstream sources are documented separately |
+| [NVIDIA Nemotron-PII](https://huggingface.co/datasets/nvidia/Nemotron-PII) | 25.7% | Fine-grained synthetic PII/PHI spans; deterministic date-label correction | CC BY 4.0 |
+| [Ai4Privacy OpenPII 1.5M](https://huggingface.co/datasets/ai4privacy/pii-masking-openpii-1.5m) | 28.2% | English examples from an additional synthetic corpus | CC BY 4.0, credited to Ai4Privacy / Ai Suisse SA |
+| Project-generated synthetic documents | 1.5% after 3× sampling | 1,966 documents targeting gaps in JSON logs, checkbox forms, and prose | Artifact is not distributed in this repository |
+
+NVIDIA's dataset supplies synthetic records with detailed span annotations. SPANIEL uses its training partition in the mixture and a subset of its test partition for the reported evaluations. Public source availability, synthetic generation, and downstream accuracy are distinct properties; synthetic data still requires label review and evaluation on the deployment domain.
+
+The training design includes approximately 22 natural-language aliases per label, requests containing absent labels, subsets of requested types, and optional definition conditioning. These teach the model both what to select and when to leave text untagged. The pipeline preserves each source's label vocabulary in the request, corrects specified date-family inconsistencies, filters incompatible spans, and constructs source-preserving targets.
+
+The recorded v2 run used bf16, a 3,072-token sequence limit, effective batch size 32, a cosine learning-rate schedule starting at `1e-5`, and one epoch on an H100 NVL (approximately 11 hours of training).
+
+See [Training data, attribution, and evaluation](docs/training-data-and-evaluation.md) for exact source revisions, modifications, upstream credits, reproducibility limits, and the distinction between the published four-source run and the available three-source rebuild.
+
 ## Results
 
-Strict span-level exact-match F1 · 300-document held-out eval · constrained decoding.
+**Strict typed span exact-match F1 on 300 held-out documents, using constrained decoding.** These are the published July 2026 experiments; this documentation update does not report a new benchmark.
 
-| Model | Trained names | Adjudicated gold | Unseen names |
-|:--|:-:|:-:|:-:|
-| gpt-oss-120b, zero-shot | 0.580 | — | — |
-| v1 (0.6B, 273k examples) | 0.944 | 0.924 | 0.747 |
-| **v2 (0.6B, 389k, 4 sources)** | 0.930 | 0.918 | **0.864** |
+| Model | Original gold | Adjudicated gold | Unseen entity names |
+|---|---:|---:|---:|
+| gpt-oss-120b, prompted zero-shot | 0.580 | — | — |
+| SPANIEL v1, 0.6B | 0.944 | 0.924 | 0.747 |
+| **SPANIEL v2, 0.6B** | **0.930** | **0.918** | **0.864** |
 
-- Copy drift and malformed output under the constrained decoder: **0.0%** —
-  incomplete generations are treated as failures, never as faithful output.
-- The 120B number is an end-to-end tagged-regeneration score: 141/300 of its
-  rows drifted or were malformed. Its conditional F1 on parseable rows was
-  0.891, separating semantic extraction quality from output-contract reliability.
-- The three columns are three measuring sticks over one inference procedure:
-  the original (noisy) gold, an adjudicated and human-spot-checked gold, and
-  requests phrased with entity names absent from all training aliases.
-- v2's −1.4 on the first column is by design (it un-learned annotation
-  noise); its +11.7 on the last column is the point.
+- V2 improves unfamiliar-name F1 by **11.7 percentage points** relative to v1. Multiple training changes were made together; this does not isolate the contribution of aliases or any individual dataset.
+- Adjudicated gold was corrected and human-spot-checked. It is not a wholly independently human-annotated benchmark.
+- Unseen names test new wording for entity types; they do not establish arbitrary unseen-concept understanding.
+- The 120B result is an end-to-end tagged-regeneration comparison: 141/300 rows drifted or were malformed. Its F1 on parseable rows was 0.891. This is not evidence that SPANIEL generally outperforms a 120B model.
+- Completed constrained outputs had 0.0% reported copy drift and malformed output. Incomplete output is a failure. Source fidelity does not measure sensitive-data recall.
+
+The [evaluation notes](docs/training-data-and-evaluation.md#evaluation-and-interpretation) explain these boundaries. Before deploying a data protection control, measure per-category recall, benign false-alert rates, document coverage, and latency on representative inputs.
+
+## Limitations and deployment scope
+
+- **English only:** multilingual source data was filtered for this release.
+- **Personal-attribute semantics:** current guidelines target information about people or their records. General world-fact mentions may intentionally remain untagged. See [annotation rules](guidelines_v2.md).
+- **Paraphrase limits:** unfamiliar wording far from the training distribution can fail. Requesting a type does not establish that the model can recognize it reliably.
+- **Output structure:** the current decoder handles non-overlapping contiguous spans and requires at least two characters per entity. Nested and linked discontinuous evidence are research goals.
+- **Coverage:** broad categories such as confidential strategy, layoff discussions, or performance reviews are not validated capabilities of this PII checkpoint. It is not a prompt-injection detector or a complete DLP system.
+- **Privacy boundary:** local inspection avoids sending submitted text to a hosted detector in the provided demo. Deployment networking, logs, subsequent AI calls, and access control determine the application's wider privacy boundary.
 
 ## The journey, as blog entries
 
-| # | Entry | One-line summary |
-|:-:|:--|:--|
-| 1 | [A $2.50 fine-tune that beats a 120B model](journal/2026-07-08-tagged-regeneration-recipe.md) | The tagged-regeneration format, label conditioning, alias sampling — and 0.6B tying 1.7B. |
-| 2 | [What a sushi chain taught our PII model](journal/2026-07-09-attribute-vs-mention-semantics.md) | Attribute vs. mention semantics; the questions a dataset silently answers. With reading list. |
-| 3 | [Making drift unrepresentable](journal/2026-07-12-constrained-decoding.md) | The copy-or-tag automaton, the vocabulary trie, and two constrained-decoding bugs that generalize. |
-| 4 | [The $10 audit](journal/2026-07-18-ten-dollar-audit.md) | Frontier models in batch mode: gold was 9% wrong, the model had learned the noise, nano models can't judge. |
-| 5 | [v2: buying back the generalization gap](journal/2026-07-19-v2-generalization.md) | Four sources, ratified guidelines, +11.7 on unseen entity names. |
-| 6 | [Teaching a small model to think — four experiments, two sizes](journal/2026-07-21-thinking-negative-result.md) | Imitation, RL, a 3× bigger model, and a reasoning specialist. Size breaks the 0.6B wall; thinking still doesn't beat direct answering; and a math-reasoning specialist is *worse*, not better — reasoning skill doesn't transfer across domains. |
+The journal records the experiments as they happened, including historical headlines, costs, and negative results. The current results section above gives the scope of the comparisons.
 
-## Repository layout
-
-| Path | What |
-|:--|:--|
-| `spans_to_xml.py` | Span → tagged-text conversion (the core representation) |
-| `convert_pii_datasets.py` · `convert_ai4privacy.py` | Dataset converters |
-| `build_sft_dataset.py` · `build_sft_dataset_v2.py` | Seeded, reproducible training-mixture builders |
-| `label_aliases.json` · `label_aliases_v2.json` | Alias sets per label — the generalization mechanism |
-| `guidelines_v2.md` | Canonical annotation rules, human-ratified |
-| `pii_decode.py` | Constrained decoder: vocabulary trie + copy-or-tag automaton |
-| `pii_eval.py` | Span-level scorer (strict/relaxed, per-label, operational failure rates) |
-| `error_autopsy.py` | Disagreement classifier (boundary / miss / swap / spurious) |
-| `run_constrained_eval.py` · `run_baseline.py` | Evaluation runners |
-| `build_batch_jobs.py` | OpenAI batch-mode jobs (adjudication, audit, aliases, synthesis) |
-| `pii_tagger/` | The local web app (FastAPI, constrained by default) |
-| `vast_run/` | GPU training scripts (TRL SFT, env-configurable) |
-| `tests/` | Fast regression tests for decoding, scoring, and reward invariants |
-| `artifact_manifest.json` | Source revisions plus row counts and SHA-256 checksums |
-| `journal/` | The blog entries above |
-
-Large artifacts (converted datasets, training mixtures, model weights,
-predictions) are intentionally not in the repo. Their expected hashes and
-upstream revisions are recorded in `artifact_manifest.json`.
+| Research note | What it documents |
+|---|---|
+| [Fine-tuning a small model for tagged extraction](journal/2026-07-08-tagged-regeneration-recipe.md) | Training representation, label conditioning, and early size comparisons |
+| [Attribute versus mention semantics](journal/2026-07-09-attribute-vs-mention-semantics.md) | How annotation choices define what counts as PII |
+| [Making copy drift unrepresentable](journal/2026-07-12-constrained-decoding.md) | The copy-or-tag automaton, tokenizer handling, and decoding bugs |
+| [Auditing annotation quality](journal/2026-07-18-ten-dollar-audit.md) | Evaluation-label errors and adjudication |
+| [The v2 training mixture and generalization](journal/2026-07-19-v2-generalization.md) | Four sources, wider queries, and the unseen-name result |
+| [Thinking-mode experiments and negative results](journal/2026-07-21-thinking-negative-result.md) | Reasoning experiments and the limits observed at small model sizes |
 
 ## Reproducing
 
+Install the data dependencies in a virtual environment and build a three-source variant:
+
 ```bash
-# 0. Create an environment. Install the appropriate CUDA PyTorch wheel
-# separately before the training requirements.
 python3 -m venv .venv
 .venv/bin/pip install -r requirements-data.txt
-
-# 1. Rebuild the original held-out eval set and the v2 mixture.
 .venv/bin/python build_sft_dataset.py --outdir sft_data
 .venv/bin/python convert_ai4privacy.py \
   --split train --out pii_xml/ai4privacy_en.jsonl
-.venv/bin/python build_sft_dataset_v2.py --outdir sft_data_v2
+.venv/bin/python build_sft_dataset_v2.py --skip-synth --outdir sft_data_v2
+```
 
-# The published four-source mixture requires pii_xml/synth_docs.jsonl, the
-# 1,966-document batch-generated artifact. Use --skip-synth for the fully
-# public three-source mixture when that artifact is unavailable.
+For the original four-source mixture, supply the 1,966-document `pii_xml/synth_docs.jsonl` artifact and omit `--skip-synth`. The three-source variant is not the published model's exact training set and should not be expected to reproduce its scores. [The artifact manifest](artifact_manifest.json) records revisions, row counts, and hashes. `verify_artifacts.py` checks available artifacts against that manifest; the three-source training file will not match the four-source training hash.
 
-# 2. Verify byte identity against the published artifacts.
-.venv/bin/python verify_artifacts.py
+On a CUDA training host with an appropriate PyTorch installation:
 
-# 3. Train (any CUDA box; ~11 h on one H100 NVL).
+```bash
 .venv/bin/pip install -r requirements-train.txt
 SFT_MODEL=Qwen/Qwen3-0.6B \
 SFT_TRAIN=sft_data_v2/sft_train_v2.jsonl \
@@ -188,26 +210,42 @@ SFT_RUN_DIR=runs/spaniel-v2 \
 SFT_BS=16 SFT_ACCUM=2 \
   .venv/bin/python vast_run/train_sft.py
 
-# 4. Evaluate with the constrained decoder.
 .venv/bin/python run_constrained_eval.py \
   --model runs/spaniel-v2/final --n 300 --out preds.jsonl
 .venv/bin/python pii_eval.py --pred preds.jsonl --n 300
-
-# Fast local validation that does not download models or datasets.
-make test
 ```
+
+This runs the original-gold evaluation path; the adjudicated and unfamiliar-name experiments require their corresponding gold/request variants. For quick code checks without downloading models or datasets, run `make test`.
+
+## Repository layout
+
+| Path | Purpose |
+|---|---|
+| `pii_decode.py`, `tokenizer_compat.py` | Constrained decoding and tokenizer compatibility |
+| `pii_tagger/` | Local FastAPI service and demonstration UI |
+| `build_sft_dataset_v2.py`, `convert_ai4privacy.py` | Training-mixture construction and source conversion |
+| `guidelines_v2.md`, `label_aliases_v2.json` | Annotation conventions and natural-language labels |
+| `vast_run/train_sft.py` | Full-parameter fine-tuning |
+| `pii_eval.py`, `run_constrained_eval.py`, `error_autopsy.py` | Scoring, inference, and error analysis |
+| `artifact_manifest.json`, `verify_artifacts.py` | Source pins and artifact verification |
+| `docs/training-data-and-evaluation.md` | Data provenance, source licenses, and evaluation methodology |
+| `docs/huggingface-model-card.md` | Maintained source for the published model card |
+| `journal/`, `tests/` | Experiment records and regression checks |
 
 ## Status & roadmap
 
-Active. Next up:
+The published release establishes a local PII extraction baseline. The next milestones are:
 
-- **Per-checkpoint capability curves** — the hub history preserves every
-  500-step snapshot; a retroactive sweep charts when each capability emerged
-  during training.
-- **Size / architecture grid** — Granite-4.0-H-350M (hybrid Mamba-2) and
-  Gemma-3-270M on the identical recipe: where is the capability floor, and do
-  SSM hybrids hold up on constrained extraction?
-- **From entities to topics** — extending the span vocabulary from PII to
-  sensitive *discussions* (compensation, pricing, layoffs) in call
-  transcripts, via reasoning-SFT + RL with the span scorer as verifiable
-  reward.
+1. **Governed AI request demonstration:** connect local findings to versioned policies, deterministic redaction or blocking, and an audit record that minimizes retained sensitive data.
+2. **Security-focused evaluation:** measure missed disclosures, benign interruptions, input manipulation, inference failures, and local latency on reviewed prompt/context/tool-output cases.
+3. **Semantic evidence:** evaluate encoders, constrained decoders, and hybrids for confidential topics and linked evidence, using a separate benchmark from entity extraction.
+
+These milestones describe future work rather than capabilities of the downloadable v2 checkpoint.
+
+## Author and attribution
+
+**[Harsh Singhal](https://www.linkedin.com/in/harshsinghal/)** builds SPANIEL as applied research in AI governance, AI security, local sensitive-data detection, and small-language-model fine-tuning. Explore the [GitHub profile](https://github.com/harshsinghal) and [Hugging Face profile](https://huggingface.co/Harsh) for related work.
+
+When referencing the project, cite **Harsh Singhal, “SPANIEL: Local PII Detection for AI Prompts,” 2026**, and include the model/repository revision used. A machine-readable citation is in [CITATION.cff](CITATION.cff).
+
+The model card declares Apache-2.0 for the model. Dataset terms remain source-specific; see the [attribution record](docs/training-data-and-evaluation.md#source-attribution-and-license-record). Naming upstream datasets or models does not imply endorsement by their creators.
