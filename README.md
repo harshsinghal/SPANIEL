@@ -10,24 +10,24 @@ SPANIEL (*SPAN Identification from Everyday Language*) is a 0.6B-parameter model
 
 The project connects **LLM fine-tuning, synthetic training data, evaluation, and local inference** to a practical data governance question: what information is present in a prompt before an application sends it to another system?
 
-**Current release:** an English PII annotation model and local API. Applications can use its findings to support data loss prevention (DLP), prompt inspection, and redaction workflows. Policy enforcement, automatic redaction, and broader confidential-topic detection are development goals; annotation alone does not remove sensitive content.
+**Current release:** an English PII annotation model, local API, and a [Python governed-retrieval example](docs/governed-retrieval.md). The example inspects text inside a retrieval tool and returns `content: null` when a configured policy matches or inspection fails. Automatic redaction and broader confidential-topic detection remain development goals; annotation alone does not remove sensitive content.
 
-[Model on Hugging Face](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2) · [Try locally](#try-it-the-demo-app) · [Results](#results) · [Training data and evaluation](docs/training-data-and-evaluation.md) · [Research journal](#the-journey-as-blog-entries)
+[Model on Hugging Face](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2) · [Try locally](#try-it-the-demo-app) · [Governed retrieval](docs/governed-retrieval.md) · [Results](#results) · [Training data and evaluation](docs/training-data-and-evaluation.md) · [Research journal](#the-journey-as-blog-entries)
 
 ## Why local sensitive-data detection matters
 
 Prompts can include personal records, customer details, employee information, and credentials. Retrieved passages and tool outputs can introduce the same information even when the user's original question contains none of it. A local detector lets an application inspect that content within its own environment.
 
-SPANIEL is the detection component of a proposed governance workflow:
+SPANIEL supplies detection for a governance workflow. The Python example implements the retrieval-tool portion:
 
 ```text
 Prompt, retrieved context, or tool output
                   |
           Local SPANIEL inspection       [available]
                   |
-      Application policy + destination   [integration work]
+      Configured entity policy          [retrieval example]
                   |
-       Allow / redact / block / review   [integration work]
+      Return text or withhold           [retrieval example]
 ```
 
 The model identifies spans; the application decides what to do with them. A name is not automatically prohibited information, and finding no spans is not proof that a document is safe to share. Useful deployment evidence includes missed sensitive items, false alerts on benign text, latency, and behavior when inference fails.
@@ -124,6 +124,30 @@ PII_MODEL_CACHE=./models \
 For CUDA, install the suitable PyTorch build before the demo requirements. The source server selects CUDA, then Apple MPS, then CPU when available. Production integrations need their own authentication, access controls, and request/log retention policy.
 
 </details>
+
+## Protect a Python retrieval tool
+
+The [governed-retrieval example](docs/governed-retrieval.md) reads a local text document, calls SPANIEL, validates the annotation, and returns the original text only when no requested entity is detected. Matches and inspection failures return null content with a reason. Policy and detector settings are fixed by the application, outside the agent's tool arguments.
+
+```python
+from spaniel_guard import CREDENTIALS, make_document_tool
+
+read_document = make_document_tool(
+    root="examples/governed_retrieval/documents", policy=CREDENTIALS,
+)
+result = read_document("sensitive_password.txt")
+```
+
+Start the local service above, then try benign, sensitive, ambiguous, and error cases:
+
+```bash
+python3 examples/governed_retrieval/demo.py benign_public.txt
+python3 examples/governed_retrieval/demo.py --suite --report /tmp/spaniel-retrieval-results.json
+```
+
+The suite reports missed sensitive content, false blocks, and inspection failures separately. It uses small synthetic examples, not a general accuracy benchmark. The [integration guide](docs/governed-retrieval.md#agent-registration-and-mcp-exposure) explains Python agent registration and MCP exposure; no agent configuration is installed automatically. Enforcement tests run without model weights as part of `make test`.
+
+**Boundary:** a policy rejection returns no document content through this tool response. A missed detection can still release sensitive content, and alternate readers or shell tools need their own controls.
 
 ## Fine-tuning with NVIDIA Nemotron-PII and a synthetic data mixture
 
@@ -223,6 +247,7 @@ This runs the original-gold evaluation path; the adjudicated and unfamiliar-name
 |---|---|
 | `pii_decode.py`, `tokenizer_compat.py` | Constrained decoding and tokenizer compatibility |
 | `pii_tagger/` | Local FastAPI service and demonstration UI |
+| `spaniel_guard.py`, `examples/governed_retrieval/` | Policy-controlled Python retrieval tool and synthetic smoke cases |
 | `build_sft_dataset_v2.py`, `convert_ai4privacy.py` | Training-mixture construction and source conversion |
 | `guidelines_v2.md`, `label_aliases_v2.json` | Annotation conventions and natural-language labels |
 | `vast_run/train_sft.py` | Full-parameter fine-tuning |
@@ -236,11 +261,11 @@ This runs the original-gold evaluation path; the adjudicated and unfamiliar-name
 
 The published release establishes a local PII extraction baseline. The next milestones are:
 
-1. **Governed AI request demonstration:** connect local findings to versioned policies, deterministic redaction or blocking, and an audit record that minimizes retained sensitive data.
+1. **Governed retrieval integration:** the Python example now connects local findings to versioned entity policies and deterministic withholding. Next, validate agent/MCP adapters and broader access-path coverage; redaction and review workflows remain future work.
 2. **Security-focused evaluation:** measure missed disclosures, benign interruptions, input manipulation, inference failures, and local latency on reviewed prompt/context/tool-output cases.
 3. **Semantic evidence:** evaluate encoders, constrained decoders, and hybrids for confidential topics and linked evidence, using a separate benchmark from entity extraction.
 
-These milestones describe future work rather than capabilities of the downloadable v2 checkpoint.
+The retrieval wrapper is application code around the downloadable v2 checkpoint. Its enforcement behavior and the checkpoint's detection accuracy are separate properties; the remaining milestones are future work.
 
 ## Author and attribution
 
