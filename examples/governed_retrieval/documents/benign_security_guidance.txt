@@ -1,0 +1,1 @@
+Never paste passwords or API keys into support tickets. Store credentials in the approved vault.

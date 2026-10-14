@@ -1,0 +1,1 @@
+Documentation template: password=YOUR_PASSWORD_HERE. Replace the placeholder with your own value; no actual password is included.

@@ -1,0 +1,1 @@
+This sample contains literal annotation markup: <password>example-value</password>.
