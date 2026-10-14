@@ -115,7 +115,10 @@ def _finding_count(text, entities, result):
         recovered, spans = parse_tagged(result["tagged"], entities)
     except ValueError:
         raise InspectionError() from None
-    if recovered != text or any(end - start < 2 for start, end, _ in spans):
+    if recovered != text or any(
+        end - start < 2 or not text[start:end].strip()
+        for start, end, _ in spans
+    ):
         raise InspectionError()
     return len(spans)
 

@@ -96,6 +96,17 @@ The default local HTTP client accepts only literal loopback addresses, such as
 `http://127.0.0.1:8377/api/tag`. It disables environment proxies and refuses HTTP
 redirects. It requires `constrained: true`, `faithful: true`, the expected label
 list, well-formed tags, and an independently verified exact copy of the source.
+The tag check is deterministic: a parser pairs opening/closing tags for the
+requested labels and records their character offsets. Removing those annotation
+tags must recover the entire original string exactly. Each finding must enclose
+at least two original characters and contain a non-whitespace character. Empty,
+whitespace-only, newly introduced self-closing, nested, or unbalanced tags and
+invented text cause inspection failure with null content. Literal requested tags
+already present in the source also cause failure because they make this
+representation ambiguous. These are XML-like annotations, not general XML:
+labels such as `api key` contain spaces, so the checker uses the project's tag
+grammar rather than an XML document parser. A structurally valid output with no
+findings can still be a model false negative.
 There is no fallback to unconstrained generation or a hosted detector. Trust
 and provision the local service itself: this protocol does not authenticate or
 attest its model version.

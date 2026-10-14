@@ -78,6 +78,35 @@ class GateTests(unittest.TestCase):
             self.assertEqual(result["code"], "INSPECTION_FAILED")
             self.assertIsNone(result["content"])
 
+    def test_whitespace_only_annotations_are_invalid(self):
+        for whitespace in ("  ", "\t\n", "\u00a0\u2003"):
+            text = "Value:" + whitespace + "end"
+            tagged = "Value:<password>" + whitespace + "</password>end"
+            with self.subTest(whitespace=repr(whitespace)):
+                result = ContentGate(tagger=lambda t, e: annotation(t, e, tagged)).inspect(text)
+                self.assertEqual(result["code"], "INSPECTION_FAILED")
+                self.assertIsNone(result["content"])
+
+    def test_self_closing_tags_added_by_model_are_invalid(self):
+        for tag in ("<password/>", "<password />", "<api key/>"):
+            with self.subTest(tag=tag):
+                result = ContentGate(tagger=lambda t, e: annotation(t, e, tag + t)).inspect(self.text)
+                self.assertEqual(result["code"], "INSPECTION_FAILED")
+                self.assertIsNone(result["content"])
+
+    def test_invented_text_inside_balanced_tag_is_invalid(self):
+        text = "Temporary password: "
+        tagged = text + "<password>Invented!Value73</password>"
+        result = ContentGate(tagger=lambda t, e: annotation(t, e, tagged)).inspect(text)
+        self.assertEqual(result["code"], "INSPECTION_FAILED")
+        self.assertIsNone(result["content"])
+
+    def test_nonempty_source_span_can_include_surrounding_whitespace(self):
+        text = "Value:  Maple!River73  ."
+        tagged = "Value:<password>  Maple!River73  </password>."
+        result = ContentGate(tagger=lambda t, e: annotation(t, e, tagged)).inspect(text)
+        self.assert_withheld(result, "SENSITIVE_CONTENT_DETECTED")
+
     def test_source_markup_is_withheld_even_when_model_returns_it_unchanged(self):
         result = ContentGate(tagger=annotation).inspect("<password>literal</password>")
         self.assertEqual(result["code"], "INSPECTION_FAILED")
