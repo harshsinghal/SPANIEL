@@ -58,6 +58,8 @@ Long variants insert 250 or 900 words of generated public-information filler, wi
 
 Annotations store exact source offsets. Companion context ranges describe surrounding evidence, including earlier messages; those ranges are not independent gold rationales. The current model still emits separate, non-overlapping contiguous spans and does not output linked evidence groups.
 
+Coverage remains narrow within some credential categories. Private-key examples use short synthetic `BEGIN PRIVATE KEY` blocks; other delimiters, encrypted keys and full-length real key formats are not validated. Password hashes, encoded secret payloads, partially masked values, Unicode obfuscation and provider-specific credential formats need additional scenarios. The one literal `CHANGEME` password family deduplicates to one positive and one negative example, which is not broad evidence about weak or placeholder-looking actual passwords. Aggregate credential scores must be read alongside per-family results.
+
 ## Training and verification
 
 The pinned base is `Harsh/qwen3-0.6b-pii-sft-v2` at `a58063469be8c7b929016d944d8d6d1545bc70a0`. The candidate uses rank-16 LoRA on attention and feed-forward projections, alpha 32, dropout 0.05, two epochs, learning rate `5e-5`, effective batch size 16, bf16 and a 4,096-token maximum.

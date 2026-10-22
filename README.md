@@ -22,7 +22,7 @@ The [coverage audit](docs/coverage-audit.md) examined all 389,521 v2 training ro
 
 The project distinguishes measured capabilities from experimental and best-effort behavior. Credentials are the first area of deeper investment; broader legal, layoff and review confidentiality remain research targets. Transcript examples are simulated text, not a real audio benchmark.
 
-[Capability and evidence record](CAPABILITIES.md) · [Progress and releases](CHANGELOG.md) · [Experiment protocol](experiments/credential-context-protocol.json)
+[Capability and evidence record](CAPABILITIES.md) · [Progress and releases](CHANGELOG.md) · [Experiment protocol](experiments/credential-context-protocol.json) · [Research milestones](docs/research-roadmap.md)
 
 An [initial GLiNER2.5 baseline](docs/gliner-context-baseline.md) uses the same frozen concept scenarios with fixed label-only and policy-description configurations. It reports sensitive-document recall, benign false blocks and exact spans separately. This compares an off-the-shelf encoder with the new task-specific experiment; it does not establish architecture superiority.
 
