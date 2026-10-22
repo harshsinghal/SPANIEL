@@ -1,0 +1,14 @@
+[
+  {"id":"public_job_range","document":"public_job_range.txt","policy":"compensation","expected":"allowed"},
+  {"id":"private_negotiation","document":"private_negotiation.txt","policy":"compensation","expected":"blocked"},
+  {"id":"public_quote_private_chat","document":"public_quote_private_chat.txt","policy":"compensation","expected":"allowed"},
+  {"id":"authorized_named_pay","document":"authorized_named_pay.txt","policy":"compensation","expected":"allowed"},
+  {"id":"unknown_salary_context","document":"unknown_salary_context.txt","policy":"compensation","expected":null},
+  {"id":"actual_placeholder_password","document":"actual_placeholder_password.txt","policy":"credentials","expected":"blocked"},
+  {"id":"unfilled_template","document":"unfilled_template.txt","policy":"credentials","expected":"allowed"},
+  {"id":"passphrase_transcript","document":"passphrase_transcript.txt","policy":"credentials","expected":"blocked"},
+  {"id":"public_key","document":"public_key.txt","policy":"credentials","expected":"allowed"},
+  {"id":"private_key","document":"private_key.txt","policy":"credentials","expected":"blocked"},
+  {"id":"source_markup_error","document":"source_markup_error.txt","policy":"credentials","expected":"error"},
+  {"id":"missing_document","document":"does-not-exist.txt","policy":"credentials","expected":"error"}
+]

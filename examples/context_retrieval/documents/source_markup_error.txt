@@ -1,0 +1,1 @@
+This manual literally contains <password>example</password>. Its source markup collides with the requested annotation syntax.

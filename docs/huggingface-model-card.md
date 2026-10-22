@@ -38,7 +38,7 @@ An October 2026 audit examined all 389,521 training rows and identified specific
 
 The new task distinguishes private compensation from public salary ranges, including informal and noisy transcript text. This is a separate experimental concept; the PII results below do not validate it. The original v2 weights and their historical results remain unchanged. Candidate training/results are in progress; no accuracy gain is claimed yet.
 
-The GitHub [progress record](https://github.com/harshsinghal/SPANIEL) tracks the audit, data, policies, fine-tuning recipe, evaluation and capability limits. Credentials are the first area of deeper investment. Broader confidential-topic detection and real audio/ASR robustness remain research targets.
+The [current milestone and results work](https://github.com/harshsinghal/SPANIEL/pull/2) tracks the audit, data, policies, GPU.ai fine-tuning recipe, evaluation and capability limits. Credentials are the first area of deeper investment. Broader confidential-topic detection and real audio/ASR robustness remain research targets.
 
 [GitHub repository](https://github.com/harshsinghal/SPANIEL) · [Constrained local demo](https://github.com/harshsinghal/SPANIEL#try-it-the-demo-app) · [Training data and attribution](https://github.com/harshsinghal/SPANIEL/blob/main/docs/training-data-and-evaluation.md) · [Research journal](https://github.com/harshsinghal/SPANIEL#the-journey-as-blog-entries)
 

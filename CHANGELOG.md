@@ -9,6 +9,7 @@ This file records artifacts and evidence, including negative results. Historical
 - Added informal/transcription-like text, repeated values in different contexts, public versus private keys, and controlled long-document variants.
 - Validated the historical mixture; rejected 64 incompatible targets from replay eligibility and sampled 1,536 public-source training rows.
 - Added explicit completion-loss masking, no-truncation preflight, a LoRA trainer, a common constrained evaluator and a GPU.ai run recipe.
+- Measured a pinned GLiNER2.5 off-the-shelf baseline with fixed label-only and policy-description configurations, plus original PII regression; documented false blocks separately from recall.
 - Training and candidate performance are pending. No new checkpoint quality is claimed by these preparation results.
 
 ## 2026-10-16 — Coverage audit

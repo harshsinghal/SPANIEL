@@ -14,7 +14,7 @@ This record distinguishes an extraction interface from demonstrated capability. 
 | Linked/discontinuous evidence | Companion data representation only | Current decoder emits contiguous spans; model-generated evidence groups are not implemented |
 | Legal strategy, layoffs, reviews and general business confidentiality | No validated concept-specific training/evaluation release | Research targets; do not present arbitrary-label requests as supported protection |
 | Multilingual inputs | No validated multilingual release; audit found source language metadata errors | English is the intended scope, not proof every source row is English |
-| GLiNER/encoder comparisons | Not yet run under a shared protocol | No claim of superiority over these models |
+| GLiNER/encoder comparisons | [GLiNER2.5 off-the-shelf baseline](docs/gliner-context-baseline.md), same frozen concept cases and source-offset scoring | Initial baseline; no equal-data architecture comparison or speed claim |
 
 “Experimental” means a specific testable hypothesis and artifact exist. “Best effort” means the interface may return findings, but reliability for that scope has not been established. Neither label grants permission to send data: the application owns the policy and handles uncertainty.
 

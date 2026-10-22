@@ -24,6 +24,8 @@ The project distinguishes measured capabilities from experimental and best-effor
 
 [Capability and evidence record](CAPABILITIES.md) · [Progress and releases](CHANGELOG.md) · [Experiment protocol](experiments/credential-context-protocol.json)
 
+An [initial GLiNER2.5 baseline](docs/gliner-context-baseline.md) uses the same frozen concept scenarios with fixed label-only and policy-description configurations. It reports sensitive-document recall, benign false blocks and exact spans separately. This compares an off-the-shelf encoder with the new task-specific experiment; it does not establish architecture superiority.
+
 ## Why local sensitive-data detection matters
 
 Prompts can include personal records, customer details, employee information, and credentials. Retrieved passages and tool outputs can introduce the same information even when the user's original question contains none of it. A local detector lets an application inspect that content within its own environment.

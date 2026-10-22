@@ -283,6 +283,14 @@ gate = ContentGate(policy=experimental_compensation)
 
 Requesting this label from v2 does not confer a validated compensation detector. Use the [capability record](../CAPABILITIES.md) and the specific adapter's evaluation to decide whether a policy belongs in your deployment. The gate has no calibrated uncertainty signal; an empty annotation on ambiguous text can still release content. Neither a private conversation nor the word “salary” is sufficient by itself to determine the policy outcome.
 
+The [context integration examples](../examples/context_retrieval/cases.json) exercise the actual file reader and gate with public salary bands, private negotiations, public information quoted in private conversations, an actual password equal to `CHANGEME`, an unfilled template, informal passphrases, and public/private key shapes. All values are fictional; key bodies are non-operational text fixtures. After starting the experimental model service, run:
+
+```bash
+python examples/context_retrieval/demo.py --report /tmp/spaniel-context-smoke.json
+```
+
+The report includes the server's declared configuration, decision codes and content-return flags, without document text. It requests three credential labels together, unlike the frozen concept evaluation's single-label requests, so it is a distinct integration smoke test. One context-deficient salary case has no asserted expected decision and is excluded from the score. It illustrates the absence of calibrated abstention; the tool does not automatically route that case for review.
+
 ### Retrieval boundary
 
 - **Text only:** UTF-8 `.txt`, `.md`, `.json`, `.csv`, and `.log`, at most 32,000

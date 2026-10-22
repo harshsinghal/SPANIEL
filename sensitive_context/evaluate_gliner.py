@@ -72,7 +72,7 @@ def main():
     for row in rows:
         entities = row['entities'] if a.schema=='labels' else {name: POLICY.get(name, name) for name in row['entities']}
         schema = model.create_schema().entities(entities)
-        prepared = model.processor.transform_for_inference(row['text'], schema, max_len=None)
+        prepared = model.processor.transform_record(row['text'], schema, max_len=None)
         max_tokens = max(max_tokens, len(prepared.input_ids))
         if len(prepared.input_ids) > model.config.max_len:
             raise ValueError('input exceeds the checkpoint sequence limit; not truncated')

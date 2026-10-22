@@ -17,6 +17,8 @@ The policy does not infer secrecy from token entropy or the word “salary.” T
 
 These are application conventions for this experiment. They do not establish legal confidentiality or a universally correct disclosure policy. Ambiguous cases are explicitly separated for review. Empty model output is not calibrated abstention.
 
+The concept benchmark requests one of these exact labels at a time. In particular, `private compensation` is different from asking for every `salary` mention. Robustness to alternative names for these new policy concepts, or to many simultaneous labels, is not established by the single-label score. The separate retrieval smoke test exercises a three-label credential request.
+
 ## Dataset and splits
 
 The reproducible generator is [sensitive_context/build.py](../../sensitive_context/build.py); authored scenario families are in [scenarios.py](../../sensitive_context/scenarios.py). Values are fictional and non-operational. Private-key bodies exercise the text shape, not cryptographic validity.
@@ -31,6 +33,8 @@ The reproducible generator is [sensitive_context/build.py](../../sensitive_conte
 | Legacy regression evaluation | 300 | Original evaluation texts | Check for loss of established PII extraction behavior |
 
 Substitutions, positive/negative variants and long forms of one family stay in a single split. Exact duplicates are removed, and the training/replay texts are checked against evaluation texts. Template substitutions are correlated examples, not thousands of independent human-authored scenarios. The new labels have not received independent human adjudication.
+
+The new training rows contain 3,221 sensitive and 2,027 benign documents. Categories are not uniformly balanced: deduplication collapses repeated benign templates more than varied sensitive values. For example, the revoked-credential category has 100 sensitive rows but only four distinct benign rows; access tokens have 200 and five. The [coverage counts](../../reports/context-coverage.json) expose this limitation. More independently authored benign scenarios remain valuable even if this candidate passes the small test. The separate legacy replay accounts for 22.6% of training rows.
 
 Transcript cases include informal number expressions, speaker turns, delayed context, corrections, missing punctuation, spelling errors and line wrapping. **These are simulated text transcripts. No audio, real ASR system or real transcription corpus is evaluated.**
 
