@@ -100,6 +100,8 @@ class SensitiveContextTests(unittest.TestCase):
         with self.assertRaises(ValueError):aligned(original,changed)
         changed=copy.deepcopy(original);changed['runtime']['device']='mps'
         with self.assertRaises(ValueError):aligned(original,changed)
+        changed=copy.deepcopy(original);changed['runtime']['decoder_sha256']='changed-decoder'
+        with self.assertRaises(ValueError):aligned(original,changed)
         changed=copy.deepcopy(original);changed['status']='running'
         with self.assertRaises(ValueError):aligned(original,changed)
 

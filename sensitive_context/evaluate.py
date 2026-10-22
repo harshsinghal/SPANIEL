@@ -7,6 +7,7 @@ import argparse
 from collections import defaultdict
 from datetime import datetime, timezone
 import hashlib
+from importlib.metadata import version
 import json
 from pathlib import Path
 import time
@@ -94,6 +95,15 @@ def main():
         return h.hexdigest()
     runtime=dict(created_at=datetime.now(timezone.utc).isoformat(),model=a.model,revision=a.revision,adapter=a.adapter,
                  device=device,dtype=str(dtype),data_sha256=sha(a.data.read_text()),
+                 torch_version=torch.__version__,transformers_version=version('transformers'),
+                 hardware=torch.cuda.get_device_name(0) if device=='cuda' else device,
+                 attention_implementation='sdpa',max_new_tokens=a.max_new_tokens,
+                 dataset_kind='legacy_source_gold' if a.legacy else 'authored_concept_scenarios',
+                 model_config_sha256=file_hash(Path(model_dir)/'config.json'),
+                 tokenizer_config_sha256=file_hash(Path(model_dir)/'tokenizer_config.json'),
+                 tokenizer_json_sha256=file_hash(Path(model_dir)/'tokenizer.json'),
+                 decoder_sha256=file_hash(Path(__file__).resolve().parents[1]/'pii_decode.py'),
+                 tokenizer_compat_sha256=file_hash(Path(__file__).resolve().parents[1]/'tokenizer_compat.py'),
                  model_weights_sha256=file_hash(weights) if weights.exists() else None,
                  adapter_weights_sha256=file_hash(Path(a.adapter)/'adapter_model.safetensors') if a.adapter and Path(a.adapter).is_dir() else None,
                  evaluator_sha256=sha(Path(__file__).read_text()),effective_rope=effective_rope(model.config),use_cache=True,
@@ -133,7 +143,7 @@ def main():
     by_category={k:summarize([r for r in results if r['category']==k]) for k in sorted({r['category'] for r in results})}
     families={k:summarize([r for r in results if r['family']==k]) for k in sorted({r['family'] for r in results})}
     final=dict(runtime=runtime,summary=summarize(results),by_category=by_category,by_family=families,results=results,status='complete',
-               scope='Authored synthetic scenario-family evaluation; substitutions and dilution variants are correlated, not independent benchmark samples. No real audio or human gold validation.')
+               scope=('Legacy PII regression on the supplied original source gold; separate from historical adjudicated labels. Benign false-block rates are unavailable when there are no benign cases.' if a.legacy else 'Authored synthetic scenario-family evaluation; substitutions and dilution variants are correlated, not independent benchmark samples. No real audio or human gold validation.'))
     a.out.write_text(json.dumps(final,indent=2)+'\n');print(json.dumps(final['summary'],indent=2),flush=True)
 
 

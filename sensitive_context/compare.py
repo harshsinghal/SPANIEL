@@ -12,7 +12,9 @@ def aligned(baseline,candidate):
     for report in (baseline,candidate):
         if report['runtime'].get('effective_rope')!={'rope_theta':1000000,'rope_scaling':None}:
             raise ValueError('missing or incorrect effective RoPE for the pinned Qwen3 experiment')
-    for key in ('data_sha256','device','dtype','decoding','evaluator_sha256','model_weights_sha256','effective_rope','use_cache','model_compat_sha256'):
+    for key in ('data_sha256','device','dtype','decoding','evaluator_sha256','model_weights_sha256','effective_rope','use_cache','model_compat_sha256',
+                'torch_version','transformers_version','hardware','attention_implementation','max_new_tokens','dataset_kind',
+                'model_config_sha256','tokenizer_config_sha256','tokenizer_json_sha256','decoder_sha256','tokenizer_compat_sha256'):
         if baseline['runtime'].get(key)!=candidate['runtime'].get(key):
             raise ValueError('evaluation configuration differs: '+key)
     a={r['id']:r for r in baseline['results']};b={r['id']:r for r in candidate['results']}
