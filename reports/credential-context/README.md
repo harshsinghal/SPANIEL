@@ -13,7 +13,7 @@ These files support the [October milestone](../../docs/milestones/2026-10-21-cre
 | `gliner-labels-test.json`, `gliner-policy-test.json` | Off-the-shelf GLiNER2.5 on the same concept cases, at threshold 0.5; both predeclared schema modes are reported |
 | `gliner-labels-legacy.json` | GLiNER2.5 on the same 300 original PII evaluation documents |
 | `run_manifest.json`, `training_history.json` | GPU.ai training recipe, data hashes, completion-only supervision, epoch losses and selected checkpoint |
-| `evaluation-execution.json`, `environment.txt` | Evaluation scheduling and dependency environment; concurrent jobs make elapsed times unsuitable as latency benchmarks |
+| `evaluation-execution.json`, `training-environment.txt`, `concept-environment.txt`, `legacy-environment.txt` | Evaluation scheduling and dependency environment; concurrent jobs make elapsed times unsuitable as latency benchmarks |
 | `retrieval-existing-smoke.json`, `retrieval-context-smoke.json` | Actual local file-reader and policy-gate checks on Apple MPS; illustrative integration cases, not the frozen GPU benchmark |
 | `retrieval-existing-v2.json`, `retrieval-context-v2.json` | The same integration suites on the original v2 weights with verified corrected RoPE configuration |
 | `ambiguity-review.json` | Six observations with insufficient context and no binary gold; no accuracy score or calibrated abstention claim |

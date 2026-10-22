@@ -69,7 +69,8 @@
     "selected_checkpoint": "checkpoint-424",
     "selected_epoch": 1,
     "adapter_weights_sha256": "dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504",
-    "best_development_completion_loss": 0.025829212740063667
+    "best_development_completion_loss": 0.025829212740063667,
+    "execution_outcome": "experiments/credential-context-execution-outcome.json"
   },
   "v2_configuration_compatibility": {
     "revision": "fc31a21a2ac54850ba3c12781ae433413691189d",
