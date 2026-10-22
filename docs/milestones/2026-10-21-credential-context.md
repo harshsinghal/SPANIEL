@@ -4,6 +4,22 @@
 
 This milestone asks whether a small local model can distinguish actual credential exposure from benign lookalikes, and private compensation from public salary information. It follows the [coverage audit](../coverage-audit.md). It is a continued LoRA fine-tune of the existing Spaniel v2 checkpoint, with the original checkpoint retained as the baseline.
 
+```mermaid
+flowchart LR
+    A[Corpus audit and policy] --> B[Scenario families and source offsets]
+    B --> C[Training data plus PII replay]
+    B --> D[Development families]
+    B --> K[Reserved test families]
+    C --> E[GPU.ai LoRA training]
+    D --> F[Select by development loss]
+    E --> F
+    F --> G[Concept test and PII regression]
+    K --> G
+    H[Unchanged Spaniel v2] --> G
+    I[Off-the-shelf GLiNER2.5] --> G
+    G --> J[Evidence, limits and release decision]
+```
+
 ## Policy before labels
 
 | Requested label | Sensitive examples | Benign examples |

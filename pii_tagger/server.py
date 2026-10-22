@@ -57,6 +57,7 @@ model = AutoModelForCausalLM.from_pretrained(
     MODEL_DIR, dtype=torch.bfloat16).to(DEVICE).eval()
 ADAPTER = os.environ.get("PII_ADAPTER")
 ADAPTER_REVISION = os.environ.get("PII_ADAPTER_REVISION")
+ADAPTER_ID = "local-adapter" if ADAPTER and Path(ADAPTER).is_dir() else ADAPTER
 if ADAPTER:
     try:
         from peft import PeftModel
@@ -84,9 +85,10 @@ def model_metadata():
     return {
         "base_model": MODEL_ID or "local-checkpoint",
         "base_revision": MODEL_REVISION,
-        "adapter": ("local-adapter" if ADAPTER and Path(ADAPTER).is_dir() else ADAPTER),
+        "adapter": ADAPTER_ID,
         "adapter_revision": ADAPTER_REVISION,
-        "source_preserving_decoder": True,
+        "constrained_by_default": True,
+        "unconstrained_enabled": ALLOW_UNCONSTRAINED,
         "note": "Artifact identity does not establish detection accuracy; consult the model card.",
     }
 
