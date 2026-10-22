@@ -11,8 +11,14 @@ case "$phase" in
   *) echo 'Pass baseline or candidate' >&2; exit 2 ;;
 esac
 mkdir -p context-results
+case "${CONTEXT_EVAL_SUITE:-all}" in
+  all) splits=(dev test legacy) ;;
+  concept) splits=(dev test) ;;
+  legacy) splits=(legacy) ;;
+  *) echo 'CONTEXT_EVAL_SUITE must be all, concept or legacy' >&2; exit 2 ;;
+esac
 pids=()
-for split in dev test legacy; do
+for split in "${splits[@]}"; do
   data=$split; legacy_args=()
   if [[ "$split" == legacy ]]; then data=legacy-eval; legacy_args=(--legacy --limit 300); fi
   "$CONTEXT_PYTHON" -m sensitive_context.evaluate \
