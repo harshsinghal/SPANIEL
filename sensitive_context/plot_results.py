@@ -29,7 +29,7 @@ def main():
         if gold!=reference:
             raise ValueError('reports use different cases or gold')
     metrics = [('sensitive_document_recall','Sensitive documents detected\nHigher is better'),
-               ('benign_false_block_rate','Benign documents blocked\nLower is better'),
+               ('benign_total_withhold_rate','Benign documents withheld\nFalse blocks + inspection failures'),
                ('exact_span_f1','Exact typed span F1\nHigher is better')]
     colors = ['#8b97a6','#176b91','#5f8060','#9275a4']
     fig, axes = plt.subplots(2,3,figsize=(14,7.2))
@@ -53,9 +53,9 @@ def main():
             for spine in ax.spines.values():spine.set_visible(False)
             if row==0:ax.set_title(title,fontsize=12,pad=20)
         axes[row,0].text(0,1.12,label,transform=axes[row,0].transAxes,fontsize=11,fontweight='bold')
-    fig.suptitle('Context-sensitive detection: recall, false blocks and exact evidence',fontsize=17,x=.04,ha='left',y=.97)
+    fig.suptitle('Context-sensitive detection: recall, withholding and exact evidence',fontsize=17,x=.04,ha='left',y=.97)
     fig.text(.04,.055,'159 authored synthetic cases across 17 families; substitutions and long variants are correlated. No independent human gold.',fontsize=10,color='#444444')
-    fig.text(.04,.025,'GLiNER is off the shelf; Spaniel Context is task-adapted. Different hardware: no speed or architecture-superiority claim. Inspection errors are reported separately.',fontsize=9,color='#555555')
+    fig.text(.04,.025,'GLiNER is off the shelf; Spaniel Context is task-adapted. Different hardware: no speed or architecture-superiority claim. Lower benign withholding is better.',fontsize=9,color='#555555')
     fig.subplots_adjust(left=.19,right=.98,bottom=.17,top=.77,wspace=.13,hspace=.65)
     a.out.parent.mkdir(parents=True,exist_ok=True)
     fig.savefig(a.out,dpi=180,facecolor='white')

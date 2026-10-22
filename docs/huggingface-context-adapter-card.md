@@ -46,6 +46,8 @@ Context matters. The same amount can describe a public job advertisement or some
 
 These are application conventions, not legal determinations. The model does not check token validity, cryptographic validity, authorization or whether a value is a working credential. Missing context has no calibrated abstention output. An unchanged annotation is not evidence that ambiguous content is safe.
 
+Public/private status in these synthetic cases is asserted in the text. The model cannot authenticate a document's claim that information is public or approved for disclosure. Applications must obtain access rights and disclosure permissions from trusted policy and metadata; the extractor does not supply them.
+
 The frozen concept evaluation requests these exact labels one at a time. `private compensation` is not equivalent to a request for every `salary` mention. The new concept results do not establish synonym robustness or performance with many simultaneous labels; a separate retrieval smoke test requests all three credential labels together.
 
 ## Results and release status
@@ -67,6 +69,9 @@ Candidate results are pending. The original Spaniel v2 PII scores do not establi
 | Sequence handling | 4,096-token limit; maximum observed 2,201; overflow rejected, no truncation |
 | Loss | Assistant completion and chat ending only; all prompt tokens masked |
 | Checkpoint selection | Lowest development completion loss; no test-set checkpoint selection |
+| Selected checkpoint | Epoch one, step 424 of 848; dev loss 0.033813 versus 0.043643 after epoch two |
+| Training runtime | 4,797.8 seconds, approximately 80 minutes |
+| Adapter SHA-256 | `8e4e99c32a5051d34d1a1d41ca73e52b00b59eef8e39453c24d92fe2b1d53b85` |
 
 The v2 base was originally fully fine-tuned from Qwen3-0.6B. This experiment uses a LoRA adapter on that already trained model; it is not an adapter trained directly on the original Qwen checkpoint. The combined augmentation/replay experiment does not isolate either component or establish that LoRA is better than full fine-tuning.
 
@@ -84,6 +89,29 @@ The repository's source-attribution record contains the exact source revisions, 
 
 Use the matching v2 base and this adapter with the SPANIEL source server. Install the repository's `requirements-adapter.txt` with a PyTorch build appropriate to your machine. Configure `PII_MODEL_ID`, `PII_MODEL_REVISION`, `PII_ADAPTER` and `PII_ADAPTER_REVISION` as documented in the milestone. The service merges the adapter in memory and keeps the same copy-or-tag constrained decoder.
 
+The inference and experiment code is available at [source revision `318ebb1`](https://github.com/harshsinghal/SPANIEL/tree/318ebb1fe5fa9056adebd569228375e578143c5f). This revision includes the adapter loader, constrained decoder, data generator and evaluators; later documentation commits record the completed results. The existing Docker image does not include the optional PEFT dependency. Use a source installation for this adapter.
+
+```bash
+git clone https://github.com/harshsinghal/SPANIEL.git
+cd SPANIEL
+git checkout 318ebb1fe5fa9056adebd569228375e578143c5f
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements-adapter.txt
+
+export PII_MODEL_ID=Harsh/qwen3-0.6b-pii-sft-v2
+export PII_MODEL_REVISION=a58063469be8c7b929016d944d8d6d1545bc70a0
+export PII_MODEL_CACHE="$PWD/.model-cache"
+export PII_ADAPTER=Harsh/spaniel-credential-context-lora-v0.1
+# Resolve once, then pin this process to that exact repository revision.
+export PII_ADAPTER_REVISION="$(python -c 'from huggingface_hub import HfApi; print(HfApi().model_info("Harsh/spaniel-credential-context-lora-v0.1").sha)')"
+python -m uvicorn server:app --app-dir pii_tagger --host 127.0.0.1 --port 8377
+```
+
+Use a CUDA-compatible PyTorch installation on an NVIDIA host. The recorded training/evaluation environment used PyTorch 2.13.0+cu126; the separate application checks used Apple MPS. Record `/api/model` and the adapter hash when reproducing an application result.
+
+In a second terminal, run `python examples/context_retrieval/demo.py --report context-smoke.json` from the checkout with its environment activated. The demo intentionally reports the observed failures described above and returns a nonzero status when expectations are missed. Do not interpret a successful service startup as a passed detector evaluation.
+
 The intended integration is a local retrieval tool: read the document inside the trusted tool, call SPANIEL, validate exact source recovery and nonempty requested spans, and return `content: null` on a policy match or inspection failure. Only the captured original text is returned when no match is found. The model's tagged output still contains sensitive values; it is not redacted text.
 
 Completed constrained annotations preserve the source. This requires the project decoder plus completion validation; unconstrained text generation does not provide the guarantee. Correct structure does not imply correct detection, and a missed entity can still cause the retrieval tool to release sensitive content.
@@ -94,6 +122,8 @@ Completed constrained annotations preserve the source. This requires the project
 - Transcript cases are simulated text with colloquial wording and transcription-like noise. No audio, real ASR system or real transcript corpus is evaluated.
 - Long-context cases use 250 or 900 words of synthetic public-information filler; they are not representative enterprise documents.
 - Benign scenarios are unevenly represented after deduplication. Independent benign examples and annotation review remain priorities.
+- Actual passwords that resemble placeholders, indirect ordinary-word passphrases and mixed public/private pay statements remain observed failure areas. In application smoke checks, this adapter released a private negotiation and an actual `CHANGEME` password, and falsely blocked a public job range and an unfilled template.
+- Six missing-context examples produced three blocks and three releases. They have no asserted binary gold; these are observations, not accuracy scores. No semantic review or clarification mechanism is implemented.
 - The format supports non-overlapping contiguous spans of at least two source characters. Linked/discontinuous evidence groups are a data sidecar, not a model output capability.
 - Legal strategy, layoffs, performance reviews and broad business confidentiality remain unvalidated research targets. Supplying an arbitrary entity label does not confer a validated capability.
 - No calibrated uncertainty or general adversarial-security claim is established. An initial GLiNER2.5 off-the-shelf baseline uses the same scenarios; it is not an equal-data architecture comparison or a speed benchmark.

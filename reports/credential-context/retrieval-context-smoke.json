@@ -1,0 +1,153 @@
+{
+  "created_at": "2026-10-22T02:38:24.806038+00:00",
+  "model_configuration": {
+    "base_model": "local-checkpoint",
+    "base_revision": null,
+    "adapter": "local-adapter",
+    "adapter_revision": null,
+    "constrained_by_default": true,
+    "unconstrained_enabled": false,
+    "note": "Artifact identity does not establish detection accuracy; consult the model card."
+  },
+  "scope": "Illustrative integration smoke test, not a benchmark. The credential policy requests three labels together; the frozen concept benchmark requests one at a time. Null expected outcomes are unscored ambiguity demonstrations.",
+  "summary": {
+    "cases": 12,
+    "scored": 11,
+    "matched": 7,
+    "sensitive_released": 2,
+    "false_blocks": 2,
+    "unexpected_errors": 0
+  },
+  "results": [
+    {
+      "id": "public_job_range",
+      "policy": "compensation",
+      "expected": "allowed",
+      "actual": "blocked",
+      "code": "SENSITIVE_CONTENT_DETECTED",
+      "content_returned": false,
+      "seconds": 1.303,
+      "matched_expectation": false
+    },
+    {
+      "id": "private_negotiation",
+      "policy": "compensation",
+      "expected": "blocked",
+      "actual": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true,
+      "seconds": 0.901,
+      "matched_expectation": false
+    },
+    {
+      "id": "public_quote_private_chat",
+      "policy": "compensation",
+      "expected": "allowed",
+      "actual": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true,
+      "seconds": 1.517,
+      "matched_expectation": true
+    },
+    {
+      "id": "authorized_named_pay",
+      "policy": "compensation",
+      "expected": "allowed",
+      "actual": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true,
+      "seconds": 0.895,
+      "matched_expectation": true
+    },
+    {
+      "id": "unknown_salary_context",
+      "policy": "compensation",
+      "expected": null,
+      "actual": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true,
+      "seconds": 1.05,
+      "matched_expectation": null
+    },
+    {
+      "id": "actual_placeholder_password",
+      "policy": "credentials",
+      "expected": "blocked",
+      "actual": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true,
+      "seconds": 0.834,
+      "matched_expectation": false
+    },
+    {
+      "id": "unfilled_template",
+      "policy": "credentials",
+      "expected": "allowed",
+      "actual": "blocked",
+      "code": "SENSITIVE_CONTENT_DETECTED",
+      "content_returned": false,
+      "seconds": 0.816,
+      "matched_expectation": false
+    },
+    {
+      "id": "passphrase_transcript",
+      "policy": "credentials",
+      "expected": "blocked",
+      "actual": "blocked",
+      "code": "SENSITIVE_CONTENT_DETECTED",
+      "content_returned": false,
+      "seconds": 0.948,
+      "matched_expectation": true
+    },
+    {
+      "id": "public_key",
+      "policy": "credentials",
+      "expected": "allowed",
+      "actual": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true,
+      "seconds": 1.263,
+      "matched_expectation": true
+    },
+    {
+      "id": "private_key",
+      "policy": "credentials",
+      "expected": "blocked",
+      "actual": "blocked",
+      "code": "SENSITIVE_CONTENT_DETECTED",
+      "content_returned": false,
+      "seconds": 1.479,
+      "matched_expectation": true
+    },
+    {
+      "id": "source_markup_error",
+      "policy": "credentials",
+      "expected": "error",
+      "actual": "error",
+      "code": "INSPECTION_FAILED",
+      "content_returned": false,
+      "seconds": 0.589,
+      "matched_expectation": true
+    },
+    {
+      "id": "missing_document",
+      "policy": "credentials",
+      "expected": "error",
+      "actual": "error",
+      "code": "RETRIEVAL_FAILED",
+      "content_returned": false,
+      "seconds": 0.0,
+      "matched_expectation": true
+    }
+  ],
+  "verified_artifacts": {
+    "base_model": "Harsh/qwen3-0.6b-pii-sft-v2",
+    "base_revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
+    "base_weights_sha256": "3ce13010b5f0430e188be1261654cc41d7f05eafc6cb1ebffa6576c5e020dc6b",
+    "adapter_weights_sha256": "8e4e99c32a5051d34d1a1d41ca73e52b00b59eef8e39453c24d92fe2b1d53b85",
+    "selected_checkpoint": "context-results/lora-r16/checkpoint-424",
+    "selection_note": "The smoke test ran on epoch 1 before the run finished. The final selected adapter is byte-identical. Selection used development completion loss, not these smoke outcomes.",
+    "device": "Apple MPS",
+    "dtype": "bfloat16"
+  }
+}

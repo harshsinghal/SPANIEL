@@ -283,6 +283,8 @@ gate = ContentGate(policy=experimental_compensation)
 
 Requesting this label from v2 does not confer a validated compensation detector. Use the [capability record](../CAPABILITIES.md) and the specific adapter's evaluation to decide whether a policy belongs in your deployment. The gate has no calibrated uncertainty signal; an empty annotation on ambiguous text can still release content. Neither a private conversation nor the word “salary” is sufficient by itself to determine the policy outcome.
 
+The detector also cannot authenticate a document's statement that its contents are public or approved for disclosure. Apply trusted access and disclosure rules separately; model interpretation of document text is not an authorization source.
+
 The [context integration examples](../examples/context_retrieval/cases.json) exercise the actual file reader and gate with public salary bands, private negotiations, public information quoted in private conversations, an actual password equal to `CHANGEME`, an unfilled template, informal passphrases, and public/private key shapes. All values are fictional; key bodies are non-operational text fixtures. After starting the experimental model service, run:
 
 ```bash
@@ -290,6 +292,8 @@ python examples/context_retrieval/demo.py --report /tmp/spaniel-context-smoke.js
 ```
 
 The report includes the server's declared configuration, decision codes and content-return flags, without document text. It requests three credential labels together, unlike the frozen concept evaluation's single-label requests, so it is a distinct integration smoke test. One context-deficient salary case has no asserted expected decision and is excluded from the score. It illustrates the absence of calibrated abstention; the tool does not automatically route that case for review.
+
+The selected October adapter met **7 of 11 scored contextual expectations**: it released a private negotiation and an actual `CHANGEME` password, and falsely blocked a public job range and an unfilled template. It met **14 of 15 older expectations**, with one placeholder false block. These are recorded [integration results](milestones/2026-10-21-credential-context.md#application-checks-on-the-selected-adapter), not a validated security guarantee. The gate correctly withholds matches and errors, but cannot turn missed detections into reliable protection.
 
 ### Retrieval boundary
 
