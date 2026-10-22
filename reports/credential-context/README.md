@@ -19,7 +19,7 @@ These files support the [October milestone](../../docs/milestones/2026-10-21-cre
 | `ambiguity-review.json` | Six observations with insufficient context and no binary gold; no accuracy score or calibrated abstention claim |
 | `report-hashes.json` | Checksums for the six exported Spaniel evaluations and the comparison |
 
-The first run's training and model-evaluation artifacts are quarantined under `invalid-rope-run/` and explicitly marked invalid. Its loader used the wrong RoPE setting. They are diagnostic records only, and its adapter was not publicly released. Corrected artifacts will occupy the paths above after the rerun. GLiNER reports are unaffected. See the [runtime investigation](../../docs/runtime-compatibility.md).
+The first run's training and model-evaluation artifacts are quarantined under `invalid-rope-run/` and explicitly marked invalid. Its loader used the wrong RoPE setting. They are diagnostic records only, and its adapter was not publicly released. The paths above contain the completed corrected rerun. The candidate fails the predeclared screening requirements and remains experimental; v2 stays the default. GLiNER reports are unaffected. See the [runtime investigation](../../docs/runtime-compatibility.md).
 
 The original experiment protocol is a frozen pre-run record; the separate [runtime-repair addendum](../../experiments/credential-context-runtime-repair.json) explains the restart without changing data or screening thresholds.
 

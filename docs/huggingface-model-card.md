@@ -36,11 +36,13 @@ The intended application is local inspection of text before it is shared with an
 
 ## Research progression: credential and context discrimination
 
-An October 2026 audit examined all 389,521 training rows and identified specific gaps in benign credential lookalikes, credential diversity, long context and confidentiality supervision. A follow-up experiment prepares 5,248 synthetic training examples, disjoint scenario-family development/test sets, 1,536 validated public-source replay examples and a continued LoRA fine-tune of this checkpoint.
+An October 2026 audit examined all 389,521 training rows and identified gaps in benign credential lookalikes, credential diversity, long context and confidentiality supervision. The follow-up **[Spaniel Context v0.1](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1)** is a separate LoRA adapter on this checkpoint, trained on GPU.ai with 5,248 new synthetic contrasts and 1,536 validated public-source replay examples.
 
-The new task distinguishes private compensation from public salary ranges, including informal and noisy transcript text. This is a separate experimental concept; the PII results below do not validate it. The original v2 weights and their historical results remain unchanged. Candidate training/results are in progress; no accuracy gain is claimed yet.
+On 159 authored synthetic cases from 17 reserved scenario families, the correctly configured v2 baseline scores 0.397 exact span F1 and the adapter scores 0.869. Sensitive detections improve from 34/81 to 70/81; benign false blocks fall from 13/78 to 9/78. These are new context-policy results, separate from the historical PII scores below.
 
-The [current milestone and results work](https://github.com/harshsinghal/SPANIEL/pull/2) tracks the audit, data, policies, GPU.ai fine-tuning recipe, evaluation and capability limits. Credentials are the first area of deeper investment. Broader confidential-topic detection and real audio/ASR robustness remain research targets.
+The adapter fails all four predeclared screens: credential recall is 84.6% against a 95% target, with 8.3% benign false blocks against a 5% limit; original-source PII F1 declines from 0.937 to 0.924, beyond the one-point limit; and the candidate has one rejected legacy annotation. Application checks remain mixed, including missed actual `CHANGEME` passwords and false blocks on public pay. **V2 remains the default; the adapter is experimental.** The original v2 weights and historical scores are unchanged.
+
+The [completed milestone](https://github.com/harshsinghal/SPANIEL/blob/main/docs/milestones/2026-10-21-credential-context.md) records data lineage, the GPU.ai recipe, selected checkpoint, paired PII regression, GLiNER2.5 baselines, runtime repair and known failures. Transcript examples are simulated text; real ASR and broader confidentiality concepts remain research targets.
 
 [GitHub repository](https://github.com/harshsinghal/SPANIEL) · [Constrained local demo](https://github.com/harshsinghal/SPANIEL#try-it-the-demo-app) · [Training data and attribution](https://github.com/harshsinghal/SPANIEL/blob/main/docs/training-data-and-evaluation.md) · [Research journal](https://github.com/harshsinghal/SPANIEL#the-journey-as-blog-entries)
 

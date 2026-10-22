@@ -16,17 +16,31 @@ The project connects **LLM fine-tuning, synthetic training data, evaluation, and
 
 ## Current research milestone: credentials and contextual compensation
 
-The next milestone develops **local sensitive-content detection that depends on context**: credentials versus placeholders and public identifiers; private pay or negotiation ranges versus public job advertisements; informal conversation and noisy transcript text. A salary range can be sensitive even without a person's name, while a private conversation can simply quote public information.
+**[Spaniel Context v0.1](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1) is a separately published experimental LoRA adapter, trained on GPU.ai.** It learns a narrower policy task: actual credentials versus benign lookalikes, and private compensation versus public salary information. The original v2 model remains the default.
 
-The [coverage audit](docs/coverage-audit.md) examined all 389,521 v2 training rows and used embeddings, cluster inspection and corpus retrieval to identify gaps. The [credential and compensation experiment](docs/milestones/2026-10-21-credential-context.md) adds 5,248 synthetic training examples, separate scenario-family evaluation splits, validated PII replay, a LoRA training recipe and a common constrained evaluator. **Training and candidate results are in progress; these preparation artifacts do not establish an accuracy gain.**
+The [coverage audit](docs/coverage-audit.md) examined all 389,521 v2 training rows. The follow-up adds **5,248 synthetic training contrasts and 1,536 validated public-source PII replay rows**, with scenario families separated across training, development and test. The selected checkpoint is epoch one of a two-epoch rank-16 LoRA run on an RTX 4090.
 
-The project distinguishes measured capabilities from experimental and best-effort behavior. Credentials are the first area of deeper investment; broader legal, layoff and review confidentiality remain research targets. Transcript examples are simulated text, not a real audio benchmark.
+On the frozen 159-case synthetic test, overall exact span F1 improves from **0.397 to 0.869**, sensitive-document recall from **34/81 to 70/81**, and benign false blocks from **13/78 to 9/78**.
 
-The experiment also found a [runtime configuration compatibility fault](docs/runtime-compatibility.md): an older loader silently used the wrong Qwen3 positional setting. The first run was invalidated and restarted after verification of the repair. Configuration compatibility is part of the evidence record, alongside weights, data and accuracy.
+| Scope | Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---|---:|---:|---:|---:|
+| Credentials | Spaniel v2 | 24/39 (61.5%) | 7/36 (19.4%) | 0.579 | 0 |
+| Credentials | Spaniel Context v0.1 | 33/39 (84.6%) | 3/36 (8.3%) | 0.889 | 0 |
+| Compensation | Spaniel v2 | 10/42 (23.8%) | 6/42 (14.3%) | 0.167 | 0 |
+| Compensation | Spaniel Context v0.1 | 37/42 (88.1%) | 6/42 (14.3%) | 0.851 | 0 |
 
-[Capability and evidence record](CAPABILITIES.md) · [Progress and releases](CHANGELOG.md) · [Experiment protocol](experiments/credential-context-protocol.json) · [Research milestones](docs/research-roadmap.md)
 
-An [initial GLiNER2.5 baseline](docs/gliner-context-baseline.md) uses the same frozen concept scenarios with fixed label-only and policy-description configurations. It reports sensitive-document recall, benign false blocks and exact spans separately. This compares an off-the-shelf encoder with the new task-specific experiment; it does not establish architecture superiority.
+The candidate **fails all four predeclared screening requirements**. Credential recall and false blocks miss their targets; original-source PII span F1 declines from **0.937 to 0.924**, beyond the allowed one-point drop; and one legacy annotation is rejected in each model. It remains a separate experimental adapter; v2 stays the default. These are 159 authored synthetic cases across 17 scenario families, with correlated substitutions and long variants, no independent human adjudication, and a disclosed runtime-repair rerun. They establish progress on this test, not production readiness or a general architecture ranking.
+
+![Context comparison: sensitive recall, benign withholding and exact span F1](docs/coverage/context-comparison.png)
+
+The [GLiNER2.5 comparison](docs/gliner-context-baseline.md) reports both fixed label-only and policy-description configurations. It compares an off-the-shelf encoder with a task-adapted decoder; it does not establish architecture superiority or relative speed. The [full milestone](docs/milestones/2026-10-21-credential-context.md) includes PII retention, per-family failures, application checks, exact hashes and reproduction steps.
+
+Application checks are mixed: the existing retrieval suite improves from 12/15 to 14/15, while the new context suite falls from 9/11 to 8/11. Actual `CHANGEME` passwords and authorized public pay remain failure cases. Simulated transcript text is included, but real audio/ASR, legal strategy, layoffs and performance reviews remain unvalidated.
+
+The experiment also found and fixed a [runtime configuration compatibility fault](docs/runtime-compatibility.md). The first run was invalidated; corrected training restarted from the original base without changing the data, hyperparameters or screening rules. Only the corrected selected adapter is published.
+
+[Use the adapter](docs/huggingface-context-adapter-card.md#local-inference-and-governed-retrieval) · [Capability record](CAPABILITIES.md) · [Progress](CHANGELOG.md) · [Frozen protocol](experiments/credential-context-protocol.json) · [Research roadmap](docs/research-roadmap.md)
 
 ## Why local sensitive-data detection matters
 
@@ -184,7 +198,7 @@ See [Training data, attribution, and evaluation](docs/training-data-and-evaluati
 
 ## Results
 
-**Strict typed span exact-match F1 on 300 held-out documents, using constrained decoding.** These are the published July 2026 experiments; this documentation update does not report a new benchmark.
+**Strict typed span exact-match F1 on 300 held-out documents, using constrained decoding.** These are the historical July 2026 experiments. The separate October contextual experiment is reported above and uses different labels and evaluation targets.
 
 | Model | Original gold | Adjudicated gold | Unseen entity names |
 |---|---:|---:|---:|
@@ -216,7 +230,7 @@ The journal records the experiments as they happened, including historical headl
 | Research note | What it documents |
 |---|---|
 | [Coverage audit and data gaps](docs/coverage-audit.md) | Full-mixture inspection, embedding clusters, repeated credentials and missing supervision |
-| [Credentials and contextual compensation](docs/milestones/2026-10-21-credential-context.md) | Contrastive data, transcript cases, validation and the next fine-tuning experiment |
+| [Credentials and contextual compensation](docs/milestones/2026-10-21-credential-context.md) | GPU.ai fine-tuning, contrastive data, measured gains, failed screening targets and remaining errors |
 | [Fine-tuning a small model for tagged extraction](journal/2026-07-08-tagged-regeneration-recipe.md) | Training representation, label conditioning, and early size comparisons |
 | [Attribute versus mention semantics](journal/2026-07-09-attribute-vs-mention-semantics.md) | How annotation choices define what counts as PII |
 | [Making copy drift unrepresentable](journal/2026-07-12-constrained-decoding.md) | The copy-or-tag automaton, tokenizer handling, and decoding bugs |
@@ -277,13 +291,13 @@ This runs the original-gold evaluation path; the adjudicated and unfamiliar-name
 
 ## Status & roadmap
 
-The published release establishes a local PII extraction baseline. The next milestones are:
+The published v2 release establishes a local PII extraction baseline. Context v0.1 adds a reproducible, separately versioned experiment with measured improvements and explicit failed screening targets. Next milestones are:
 
 1. **Governed retrieval integration:** the Python example now connects local findings to versioned entity policies and deterministic withholding. Next, validate agent/MCP adapters and broader access-path coverage; redaction and review workflows remain future work.
 2. **Security-focused evaluation:** measure missed disclosures, benign interruptions, input manipulation, inference failures, and local latency on reviewed prompt/context/tool-output cases.
 3. **Semantic evidence:** evaluate encoders, constrained decoders, and hybrids for confidential topics and linked evidence, using a separate benchmark from entity extraction.
 
-The retrieval wrapper is application code around the downloadable v2 checkpoint. Its enforcement behavior and the checkpoint's detection accuracy are separate properties; the remaining milestones are future work.
+The retrieval wrapper uses v2 by default and supports the optional context adapter through the source server. Its enforcement behavior and learned detection accuracy remain separate properties. Next data improvements should target the published failure families and be evaluated on a newly reserved, independently reviewed test.
 
 ## Author and attribution
 

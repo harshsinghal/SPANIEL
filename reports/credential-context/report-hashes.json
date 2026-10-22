@@ -1,0 +1,9 @@
+{
+  "v2-dev.json": "8f392b3266a0e6997b2ba1148cbc220a99cfc9f8cd15e0ba728feb341c2bb1bc",
+  "candidate-dev.json": "c93a9ffaf11aba16d91bf196acab4b609f5060117145ecdfcf476d48cd7ce789",
+  "v2-test.json": "79970e824391dba06884b41180e9a5c881e9fc5cb71c140c50e19d085e62e17a",
+  "candidate-test.json": "817249cb52db53c3757a07ede40b40d0757b0e72d423203b44315490839dc1ae",
+  "v2-legacy.json": "91585a6faff694abbe1bb591a35e542acb242e37dd2474a6a61e62e7e2696ba1",
+  "candidate-legacy.json": "653a12d0bfd2965aaabb3ef24e47ffd971d34ae69b717057167b16026e88f242",
+  "comparison.json": "4bf8878298329af097719593fb6d7990b2a519398b124c2e6b551b5fd08f31a9"
+}

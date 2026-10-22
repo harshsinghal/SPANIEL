@@ -1,6 +1,6 @@
 # Milestone: credentials and contextual compensation
 
-**Harsh Singhal · 21 October 2026 · Corrected GPU.ai training complete; final evaluation in progress.**
+**Harsh Singhal · 21 October 2026 · GPU.ai training and evaluation complete; experimental adapter published.**
 
 This milestone asks whether a small local model can distinguish actual credential exposure from benign lookalikes, and private compensation from public salary information. It follows the [coverage audit](../coverage-audit.md). It is a continued LoRA fine-tune of the existing Spaniel v2 checkpoint, with the original checkpoint retained as the baseline.
 
@@ -78,9 +78,51 @@ The first experiment combines targeted augmentation and replay. It does not isol
 
 The corrected run selected **epoch one, step 424**, with development completion loss **0.025829** versus **0.031610** at epoch two. The selected adapter SHA-256 is `dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504`. These losses select a checkpoint; they do not measure detection quality.
 
-## Evaluation status
+## Results and release decision
 
-Corrected development, reserved-test, PII-retention and application checks are pending. The [invalid first run](../../reports/credential-context/invalid-rope-run/INVALIDATED.json) is retained for audit and must not be presented as evidence about the correctly configured model. The independent GLiNER baseline is unaffected by this Qwen3 loading issue.
+The [selected adapter](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1) is published separately as **Spaniel Context v0.1**. Both Spaniel models use the verified effective RoPE setting, identical constrained decoding and the same hardware within each paired comparison. No incomplete worker output or invalid first-run result is used.
+
+| Scope | Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---|---:|---:|---:|---:|
+| Credentials | Spaniel v2 | 24/39 (61.5%) | 7/36 (19.4%) | 0.579 | 0 |
+| Credentials | Spaniel Context v0.1 | 33/39 (84.6%) | 3/36 (8.3%) | 0.889 | 0 |
+| Compensation | Spaniel v2 | 10/42 (23.8%) | 6/42 (14.3%) | 0.167 | 0 |
+| Compensation | Spaniel Context v0.1 | 37/42 (88.1%) | 6/42 (14.3%) | 0.851 | 0 |
+
+
+Across all 159 concept cases:
+
+| Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---:|---:|---:|---:|
+| Spaniel v2 | 34/81 (42.0%) | 13/78 (16.7%) | 0.397 | 0 |
+| Spaniel Context v0.1 | 70/81 (86.4%) | 9/78 (11.5%) | 0.869 | 0 |
+| GLiNER2.5, labels | 70/81 (86.4%) | 54/78 (69.2%) | 0.421 | 0 |
+| GLiNER2.5, policy descriptions | 72/81 (88.9%) | 67/78 (85.9%) | 0.415 | 0 |
+
+
+![Context comparison](../coverage/context-comparison.png)
+
+GLiNER2.5 is off the shelf, while Spaniel Context has task-specific training. Both fixed GLiNER schemas are reported. This is a policy-task baseline, not an equal-data architecture comparison or a speed benchmark.
+
+On the 300-document original-source PII regression, exact typed span F1 is **0.937 for v2 and 0.924 for the adapter** (-1.26 percentage points). Inspection errors are 1 and 1, respectively. Every legacy document contains requested entities, so this set cannot measure benign false blocks. It uses original source annotations, not the separately adjudicated historical labels behind v2's 0.918 score.
+
+| Frozen screening requirement | Observed | Outcome |
+|---|---:|---|
+| Credential document recall ≥95% | 84.6% | Fail |
+| Credential benign false blocks ≤5% | 8.3% | Fail |
+| No candidate concept/legacy inspection errors | 1 | Fail |
+| Legacy F1 decline ≤1 percentage point | -1.26 percentage points | Fail |
+
+
+The candidate **fails all four predeclared screening requirements**. Credential recall and false blocks miss their targets; original-source PII span F1 declines from **0.937 to 0.924**, beyond the allowed one-point drop; and one legacy annotation is rejected in each model. It remains a separate experimental adapter; v2 stays the default. These are 159 authored synthetic cases across 17 scenario families, with correlated substitutions and long variants, no independent human adjudication, and a disclosed runtime-repair rerun. They establish progress on this test, not production readiness or a general architecture ranking.
+
+The remaining failures are concrete. The adapter finds only 4/9 sensitive recovery-conversation variants, misses all three sensitive range-correction-call cases, falsely blocks all three authorized-public-pay cases, and blocks both benign README-variable cases. The separate application suite also misses an actual password equal to `CHANGEME` and falsely blocks a public job range. These failures prioritize new independently authored benign examples, indirect login language, corrected spoken ranges and trusted disclosure context.
+
+The controlled long-context slice improves from 7/30 to 23/30 sensitive documents detected, with benign false blocks rising from 0/30 to 2/30; exact span F1 rises from 0.216 to 0.836. The 24-case transcript/noise slice improves from 6/12 to 9/12 sensitive documents detected, with false blocks falling from 3/12 to 1/12. These small synthetic slices do not validate enterprise documents or real ASR.
+
+Correct decisions on both members of a sensitive/benign contrast pair rise from 25/78 to 59/78. For future training, these observed test families must be treated as development evidence and assessed against a newly reserved test; this release did not retrain on its failures.
+
+The [comparison report](../../reports/credential-context/comparison.json) includes all family and position slices. The [invalid first run](../../reports/credential-context/invalid-rope-run/INVALIDATED.json) remains available for audit and contributes no release results. The independent GLiNER baseline was unaffected by that Qwen3 loading fault.
 
 ## Application checks on the selected adapter
 
@@ -121,6 +163,8 @@ Set `CONTEXT_EVAL_JOBS=3` to run the independent accuracy evaluations in three g
 The corrected run separates evaluation from training to fit the instances' shutdown deadlines. Development and concept-test baseline/candidate pairs use one RTX 4090; both legacy PII evaluations use a separate RTX 4090. The [initial execution addendum](../../experiments/credential-context-evaluation-execution.json) and [regression-worker addendum](../../experiments/credential-context-regression-worker.json) record the initial scheduling decisions; the [execution outcome](../../experiments/credential-context-execution-outcome.json) records the failed CUDA worker and its replacement. Within each paired comparison the hardware, code, data, weights, precision and scoring rules match. Partial evaluations from the training instance and the superseded legacy evaluation on the concept worker are excluded. The selected adapter is transferred only after training selection and checksum verification.
 
 To use that arrangement, copy the same source and `context-data/` to both prepared workers. On the concept worker, run `CONTEXT_EVAL_SUITE=concept bash experiments/evaluate_credential_context_phase.sh baseline`; use `CONTEXT_EVAL_SUITE=legacy` on the regression worker. Transfer the selected adapter into each worker's `context-results/lora-r16/adapter`, then repeat the corresponding command with `candidate` instead of `baseline`. Collect all six completed reports before exporting the paired comparison. Keep training manifests and adapter checksums with the evidence; elapsed times remain unsuitable for a latency comparison. The suite defaults to `all` for a single-worker run with enough time.
+
+All task GPU.ai instances were terminated after checksum-verified collection. The estimated ready-to-terminated runtime cost was **USD 4.49**, including the invalid initial run, corrected training, evaluations and failed CUDA worker. This is an estimate from quoted hourly rates, not an invoice; the [execution record](../../experiments/credential-context-execution-outcome.json) provides the timestamps and calculation.
 
 ## What qualifies as progress
 

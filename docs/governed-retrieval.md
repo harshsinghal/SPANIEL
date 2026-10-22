@@ -260,7 +260,7 @@ blocking a placeholder. They are not evidence of model accuracy.
 
 The [credential/context milestone](milestones/2026-10-21-credential-context.md) develops new discrimination behavior separately from this tool's enforcement logic. The existing default `CREDENTIALS` policy still requests `password` and `api key` from the loaded model.
 
-The source server can optionally load a matching LoRA adapter. Install `requirements-adapter.txt`, set `PII_ADAPTER` to its local directory or Hugging Face repository, and set `PII_ADAPTER_REVISION` when using a remote artifact. The base checkpoint must match the adapter's model card. `/api/model` identifies the loaded base and adapter; it does not certify detection quality.
+The source server can optionally load the separately published [Spaniel Context v0.1 adapter](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1). It remains experimental and fails the predeclared credential screening targets; v2 remains the default. Install `requirements-adapter.txt`, set `PII_ADAPTER` to its local directory or Hugging Face repository, and set `PII_ADAPTER_REVISION` when using a remote artifact. The base checkpoint must match the adapter's model card. `/api/model` identifies the loaded base and adapter; it does not certify detection quality.
 
 An application can create an explicitly experimental compensation policy:
 

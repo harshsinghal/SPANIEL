@@ -6,7 +6,7 @@ Research by [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/) · Docume
 
 This document explains the published SPANIEL v2 training recipe and its evidence. Dataset license statements below were checked against the exact revisions recorded in the manifest, as well as the current source cards. They describe source terms and provenance; this documentation update does not redistribute the datasets or establish a new license for their contents.
 
-The [October coverage audit](coverage-audit.md) and [credential/context experiment](milestones/2026-10-21-credential-context.md) are separate from the historical v2 recipe below. The new experiment uses explicit completion-only masking, 5,248 newly generated contrasts and 1,536 validated public-source replay rows. Its own manifests, splits and eventual results must not be substituted into v2's historical benchmark tables.
+The [October coverage audit](coverage-audit.md) and [credential/context experiment](milestones/2026-10-21-credential-context.md) are separate from the historical v2 recipe below. The new experiment uses explicit completion-only masking, 5,248 newly generated contrasts and 1,536 validated public-source replay rows. Its completed GPU.ai run, manifests, family-level results and separate experimental adapter are documented in the milestone. Its scores must not be substituted into v2's historical benchmark tables.
 
 ## Why use a mixture?
 

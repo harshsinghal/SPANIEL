@@ -1,0 +1,51 @@
+{
+  "status": "complete",
+  "training_provider": "GPU.ai",
+  "training_gpu": "RTX 4090 24 GB",
+  "concept_pair_gpu": "RTX 4090 24 GB",
+  "legacy_pair_gpu": "RTX 4090 24 GB",
+  "configuration": "Effective RoPE theta 1000000; identical evaluator/decoding within each pair. Both pairs use the same pinned base and selected adapter.",
+  "timing_scope": "Accuracy evaluation only. Concurrent jobs share resources; case durations are not a latency or throughput benchmark.",
+  "selected_adapter_sha256": "dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504",
+  "reports": {
+    "v2-dev.json": {
+      "worker": "concept_rtx4090",
+      "sha256": "751c4b89cbb7d017280cae911f3f6df0d18e1f62cb1efa66c35f9e9e4b7bb7c1",
+      "cases": 100
+    },
+    "candidate-dev.json": {
+      "worker": "concept_rtx4090",
+      "sha256": "dd09528f2497ef1171028abe6623d0e810e78de31932b055827c9dde8354839f",
+      "cases": 100
+    },
+    "v2-test.json": {
+      "worker": "concept_rtx4090",
+      "sha256": "bfa0d7a5388062f0a54467520ad564c5aeb0dfaa3a7f406be923863a291002f9",
+      "cases": 159
+    },
+    "candidate-test.json": {
+      "worker": "concept_rtx4090",
+      "sha256": "2e6f62a0e052d13b42dc41cdb62a4c5d645d8ad867ad301df40c262dd335a508",
+      "cases": 159
+    },
+    "v2-legacy.json": {
+      "worker": "legacy_rtx4090",
+      "sha256": "63e272b0293e0687cd7c14aac741e39e331ce8425c2494598c0e2c83a291bbc0",
+      "cases": 300
+    },
+    "candidate-legacy.json": {
+      "worker": "legacy_rtx4090",
+      "sha256": "405fded2465a9ef6589a66aa489670fb7c89f80c5c7a40d8f1884340f00df366",
+      "cases": 300
+    }
+  },
+  "excluded": "Invalid-RoPE first run; partial automatic evaluations on training instance; superseded partial legacy baseline on concept worker.",
+  "protocols": [
+    "experiments/credential-context-protocol.json",
+    "experiments/credential-context-runtime-repair.json",
+    "experiments/credential-context-evaluation-execution.json",
+    "experiments/credential-context-regression-worker.json",
+    "experiments/credential-context-execution-outcome.json"
+  ],
+  "estimated_upper_gpu_runtime_usd": 4.91
+}

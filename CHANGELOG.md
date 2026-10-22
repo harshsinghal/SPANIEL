@@ -11,7 +11,11 @@ This file records artifacts and evidence, including negative results. Historical
 - Added explicit completion-loss masking, no-truncation preflight, a LoRA trainer, a common constrained evaluator and a GPU.ai run recipe.
 - Measured a pinned GLiNER2.5 off-the-shelf baseline with fixed label-only and policy-description configurations, plus original PII regression; documented false blocks separately from recall.
 - Found and fixed a Qwen3 RoPE configuration mismatch between a newer saved checkpoint and the older runtime. Invalidated the first run, preserved its diagnostic records, added effective-configuration checks and restarted training from the original base. See [the investigation](docs/runtime-compatibility.md).
-- Training and candidate performance are pending. No new checkpoint quality is claimed by these preparation results.
+- Completed the corrected GPU.ai RTX 4090 run; selected epoch one by development completion loss. Published the selected adapter separately as [Spaniel Context v0.1](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1).
+- On 159 frozen synthetic cases, exact span F1 improved from 0.397 to 0.869; sensitive-document detections rose from 34/81 to 70/81 and benign false blocks fell from 13/78 to 9/78.
+- Credential recall (84.6%) and false blocks (8.3%) still fail the predeclared 95%/5% screens. V2 remains the default; no production or architecture-superiority claim is made.
+- Original-source PII regression F1: 0.937 → 0.924; candidate inspection errors: 1. See the milestone for full denominators and retained failure cases.
+- Actual retrieval checks were mixed: 12/15 → 14/15 on existing cases and 9/11 → 8/11 on new context cases. Published model/data/runtime hashes, per-family results, a comparison figure and both model cards.
 
 ## 2026-10-16 — Coverage audit
 

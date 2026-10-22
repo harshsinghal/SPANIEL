@@ -52,7 +52,7 @@ def main():
                 ax.text(value+.025,i,text,va='center',fontsize=10)
             for spine in ax.spines.values():spine.set_visible(False)
             if row==0:ax.set_title(title,fontsize=12,pad=20)
-        axes[row,0].text(0,1.12,label,transform=axes[row,0].transAxes,fontsize=11,fontweight='bold')
+        axes[row,0].text(0,1.43 if row==0 else 1.12,label,transform=axes[row,0].transAxes,fontsize=11,fontweight='bold')
     fig.suptitle('Context-sensitive detection: recall, withholding and exact evidence',fontsize=17,x=.04,ha='left',y=.97)
     fig.text(.04,.055,'159 authored synthetic cases across 17 families; substitutions and long variants are correlated. No independent human gold.',fontsize=10,color='#444444')
     fig.text(.04,.025,'GLiNER is off the shelf; Spaniel Context is task-adapted. Different hardware: no speed or architecture-superiority claim. Lower benign withholding is better.',fontsize=9,color='#555555')

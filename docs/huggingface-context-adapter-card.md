@@ -33,7 +33,7 @@ tags:
 
 This adapter investigates whether a 0.6B local language model can distinguish sensitive credentials from benign lookalikes and private compensation from public salary information. It continues supervised fine-tuning of [Spaniel v2](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2), using source-grounded synthetic contrasts and validated PII replay. It is an experimental artifact, not a production disclosure-prevention guarantee.
 
-**Draft: corrected training is complete and the selected adapter is staged privately. Final paired evaluations are in progress; this card is not yet a public release. The first, misconfigured run was discarded.**
+**Experimental release: training and paired evaluation are complete. The adapter improves the authored synthetic test but fails its predeclared reliability screens. Spaniel v2 remains the default. Only the corrected selected weights are published.**
 
 ## Task and policy
 
@@ -54,7 +54,53 @@ The frozen concept evaluation requests these exact labels one at a time. `privat
 
 ## Results and release status
 
-Candidate results are pending. The original Spaniel v2 PII scores do not establish performance on these new concepts. Do not infer an accuracy gain from the existence of this adapter recipe.
+The completed frozen test contains 159 authored synthetic documents from 17 scenario families: 81 sensitive and 78 benign. All documents are processed without truncation. Baseline and adapter use matched constrained decoding and runtime configuration on the same GPU.ai RTX 4090 within each suite.
+
+| Scope | Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---|---:|---:|---:|---:|
+| Credentials | Spaniel v2 | 24/39 (61.5%) | 7/36 (19.4%) | 0.579 | 0 |
+| Credentials | Spaniel Context v0.1 | 33/39 (84.6%) | 3/36 (8.3%) | 0.889 | 0 |
+| Compensation | Spaniel v2 | 10/42 (23.8%) | 6/42 (14.3%) | 0.167 | 0 |
+| Compensation | Spaniel Context v0.1 | 37/42 (88.1%) | 6/42 (14.3%) | 0.851 | 0 |
+
+
+Across all concept cases, including both frozen off-the-shelf GLiNER2.5 configurations:
+
+| Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---:|---:|---:|---:|
+| Spaniel v2 | 34/81 (42.0%) | 13/78 (16.7%) | 0.397 | 0 |
+| Spaniel Context v0.1 | 70/81 (86.4%) | 9/78 (11.5%) | 0.869 | 0 |
+| GLiNER2.5, labels | 70/81 (86.4%) | 54/78 (69.2%) | 0.421 | 0 |
+| GLiNER2.5, policy descriptions | 72/81 (88.9%) | 67/78 (85.9%) | 0.415 | 0 |
+
+
+![Context comparison](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1/resolve/main/context-comparison.png)
+
+GLiNER uses its native extractor at threshold 0.5 on CPU, without task fine-tuning. Both labels and policy descriptions were fixed before prediction. This is not an equal-data architecture comparison or a latency benchmark. Detailed reports, environment records and hashes are included in the repository's `evidence/` directory.
+
+On the 300-document original-source PII regression, exact typed span F1 is **0.937 for v2 and 0.924 for the adapter** (-1.26 percentage points). Inspection errors are 1 and 1, respectively. Every legacy document contains requested entities, so this set cannot measure benign false blocks. It uses original source annotations, not the separately adjudicated historical labels behind v2's 0.918 score.
+
+| Frozen screening requirement | Observed | Outcome |
+|---|---:|---|
+| Credential document recall ≥95% | 84.6% | Fail |
+| Credential benign false blocks ≤5% | 8.3% | Fail |
+| No candidate concept/legacy inspection errors | 1 | Fail |
+| Legacy F1 decline ≤1 percentage point | -1.26 percentage points | Fail |
+
+
+The candidate **fails all four predeclared screening requirements**. Credential recall and false blocks miss their targets; original-source PII span F1 declines from **0.937 to 0.924**, beyond the allowed one-point drop; and one legacy annotation is rejected in each model. It remains a separate experimental adapter; v2 stays the default. These are 159 authored synthetic cases across 17 scenario families, with correlated substitutions and long variants, no independent human adjudication, and a disclosed runtime-repair rerun. They establish progress on this test, not production readiness or a general architecture ranking.
+
+The remaining failures are concrete. The adapter finds only 4/9 sensitive recovery-conversation variants, misses all three sensitive range-correction-call cases, falsely blocks all three authorized-public-pay cases, and blocks both benign README-variable cases. The separate application suite also misses an actual password equal to `CHANGEME` and falsely blocks a public job range. These failures prioritize new independently authored benign examples, indirect login language, corrected spoken ranges and trusted disclosure context.
+
+The controlled long-context slice improves from 7/30 to 23/30 sensitive documents detected, with benign false blocks rising from 0/30 to 2/30; exact span F1 rises from 0.216 to 0.836. The 24-case transcript/noise slice improves from 6/12 to 9/12 sensitive documents detected, with false blocks falling from 3/12 to 1/12. These small synthetic slices do not validate enterprise documents or real ASR.
+
+Correct decisions on both members of a sensitive/benign contrast pair rise from 25/78 to 59/78. For future training, these observed test families must be treated as development evidence and assessed against a newly reserved test; this release did not retrain on its failures.
+
+Actual Apple MPS retrieval checks improved from 12/15 to 14/15 on existing examples but declined from 9/11 to 8/11 on new context examples. The latter newly blocks public job ranges and authorized pay, and releases an actual `CHANGEME` password. Six ambiguous cases are observations only, without binary gold or a calibrated review action. The adapter must not be treated as a reliable disclosure-prevention control on the basis of aggregate F1.
+
+### Runtime-repair disclosure
+
+The first training/evaluation run loaded a newer Qwen3 RoPE configuration incorrectly in an older runtime. That entire run was invalidated and its weights were never released publicly. Corrected training restarted from the original pinned base with the same data, hyperparameters, selection rule and screening thresholds. Some reserved-test predictions had already been observed under the invalid runtime; no training or labeling decisions were changed in response. This is a disclosed repair rerun, not an untouched multi-run benchmark. The [investigation](https://github.com/harshsinghal/SPANIEL/blob/main/docs/runtime-compatibility.md) records the verification of the actual positional-frequency tensor.
 
 ## Training provenance
 

@@ -26,7 +26,7 @@
   },
   "credential_context_experiment": {
     "id": "credential-context-2026-10-21",
-    "status": "corrected_adapter_trained_evaluation_in_progress",
+    "status": "evaluated_experimental_release_screening_failed",
     "base_model": "Harsh/qwen3-0.6b-pii-sft-v2",
     "base_revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
     "data_manifest": "reports/context-manifest.json",
@@ -70,7 +70,20 @@
     "selected_epoch": 1,
     "adapter_weights_sha256": "dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504",
     "best_development_completion_loss": 0.025829212740063667,
-    "execution_outcome": "experiments/credential-context-execution-outcome.json"
+    "execution_outcome": "experiments/credential-context-execution-outcome.json",
+    "adapter_model": "Harsh/spaniel-credential-context-lora-v0.1",
+    "adapter_weights_revision": "6cd01c4f621c1528f00c5f70f9f1c7855f0a434a",
+    "inference_source_revision": "506e0833087cb7861b1b42c71d455866ba92ac1f",
+    "comparison": "reports/credential-context/comparison.json",
+    "screening": {
+      "credential_recall_at_least_0.95": false,
+      "credential_false_blocks_at_most_0.05": false,
+      "no_candidate_inspection_errors": false,
+      "legacy_exact_f1_drop_at_most_0.01": false
+    },
+    "meets_numeric_screening": false,
+    "production_validated": false,
+    "adapter_release_revision": "9b77c5451f4c99ea5292606de91d792237183198"
   },
   "v2_configuration_compatibility": {
     "revision": "fc31a21a2ac54850ba3c12781ae433413691189d",

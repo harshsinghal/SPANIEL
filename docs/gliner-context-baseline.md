@@ -11,7 +11,7 @@ The [protocol](../experiments/gliner-context-baseline-protocol.json) was committ
 1. **Labels:** the same requested entity names as the Spaniel test.
 2. **Policy descriptions:** those names plus the already frozen policy descriptions, without rewriting them based on results.
 
-Both are reported; the better configuration is not selected as the sole baseline. There is no threshold optimization, GLiNER fine-tuning or test-driven label editing. The candidate Spaniel training run continues unchanged and selects its checkpoint using development completion loss only.
+Both are reported; the better configuration is not selected as the sole baseline. There is no threshold optimization, GLiNER fine-tuning or test-driven label editing. The corrected Spaniel training run selected epoch one using development completion loss only; no GLiNER configuration was changed in response to its results.
 
 All 159 concept-test documents are processed in full. Preflight checks the encoded input against the checkpoint limit: maximum 1,021 tokens for label-only requests and 1,082 with descriptions. There is no chunking or truncation. Returned offsets must identify nonempty original source text. Invalid predictions would be inspection errors, never successful no-match results.
 
@@ -33,6 +33,12 @@ The test has 159 authored synthetic cases from 17 families: 81 sensitive and 78 
 High compensation recall here coexists with frequent blocking of public information. The policy requires discrimination about disclosure context, which is different from identifying every salary amount or credential-shaped value. These numbers do not measure general NER quality or establish that an encoder cannot learn the policy. The next architecture comparison should adapt both models using the same training data and select thresholds only on development data.
 
 The [label-only report](../reports/credential-context/gliner-labels-test.json) and [description report](../reports/credential-context/gliner-policy-test.json) include per-family outcomes, exact offsets, dataset/model/code hashes and configuration. Source text and tagged outputs are omitted from public reports; the deterministic scenario generator reconstructs the synthetic inputs.
+
+## Comparison with the adapted Spaniel candidate
+
+On all 159 cases, the selected Spaniel Context adapter detects 70/81 sensitive documents, falsely blocks 9/78 benign documents and scores 0.869 exact span F1, with no inspection errors. Its ordinary v2 baseline detects 34/81, falsely blocks 13/78 and scores 0.397 F1. The [milestone](milestones/2026-10-21-credential-context.md) includes category slices, paired regression, failed screening targets and mixed application checks.
+
+The difference is useful evidence about these deployed configurations on this particular policy task. Task-specific training, model architecture, precision and runtime differ; this experiment does not isolate why they differ or establish a general ranking.
 
 ## Conventional PII regression set
 

@@ -10,9 +10,9 @@ The defensible claim is that a rejected result returns no document content throu
 
 ## 2. Contextual credential and compensation discrimination
 
-**Current experiment:** the [coverage audit](coverage-audit.md), explicit policy, reproducible synthetic data, GPU.ai LoRA run, frozen family splits, original PII regression and an [off-the-shelf encoder baseline](gliner-context-baseline.md).
+**Completed experimental milestone:** the [coverage audit](coverage-audit.md), explicit policy, reproducible synthetic data, GPU.ai LoRA run, frozen family splits, original PII regression and an [off-the-shelf encoder baseline](gliner-context-baseline.md).
 
-Report missed sensitive documents and benign false blocks separately, together with exact evidence boundaries and inspection failures. Publish a separate experimental adapter and retain v2 as a reproducible baseline. Do not promote a candidate merely because training loss fell, or describe a failed screening target as achieved. The [milestone record](milestones/2026-10-21-credential-context.md) records the outcome.
+The [published adapter](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1) improves overall synthetic exact span F1 from 0.397 to 0.869. It fails all four frozen screens: credential recall and false blocks, original PII retention (0.937 → 0.924 F1), and zero inspection errors. Application checks remain mixed. V2 stays the default. The [milestone record](milestones/2026-10-21-credential-context.md) records the outcome, including public-pay false alarms, missed indirect passwords and spoken range corrections. The next data iteration should address these failures while reserving new test families before training. An augmentation/replay ablation should also measure whether a stronger retention constraint improves the tradeoff.
 
 ## 3. An independently reviewed policy benchmark
 

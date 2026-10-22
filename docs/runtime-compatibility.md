@@ -1,6 +1,6 @@
 # Runtime configuration is part of the model
 
-**Harsh Singhal · 21 October 2026.** The first credential/context run was invalidated after a Qwen3 configuration compatibility fault was found. Its adapter is not a release candidate. A corrected GPU.ai run restarts from the original base with the same data and training recipe.
+**Harsh Singhal · 21 October 2026.** The first credential/context run was invalidated after a Qwen3 configuration compatibility fault was found. Its adapter is not a release candidate. The corrected GPU.ai run restarted from the original base with the same data and training recipe, completed both epochs and produced the separately evaluated Context v0.1 adapter.
 
 ## What failed
 
@@ -51,11 +51,11 @@ Inference explicitly records `use_cache=True`. The saved model configuration has
 ## How the experiment was restarted
 
 - The original v2 weights, frozen source texts and labels, replay sample, scenario-family splits, LoRA rank, learning rate, seed and effective batch remain unchanged.
-- Training starts again from the original base, with two epochs and the same minimum-development-loss checkpoint rule. It does not continue from the invalid adapter.
-- Both baseline and candidate evaluations and the application smoke checks are rerun using the repaired loader.
+- Training restarted from the original base, with two epochs and the same minimum-development-loss checkpoint rule. It does not continue from the invalid adapter.
+- Both baseline and candidate evaluations and the application smoke checks were completed using the repaired loader.
 - Some reserved-test predictions had already been observed under the invalid runtime. No data, labels, thresholds, hyperparameters or selection rules were changed in response. This is a disclosed runtime-repair rerun, not an untouched multi-run benchmark.
 - The independent GLiNER baseline uses a separate model/runtime and is unaffected.
 
-The [repair protocol](../experiments/credential-context-runtime-repair.json) records the decision before the corrected restart. The [invalid-run record](../reports/credential-context/invalid-rope-run/INVALIDATED.json) preserves its status and artifact hash; the model reports in that directory are explicitly marked invalid. Its weights were staged privately and withheld from public release. Corrected results belong in the [milestone record](milestones/2026-10-21-credential-context.md).
+The [repair protocol](../experiments/credential-context-runtime-repair.json) records the decision before the corrected restart. The [invalid-run record](../reports/credential-context/invalid-rope-run/INVALIDATED.json) preserves its status and artifact hash; the model reports in that directory are explicitly marked invalid. Its weights were staged privately and withheld from public release. That invalid private staging history was removed before the corrected artifact was staged; no invalid weights are part of the public adapter repository. Corrected results belong in the [milestone record](milestones/2026-10-21-credential-context.md).
 
 This failure is part of the research record. A checkpoint hash alone does not establish that the intended model computation was loaded. Runtime configuration and measured regression behavior must accompany the weights when making accuracy claims.
