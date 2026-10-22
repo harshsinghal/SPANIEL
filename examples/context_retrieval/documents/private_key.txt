@@ -1,0 +1,4 @@
+This internal deployment attachment contains the private signing key:
+-----BEGIN PRIVATE KEY-----
+Tk9OT1BFUkFUSU9OQUwtU1lOVEhFVElDLUVYQU1QTEU=
+-----END PRIVATE KEY-----

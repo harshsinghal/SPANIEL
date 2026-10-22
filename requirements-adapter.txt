@@ -1,0 +1,2 @@
+-r requirements-demo.txt
+peft==0.17.1

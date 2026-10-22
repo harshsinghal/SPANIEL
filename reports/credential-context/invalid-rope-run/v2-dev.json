@@ -1,0 +1,3907 @@
+{
+  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark.",
+  "runtime": {
+    "created_at": "2026-10-22T02:56:37.590906+00:00",
+    "model": "Harsh/qwen3-0.6b-pii-sft-v2",
+    "revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
+    "adapter": null,
+    "device": "cuda",
+    "dtype": "torch.bfloat16",
+    "data_sha256": "e32e0976baffb2726381531a5ce7e5d716c613f70f89237d334faaffdd303ddc",
+    "model_weights_sha256": "3ce13010b5f0430e188be1261654cc41d7f05eafc6cb1ebffa6576c5e020dc6b",
+    "adapter_weights_sha256": null,
+    "evaluator_sha256": "98f0dec5eca9510f8654a0c20a9e8edd6603c5694ba1e525696783fb3bd705fd",
+    "decoding": "greedy copy-or-tag constraint; full source and span validation"
+  },
+  "summary": {
+    "cases": 100,
+    "scored_cases": 100,
+    "sensitive_cases": 51,
+    "benign_cases": 49,
+    "review_cases": 0,
+    "inspection_errors": 9,
+    "document_true_positives": 23,
+    "document_misses": 26,
+    "sensitive_inspection_errors": 2,
+    "benign_false_blocks": 13,
+    "benign_inspection_errors": 7,
+    "sensitive_document_recall": 0.45098039215686275,
+    "benign_false_block_rate": 0.2653061224489796,
+    "benign_total_withhold_rate": 0.40816326530612246,
+    "exact_case_matches": 37,
+    "span_tp": 9,
+    "span_fp": 314,
+    "span_fn": 42,
+    "span_precision": 0.02786377708978328,
+    "span_recall": 0.17647058823529413,
+    "exact_span_f1": 0.0481283422459893,
+    "complete_contrast_pairs": 49,
+    "correct_contrast_pairs": 6
+  },
+  "by_category": {
+    "access_token": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 2,
+      "document_misses": 1,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.6666666666666666,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 5,
+      "span_tp": 2,
+      "span_fp": 0,
+      "span_fn": 1,
+      "span_precision": 1.0,
+      "span_recall": 0.6666666666666666,
+      "exact_span_f1": 0.8,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 2
+    },
+    "api_key": {
+      "cases": 11,
+      "scored_cases": 11,
+      "sensitive_cases": 6,
+      "benign_cases": 5,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 3,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 1,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.5,
+      "benign_false_block_rate": 0.2,
+      "benign_total_withhold_rate": 0.2,
+      "exact_case_matches": 7,
+      "span_tp": 3,
+      "span_fp": 1,
+      "span_fn": 3,
+      "span_precision": 0.75,
+      "span_recall": 0.5,
+      "exact_span_f1": 0.6,
+      "complete_contrast_pairs": 5,
+      "correct_contrast_pairs": 1
+    },
+    "compensation_range": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 0,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.0,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 3,
+      "span_tp": 0,
+      "span_fp": 0,
+      "span_fn": 3,
+      "span_precision": null,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 0
+    },
+    "long_api_key": {
+      "cases": 24,
+      "scored_cases": 24,
+      "sensitive_cases": 12,
+      "benign_cases": 12,
+      "review_cases": 0,
+      "inspection_errors": 8,
+      "document_true_positives": 6,
+      "document_misses": 4,
+      "sensitive_inspection_errors": 2,
+      "benign_false_blocks": 1,
+      "benign_inspection_errors": 6,
+      "sensitive_document_recall": 0.5,
+      "benign_false_block_rate": 0.08333333333333333,
+      "benign_total_withhold_rate": 0.5833333333333334,
+      "exact_case_matches": 7,
+      "span_tp": 3,
+      "span_fp": 115,
+      "span_fn": 9,
+      "span_precision": 0.025423728813559324,
+      "span_recall": 0.25,
+      "exact_span_f1": 0.046153846153846156,
+      "complete_contrast_pairs": 12,
+      "correct_contrast_pairs": 2
+    },
+    "long_compensation_range": {
+      "cases": 12,
+      "scored_cases": 12,
+      "sensitive_cases": 6,
+      "benign_cases": 6,
+      "review_cases": 0,
+      "inspection_errors": 1,
+      "document_true_positives": 3,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 3,
+      "benign_inspection_errors": 1,
+      "sensitive_document_recall": 0.5,
+      "benign_false_block_rate": 0.5,
+      "benign_total_withhold_rate": 0.6666666666666666,
+      "exact_case_matches": 2,
+      "span_tp": 0,
+      "span_fp": 127,
+      "span_fn": 6,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 6,
+      "correct_contrast_pairs": 0
+    },
+    "long_passphrase": {
+      "cases": 12,
+      "scored_cases": 12,
+      "sensitive_cases": 6,
+      "benign_cases": 6,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 4,
+      "document_misses": 2,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 5,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.6666666666666666,
+      "benign_false_block_rate": 0.8333333333333334,
+      "benign_total_withhold_rate": 0.8333333333333334,
+      "exact_case_matches": 1,
+      "span_tp": 0,
+      "span_fp": 64,
+      "span_fn": 6,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 6,
+      "correct_contrast_pairs": 0
+    },
+    "noisy_credential": {
+      "cases": 5,
+      "scored_cases": 5,
+      "sensitive_cases": 3,
+      "benign_cases": 2,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 3,
+      "document_misses": 0,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 2,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 1.0,
+      "benign_false_block_rate": 1.0,
+      "benign_total_withhold_rate": 1.0,
+      "exact_case_matches": 0,
+      "span_tp": 0,
+      "span_fp": 5,
+      "span_fn": 3,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 2,
+      "correct_contrast_pairs": 0
+    },
+    "passphrase": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 0,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.0,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 3,
+      "span_tp": 0,
+      "span_fp": 0,
+      "span_fn": 3,
+      "span_precision": null,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 0
+    },
+    "personal_compensation": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 0,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.0,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 3,
+      "span_tp": 0,
+      "span_fp": 0,
+      "span_fn": 3,
+      "span_precision": null,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 0
+    },
+    "private_key": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 0,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.0,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 3,
+      "span_tp": 0,
+      "span_fp": 0,
+      "span_fn": 3,
+      "span_precision": null,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 0
+    },
+    "transcript_compensation": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 2,
+      "document_misses": 1,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 1,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.6666666666666666,
+      "benign_false_block_rate": 0.3333333333333333,
+      "benign_total_withhold_rate": 0.3333333333333333,
+      "exact_case_matches": 3,
+      "span_tp": 1,
+      "span_fp": 2,
+      "span_fn": 2,
+      "span_precision": 0.3333333333333333,
+      "span_recall": 0.3333333333333333,
+      "exact_span_f1": 0.3333333333333333,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 1
+    }
+  },
+  "by_family": {
+    "bad_ocr": {
+      "cases": 5,
+      "scored_cases": 5,
+      "sensitive_cases": 3,
+      "benign_cases": 2,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 3,
+      "document_misses": 0,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 2,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 1.0,
+      "benign_false_block_rate": 1.0,
+      "benign_total_withhold_rate": 1.0,
+      "exact_case_matches": 0,
+      "span_tp": 0,
+      "span_fp": 5,
+      "span_fn": 3,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 2,
+      "correct_contrast_pairs": 0
+    },
+    "exported_session": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 2,
+      "document_misses": 1,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.6666666666666666,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 5,
+      "span_tp": 2,
+      "span_fp": 0,
+      "span_fn": 1,
+      "span_precision": 1.0,
+      "span_recall": 0.6666666666666666,
+      "exact_span_f1": 0.8,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 2
+    },
+    "guide_placeholder": {
+      "cases": 17,
+      "scored_cases": 17,
+      "sensitive_cases": 9,
+      "benign_cases": 8,
+      "review_cases": 0,
+      "inspection_errors": 6,
+      "document_true_positives": 6,
+      "document_misses": 1,
+      "sensitive_inspection_errors": 2,
+      "benign_false_blocks": 1,
+      "benign_inspection_errors": 4,
+      "sensitive_document_recall": 0.6666666666666666,
+      "benign_false_block_rate": 0.125,
+      "benign_total_withhold_rate": 0.625,
+      "exact_case_matches": 8,
+      "span_tp": 6,
+      "span_fp": 16,
+      "span_fn": 3,
+      "span_precision": 0.2727272727272727,
+      "span_recall": 0.6666666666666666,
+      "exact_span_f1": 0.3870967741935484,
+      "complete_contrast_pairs": 8,
+      "correct_contrast_pairs": 3
+    },
+    "handover_phrase": {
+      "cases": 18,
+      "scored_cases": 18,
+      "sensitive_cases": 9,
+      "benign_cases": 9,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 4,
+      "document_misses": 5,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 5,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.4444444444444444,
+      "benign_false_block_rate": 0.5555555555555556,
+      "benign_total_withhold_rate": 0.5555555555555556,
+      "exact_case_matches": 4,
+      "span_tp": 0,
+      "span_fp": 64,
+      "span_fn": 9,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 9,
+      "correct_contrast_pairs": 0
+    },
+    "hiring_summary": {
+      "cases": 18,
+      "scored_cases": 18,
+      "sensitive_cases": 9,
+      "benign_cases": 9,
+      "review_cases": 0,
+      "inspection_errors": 1,
+      "document_true_positives": 3,
+      "document_misses": 6,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 3,
+      "benign_inspection_errors": 1,
+      "sensitive_document_recall": 0.3333333333333333,
+      "benign_false_block_rate": 0.3333333333333333,
+      "benign_total_withhold_rate": 0.4444444444444444,
+      "exact_case_matches": 5,
+      "span_tp": 0,
+      "span_fp": 127,
+      "span_fn": 9,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 9,
+      "correct_contrast_pairs": 0
+    },
+    "mixed_public_internal": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 0,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.0,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 3,
+      "span_tp": 0,
+      "span_fp": 0,
+      "span_fn": 3,
+      "span_precision": null,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 0
+    },
+    "pay_call": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 2,
+      "document_misses": 1,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 1,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.6666666666666666,
+      "benign_false_block_rate": 0.3333333333333333,
+      "benign_total_withhold_rate": 0.3333333333333333,
+      "exact_case_matches": 3,
+      "span_tp": 1,
+      "span_fp": 2,
+      "span_fn": 2,
+      "span_precision": 0.3333333333333333,
+      "span_recall": 0.3333333333333333,
+      "exact_span_f1": 0.3333333333333333,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 1
+    },
+    "signer_attachment": {
+      "cases": 6,
+      "scored_cases": 6,
+      "sensitive_cases": 3,
+      "benign_cases": 3,
+      "review_cases": 0,
+      "inspection_errors": 0,
+      "document_true_positives": 0,
+      "document_misses": 3,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 0,
+      "benign_inspection_errors": 0,
+      "sensitive_document_recall": 0.0,
+      "benign_false_block_rate": 0.0,
+      "benign_total_withhold_rate": 0.0,
+      "exact_case_matches": 3,
+      "span_tp": 0,
+      "span_fp": 0,
+      "span_fn": 3,
+      "span_precision": null,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 3,
+      "correct_contrast_pairs": 0
+    },
+    "trace_json": {
+      "cases": 18,
+      "scored_cases": 18,
+      "sensitive_cases": 9,
+      "benign_cases": 9,
+      "review_cases": 0,
+      "inspection_errors": 2,
+      "document_true_positives": 3,
+      "document_misses": 6,
+      "sensitive_inspection_errors": 0,
+      "benign_false_blocks": 1,
+      "benign_inspection_errors": 2,
+      "sensitive_document_recall": 0.3333333333333333,
+      "benign_false_block_rate": 0.1111111111111111,
+      "benign_total_withhold_rate": 0.3333333333333333,
+      "exact_case_matches": 6,
+      "span_tp": 0,
+      "span_fp": 100,
+      "span_fn": 9,
+      "span_precision": 0.0,
+      "span_recall": 0.0,
+      "exact_span_f1": 0.0,
+      "complete_contrast_pairs": 9,
+      "correct_contrast_pairs": 0
+    }
+  },
+  "status": "complete",
+  "scope": "Authored synthetic scenario-family evaluation; substitutions and dilution variants are correlated, not independent benchmark samples. No real audio or human gold validation.",
+  "results": [
+    {
+      "id": "mixed_public_internal-0000-sensitive",
+      "family": "mixed_public_internal",
+      "pair_id": "mixed_public_internal-0000",
+      "category": "personal_compensation",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          91,
+          98,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "a11508f3ccfecb8254894a065bff7f60f065943b369ae61412d3848ccee00d31",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 1.571
+    },
+    {
+      "id": "mixed_public_internal-0000-benign",
+      "family": "mixed_public_internal",
+      "pair_id": "mixed_public_internal-0000",
+      "category": "personal_compensation",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "3827dbee7cbd830341999f1870d66d7056bacc2f22e9463e2984a46e4248e871",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.92
+    },
+    {
+      "id": "mixed_public_internal-0001-sensitive",
+      "family": "mixed_public_internal",
+      "pair_id": "mixed_public_internal-0001",
+      "category": "personal_compensation",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          91,
+          98,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "ab0b7ea7f009676de1f4f60f7eae67715b15959c0103e82274bcc24e39a4a75e",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.794
+    },
+    {
+      "id": "mixed_public_internal-0001-benign",
+      "family": "mixed_public_internal",
+      "pair_id": "mixed_public_internal-0001",
+      "category": "personal_compensation",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "f40f7ed2c19433be093188eb40b16d900036471b74a2c68d6aa2f314fab3b078",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.957
+    },
+    {
+      "id": "mixed_public_internal-0002-sensitive",
+      "family": "mixed_public_internal",
+      "pair_id": "mixed_public_internal-0002",
+      "category": "personal_compensation",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          95,
+          106,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "2a35947746edff07abdbe24a89b86080c190608cbe2954ced18f3ca7d445b0ce",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.943
+    },
+    {
+      "id": "mixed_public_internal-0002-benign",
+      "family": "mixed_public_internal",
+      "pair_id": "mixed_public_internal-0002",
+      "category": "personal_compensation",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "448099e25815f883ed2071a8257660ee0ed0b79e3ffccb9a7ee323db7fcf02ca",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 1.031
+    },
+    {
+      "id": "handover_phrase-0000-sensitive",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000",
+      "category": "passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          25,
+          46,
+          "password"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "b04b8d807dec08e01d4944f04e9be6e62083cd6cb5c64ae03abd6423a8415cf1",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.483
+    },
+    {
+      "id": "handover_phrase-0000-sensitive-long-250-0.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-250-0.0",
+      "category": "long_passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          25,
+          46,
+          "password"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          1563,
+          1572,
+          "password"
+        ]
+      ],
+      "sha256": "3c9ed66769a7cfdebbff48edf6c116a980a8e3810bee8630c92b06c151a96dca",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 7.784
+    },
+    {
+      "id": "handover_phrase-0000-sensitive-long-250-0.5",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-250-0.5",
+      "category": "long_passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          947,
+          968,
+          "password"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "ce97c7617d315ecf8a2c382cd72fdc85ec64296d9165ce16c4bf47c077bc2f02",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 7.631
+    },
+    {
+      "id": "handover_phrase-0000-sensitive-long-250-1.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-250-1.0",
+      "category": "long_passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          1786,
+          1807,
+          "password"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          1483,
+          1492,
+          "password"
+        ]
+      ],
+      "sha256": "8515cd2ceb8e3651d1cdf8db6c1700d1c56b84dd4614d7d15ef16a2622cf846e",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 7.927
+    },
+    {
+      "id": "handover_phrase-0000-sensitive-long-900-0.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-900-0.0",
+      "category": "long_passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          25,
+          46,
+          "password"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          0,
+          13,
+          "password"
+        ]
+      ],
+      "sha256": "5bfe2313a05bf845c975dc633ffc5cae6f9edc7a9d15ef47dfae3e2a0d6b4bd6",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 26.815
+    },
+    {
+      "id": "handover_phrase-0000-sensitive-long-900-0.5",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-900-0.5",
+      "category": "long_passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          3052,
+          3073,
+          "password"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "394ccee3f74487d1c79b7711e7965f5ba6f4c4189a6a3704ee3960119348a51c",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 26.285
+    },
+    {
+      "id": "handover_phrase-0000-sensitive-long-900-1.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-900-1.0",
+      "category": "long_passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          6043,
+          6064,
+          "password"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          6017,
+          6019,
+          "password"
+        ],
+        [
+          6019,
+          6022,
+          "password"
+        ],
+        [
+          6022,
+          6025,
+          "password"
+        ],
+        [
+          6025,
+          6027,
+          "password"
+        ],
+        [
+          6027,
+          6031,
+          "password"
+        ],
+        [
+          6031,
+          6033,
+          "password"
+        ],
+        [
+          6033,
+          6036,
+          "password"
+        ],
+        [
+          6037,
+          6041,
+          "password"
+        ],
+        [
+          6041,
+          6043,
+          "password"
+        ],
+        [
+          6043,
+          6049,
+          "password"
+        ],
+        [
+          6050,
+          6056,
+          "password"
+        ],
+        [
+          6057,
+          6060,
+          "password"
+        ],
+        [
+          6060,
+          6064,
+          "password"
+        ],
+        [
+          6065,
+          6068,
+          "password"
+        ],
+        [
+          6068,
+          6071,
+          "password"
+        ],
+        [
+          6072,
+          6075,
+          "password"
+        ],
+        [
+          6076,
+          6079,
+          "password"
+        ],
+        [
+          6079,
+          6082,
+          "password"
+        ],
+        [
+          6083,
+          6087,
+          "password"
+        ],
+        [
+          6088,
+          6095,
+          "password"
+        ]
+      ],
+      "sha256": "fea6ebc0539de6329e49e599fcccfa1644f6bef73dcd1da763b130df5cb7d9a7",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 30.113
+    },
+    {
+      "id": "handover_phrase-0000-benign",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000",
+      "category": "passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "6cba5d2145e8b6d84e17643a954b84394f12d447d28a954b4889c2a05b55d921",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.515
+    },
+    {
+      "id": "handover_phrase-0000-benign-long-250-0.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-250-0.0",
+      "category": "long_passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          1318,
+          1324,
+          "password"
+        ],
+        [
+          1584,
+          1592,
+          "password"
+        ]
+      ],
+      "sha256": "f1eaa391fe547275791c36ec35bfd1239196a1df09b63296be1110ba7873ff9d",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 7.806
+    },
+    {
+      "id": "handover_phrase-0000-benign-long-250-0.5",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-250-0.5",
+      "category": "long_passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "9620a69497cf89160c75bee14f8804e5a8639466b4019916822a2d9ff6b05a93",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 7.399
+    },
+    {
+      "id": "handover_phrase-0000-benign-long-250-1.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-250-1.0",
+      "category": "long_passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          1237,
+          1243,
+          "password"
+        ]
+      ],
+      "sha256": "5e148f719dcfc6d669dfa6a0722427255bac8010294e9bc455fdaadc832a6ace",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 7.605
+    },
+    {
+      "id": "handover_phrase-0000-benign-long-900-0.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-900-0.0",
+      "category": "long_passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          0,
+          13,
+          "password"
+        ],
+        [
+          5593,
+          5601,
+          "password"
+        ],
+        [
+          5624,
+          5633,
+          "password"
+        ],
+        [
+          5649,
+          5657,
+          "password"
+        ],
+        [
+          5682,
+          5690,
+          "password"
+        ],
+        [
+          5713,
+          5720,
+          "password"
+        ],
+        [
+          5731,
+          5739,
+          "password"
+        ],
+        [
+          5764,
+          5770,
+          "password"
+        ],
+        [
+          5796,
+          5803,
+          "password"
+        ],
+        [
+          5814,
+          5822,
+          "password"
+        ],
+        [
+          5847,
+          5853,
+          "password"
+        ],
+        [
+          5909,
+          5915,
+          "password"
+        ],
+        [
+          5938,
+          5944,
+          "password"
+        ],
+        [
+          5964,
+          5971,
+          "password"
+        ],
+        [
+          5993,
+          6000,
+          "password"
+        ]
+      ],
+      "sha256": "99411754c7c61b6e7b937444c13d23b60d5b0ea7f5c3356791ba457226557d09",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 29.128
+    },
+    {
+      "id": "handover_phrase-0000-benign-long-900-0.5",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-900-0.5",
+      "category": "long_passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          0,
+          86,
+          "password"
+        ]
+      ],
+      "sha256": "edb8bbc095bda00d300c1800ba6a707d9d6553dba2c52bf75b69097f12d0dc3b",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 25.928
+    },
+    {
+      "id": "handover_phrase-0000-benign-long-900-1.0",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0000-long-900-1.0",
+      "category": "long_passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          5943,
+          5945,
+          "password"
+        ],
+        [
+          5945,
+          5948,
+          "password"
+        ],
+        [
+          5948,
+          5951,
+          "password"
+        ],
+        [
+          5951,
+          5953,
+          "password"
+        ],
+        [
+          5953,
+          5957,
+          "password"
+        ],
+        [
+          5957,
+          5959,
+          "password"
+        ],
+        [
+          5959,
+          5962,
+          "password"
+        ],
+        [
+          5963,
+          5968,
+          "password"
+        ],
+        [
+          5969,
+          5975,
+          "password"
+        ],
+        [
+          5976,
+          5982,
+          "password"
+        ],
+        [
+          5983,
+          5986,
+          "password"
+        ],
+        [
+          5986,
+          5990,
+          "password"
+        ],
+        [
+          5991,
+          5994,
+          "password"
+        ],
+        [
+          5995,
+          5998,
+          "password"
+        ],
+        [
+          5999,
+          6002,
+          "password"
+        ],
+        [
+          6002,
+          6004,
+          "password"
+        ],
+        [
+          6005,
+          6007,
+          "password"
+        ],
+        [
+          6008,
+          6011,
+          "password"
+        ],
+        [
+          6012,
+          6015,
+          "password"
+        ],
+        [
+          6015,
+          6017,
+          "password"
+        ],
+        [
+          6017,
+          6021,
+          "password"
+        ],
+        [
+          6021,
+          6023,
+          "password"
+        ]
+      ],
+      "sha256": "658242aabefdccfde6b1b727da47b7f666d5dd37daacafa4ac6ba2d8ac26fc04",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 30.494
+    },
+    {
+      "id": "handover_phrase-0001-sensitive",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0001",
+      "category": "passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          25,
+          46,
+          "password"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "c692c6c118f5000a61ac104087e5417ba8cc189b15fcc5e5263aca251d64461a",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.443
+    },
+    {
+      "id": "handover_phrase-0001-benign",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0001",
+      "category": "passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "e45515c468dafe0be8bff98cb98fc44dcb1906a1e28e4a25936cb3b991240656",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.498
+    },
+    {
+      "id": "handover_phrase-0002-sensitive",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0002",
+      "category": "passphrase",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          25,
+          45,
+          "password"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "c9fe0cb3aa28452028650b49517deae94f1780c92cf66e3dda306b67cb924d6c",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.419
+    },
+    {
+      "id": "handover_phrase-0002-benign",
+      "family": "handover_phrase",
+      "pair_id": "handover_phrase-0002",
+      "category": "passphrase",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "5a4247e14d3688233ab40ca8a77d0b4fc8b6491ff235607cd2b41ff224099a0f",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.498
+    },
+    {
+      "id": "guide_placeholder-0000-sensitive",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000",
+      "category": "api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          40,
+          72,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          40,
+          72,
+          "api key"
+        ]
+      ],
+      "sha256": "5dc605307c673903518ddf066946c622674abe42b309e812d24d684581852872",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 1.063
+    },
+    {
+      "id": "guide_placeholder-0000-sensitive-long-250-0.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-250-0.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          40,
+          72,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          40,
+          72,
+          "api key"
+        ]
+      ],
+      "sha256": "58796d0a25aa1cb64a8a2e4359d43b49adb57e597d15a9c772d3febb3eb3d6b5",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 7.972
+    },
+    {
+      "id": "guide_placeholder-0000-sensitive-long-250-0.5",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-250-0.5",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          961,
+          993,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          961,
+          993,
+          "api key"
+        ]
+      ],
+      "sha256": "0d69e305dda36e8b496f6e4456da647436b89dc341357fbdff7274680649454a",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 8.253
+    },
+    {
+      "id": "guide_placeholder-0000-sensitive-long-250-1.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-250-1.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          1758,
+          1790,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "7966b855b90be43e20bbb94833b1646926189cbf7b430039b929a69e787a5771",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 7.797
+    },
+    {
+      "id": "guide_placeholder-0000-sensitive-long-900-0.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-900-0.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          40,
+          72,
+          "api key"
+        ]
+      ],
+      "sha256": "55ef8fbdb10e1940a7013b78ae609f816f8f04a63b176afb984d0deb302f82d9",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 57.523,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "guide_placeholder-0000-sensitive-long-900-0.5",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-900-0.5",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          2941,
+          2973,
+          "api key"
+        ]
+      ],
+      "sha256": "e3f5305f5bfb1cba16382b1ac3454bda210a52074651b294e7c6b10ad90270e5",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 58.517,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "guide_placeholder-0000-sensitive-long-900-1.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-900-1.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          6021,
+          6053,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          5980,
+          5982,
+          "api key"
+        ],
+        [
+          5982,
+          5985,
+          "api key"
+        ],
+        [
+          5985,
+          5988,
+          "api key"
+        ],
+        [
+          5989,
+          5991,
+          "api key"
+        ],
+        [
+          5991,
+          5994,
+          "api key"
+        ],
+        [
+          5994,
+          5997,
+          "api key"
+        ],
+        [
+          5998,
+          6001,
+          "api key"
+        ],
+        [
+          6002,
+          6005,
+          "api key"
+        ],
+        [
+          6005,
+          6009,
+          "api key"
+        ],
+        [
+          6010,
+          6013,
+          "api key"
+        ],
+        [
+          6014,
+          6020,
+          "api key"
+        ],
+        [
+          6021,
+          6053,
+          "api key"
+        ],
+        [
+          6054,
+          6056,
+          "api key"
+        ],
+        [
+          6057,
+          6061,
+          "api key"
+        ],
+        [
+          6062,
+          6069,
+          "api key"
+        ],
+        [
+          6070,
+          6076,
+          "api key"
+        ]
+      ],
+      "sha256": "40882ded99c50bb460c159142d88ccaa53e2370e325bb39ab50672c15e148232",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 30.106
+    },
+    {
+      "id": "guide_placeholder-0000-benign",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000",
+      "category": "api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "449f57531720dbe8457bdc250f573b364a4e03fdf01fdbc023e539276c16d94d",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.524
+    },
+    {
+      "id": "guide_placeholder-0000-benign-long-250-0.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-250-0.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "4edf9fa91aa480cfa4d9787fd6627a0b402fdabc72b257545d7351ccd036847b",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 7.392
+    },
+    {
+      "id": "guide_placeholder-0000-benign-long-250-0.5",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-250-0.5",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "e4c2fac957b3e4dc14798a59f77756bbdcbbf69de454cf6b612065b9f5723f04",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 7.48
+    },
+    {
+      "id": "guide_placeholder-0000-benign-long-250-1.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-250-1.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "sha256": "ae95c73833754097315bea3feb7a502cb0303496c0a326f7b09aabec8ed96b40",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 22.138,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "guide_placeholder-0000-benign-long-900-0.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-900-0.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "sha256": "219b15c6be3e3ebf5fed5a688daa640902c091963de55d746d0cb1f963f4add5",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 58.81,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "guide_placeholder-0000-benign-long-900-0.5",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-900-0.5",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "sha256": "811c55c1f9f97b736a40b202d8f11d19ddc5f00b2edb056bdbdb00e4e8ac9c82",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 60.258,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "guide_placeholder-0000-benign-long-900-1.0",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0000-long-900-1.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "sha256": "7d058800c62e976487f3ae9a568fe780b1992adcf1d87d5218405a2818eccf94",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 59.557,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "guide_placeholder-0001-sensitive",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0001",
+      "category": "api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          40,
+          63,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          40,
+          63,
+          "api key"
+        ]
+      ],
+      "sha256": "077ec8c8008727ebc28b5515accf3485209a233edd99a4a863b56fa0a5d844aa",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.879
+    },
+    {
+      "id": "guide_placeholder-0002-sensitive",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0002",
+      "category": "api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          40,
+          70,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          40,
+          70,
+          "api key"
+        ]
+      ],
+      "sha256": "35f6534cabaaa9802a9c16c66868c0e087b6ffd0f176115fdfadfb0f418e2d1d",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.962
+    },
+    {
+      "id": "guide_placeholder-0002-benign",
+      "family": "guide_placeholder",
+      "pair_id": "guide_placeholder-0002",
+      "category": "api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          52,
+          69,
+          "api key"
+        ]
+      ],
+      "sha256": "35cc03a4ed278de8ceb5bd3d5a80ca7d470eccb20f5eee129c380ebd84c5e7bc",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.768
+    },
+    {
+      "id": "trace_json-0000-sensitive",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000",
+      "category": "api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          51,
+          83,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "491c89e2babd1e82dcae915ecf58a1f0bd30dbd84d18435d2400b24e2b6f1f51",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.865
+    },
+    {
+      "id": "trace_json-0000-sensitive-long-250-0.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-250-0.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          51,
+          83,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "21f5f80dfbc74258dec5afc96361516b1e2367de8d00babea32e451ded08ac3d",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 8.04
+    },
+    {
+      "id": "trace_json-0000-sensitive-long-250-0.5",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-250-0.5",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          846,
+          878,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "1e22fca6ba45a7868b32a2ff368d618f861a30edcf30d9f83dd422e5e322bb42",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 7.95
+    },
+    {
+      "id": "trace_json-0000-sensitive-long-250-1.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-250-1.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          1702,
+          1734,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "8cf77940938bc9b9d364070d63065344bb99abb2b9611e6eb2735a851e15f9dd",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 7.777
+    },
+    {
+      "id": "trace_json-0000-sensitive-long-900-0.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-900-0.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          51,
+          83,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          0,
+          6023,
+          "api key"
+        ]
+      ],
+      "sha256": "a8cd5e978bcb7ce9aed6a00ec4ec92924f6f0414b1a804704095d911d8e91bb4",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 26.728
+    },
+    {
+      "id": "trace_json-0000-sensitive-long-900-0.5",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-900-0.5",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          3021,
+          3053,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          2969,
+          3058,
+          "api key"
+        ]
+      ],
+      "sha256": "2244bf868e7f0cd605296cdb5ffce2cb5ee93ecce74d8fa3b5b78fe5f23f845d",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 26.978
+    },
+    {
+      "id": "trace_json-0000-sensitive-long-900-1.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-900-1.0",
+      "category": "long_api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          5988,
+          6020,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          0,
+          2,
+          "api key"
+        ],
+        [
+          3,
+          6,
+          "api key"
+        ],
+        [
+          7,
+          10,
+          "api key"
+        ],
+        [
+          10,
+          13,
+          "api key"
+        ],
+        [
+          13,
+          17,
+          "api key"
+        ],
+        [
+          17,
+          20,
+          "api key"
+        ],
+        [
+          20,
+          22,
+          "api key"
+        ],
+        [
+          22,
+          25,
+          "api key"
+        ],
+        [
+          25,
+          28,
+          "api key"
+        ],
+        [
+          28,
+          30,
+          "api key"
+        ],
+        [
+          30,
+          34,
+          "api key"
+        ],
+        [
+          34,
+          37,
+          "api key"
+        ],
+        [
+          37,
+          40,
+          "api key"
+        ],
+        [
+          40,
+          43,
+          "api key"
+        ],
+        [
+          43,
+          46,
+          "api key"
+        ],
+        [
+          46,
+          48,
+          "api key"
+        ],
+        [
+          48,
+          51,
+          "api key"
+        ],
+        [
+          51,
+          55,
+          "api key"
+        ],
+        [
+          55,
+          57,
+          "api key"
+        ],
+        [
+          57,
+          60,
+          "api key"
+        ],
+        [
+          60,
+          62,
+          "api key"
+        ],
+        [
+          62,
+          66,
+          "api key"
+        ],
+        [
+          66,
+          69,
+          "api key"
+        ],
+        [
+          69,
+          71,
+          "api key"
+        ],
+        [
+          71,
+          73,
+          "api key"
+        ],
+        [
+          73,
+          76,
+          "api key"
+        ],
+        [
+          76,
+          83,
+          "api key"
+        ],
+        [
+          83,
+          85,
+          "api key"
+        ],
+        [
+          85,
+          88,
+          "api key"
+        ],
+        [
+          88,
+          92,
+          "api key"
+        ],
+        [
+          92,
+          95,
+          "api key"
+        ],
+        [
+          95,
+          97,
+          "api key"
+        ],
+        [
+          97,
+          100,
+          "api key"
+        ],
+        [
+          100,
+          103,
+          "api key"
+        ],
+        [
+          103,
+          105,
+          "api key"
+        ],
+        [
+          105,
+          5936,
+          "api key"
+        ],
+        [
+          5937,
+          5939,
+          "api key"
+        ],
+        [
+          5940,
+          5943,
+          "api key"
+        ],
+        [
+          5944,
+          5947,
+          "api key"
+        ],
+        [
+          5947,
+          5950,
+          "api key"
+        ],
+        [
+          5950,
+          5953,
+          "api key"
+        ],
+        [
+          5954,
+          5958,
+          "api key"
+        ],
+        [
+          5958,
+          5960,
+          "api key"
+        ],
+        [
+          5960,
+          5962,
+          "api key"
+        ],
+        [
+          5962,
+          5966,
+          "api key"
+        ],
+        [
+          5966,
+          5969,
+          "api key"
+        ],
+        [
+          5969,
+          5972,
+          "api key"
+        ],
+        [
+          5972,
+          5975,
+          "api key"
+        ],
+        [
+          5975,
+          5977,
+          "api key"
+        ],
+        [
+          5977,
+          5979,
+          "api key"
+        ],
+        [
+          5979,
+          5985,
+          "api key"
+        ],
+        [
+          5985,
+          5987,
+          "api key"
+        ],
+        [
+          5987,
+          5989,
+          "api key"
+        ],
+        [
+          5989,
+          5991,
+          "api key"
+        ],
+        [
+          5991,
+          5993,
+          "api key"
+        ],
+        [
+          5993,
+          5996,
+          "api key"
+        ],
+        [
+          5996,
+          5998,
+          "api key"
+        ],
+        [
+          5998,
+          6000,
+          "api key"
+        ],
+        [
+          6000,
+          6002,
+          "api key"
+        ],
+        [
+          6002,
+          6004,
+          "api key"
+        ],
+        [
+          6004,
+          6006,
+          "api key"
+        ],
+        [
+          6006,
+          6008,
+          "api key"
+        ],
+        [
+          6008,
+          6010,
+          "api key"
+        ],
+        [
+          6010,
+          6012,
+          "api key"
+        ],
+        [
+          6012,
+          6014,
+          "api key"
+        ],
+        [
+          6014,
+          6016,
+          "api key"
+        ],
+        [
+          6016,
+          6018,
+          "api key"
+        ],
+        [
+          6018,
+          6020,
+          "api key"
+        ],
+        [
+          6020,
+          6022,
+          "api key"
+        ]
+      ],
+      "sha256": "b252ffeb26927e037fe4425610cc12860b9391a4dd8edc22b24718e87884d175",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 44.429
+    },
+    {
+      "id": "trace_json-0000-benign",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000",
+      "category": "api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "47a9fd784ff27bb4309b0a6ed55651c53843eb448f18ade8c0b743255bfcb191",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.886
+    },
+    {
+      "id": "trace_json-0000-benign-long-250-0.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-250-0.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "603779861ae988c11cff2c6a46426a3361cca55380c7318fc664e01a56a11433",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 8.162
+    },
+    {
+      "id": "trace_json-0000-benign-long-250-0.5",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-250-0.5",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "c2e7e96ee34e8b0e7d21aa8fadbfcdd1c38113152a2893042f00bd3cb31de25e",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 8.228
+    },
+    {
+      "id": "trace_json-0000-benign-long-250-1.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-250-1.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "08200b79bf85e5362e843a6e156dbc4514bb9e3f7e929d26ec9a9001032578ed",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 8.106
+    },
+    {
+      "id": "trace_json-0000-benign-long-900-0.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-900-0.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "sha256": "a41affd04a7fc5014d53d59693c99a7f62f542ecf953b9c73c027f0a05a7db25",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 61.043,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "trace_json-0000-benign-long-900-0.5",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-900-0.5",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          0,
+          93,
+          "api key"
+        ],
+        [
+          3022,
+          4173,
+          "api key"
+        ],
+        [
+          4197,
+          4426,
+          "api key"
+        ],
+        [
+          4450,
+          4715,
+          "api key"
+        ],
+        [
+          4739,
+          4793,
+          "api key"
+        ],
+        [
+          4821,
+          4886,
+          "api key"
+        ],
+        [
+          4914,
+          5015,
+          "api key"
+        ],
+        [
+          5123,
+          5184,
+          "api key"
+        ],
+        [
+          5212,
+          5247,
+          "api key"
+        ],
+        [
+          5265,
+          5293,
+          "api key"
+        ],
+        [
+          5399,
+          5436,
+          "api key"
+        ],
+        [
+          5460,
+          5488,
+          "api key"
+        ],
+        [
+          5553,
+          5581,
+          "api key"
+        ],
+        [
+          5586,
+          5602,
+          "api key"
+        ],
+        [
+          5613,
+          5632,
+          "api key"
+        ],
+        [
+          5637,
+          5643,
+          "api key"
+        ],
+        [
+          5661,
+          5666,
+          "api key"
+        ],
+        [
+          5688,
+          5728,
+          "api key"
+        ],
+        [
+          5735,
+          5751,
+          "api key"
+        ],
+        [
+          5752,
+          5757,
+          "api key"
+        ],
+        [
+          5773,
+          5807,
+          "api key"
+        ],
+        [
+          5856,
+          5861,
+          "api key"
+        ],
+        [
+          5878,
+          5912,
+          "api key"
+        ],
+        [
+          5961,
+          5966,
+          "api key"
+        ],
+        [
+          5983,
+          6008,
+          "api key"
+        ],
+        [
+          6013,
+          6019,
+          "api key"
+        ],
+        [
+          6037,
+          6042,
+          "api key"
+        ],
+        [
+          6058,
+          6072,
+          "api key"
+        ],
+        [
+          6090,
+          6096,
+          "api key"
+        ]
+      ],
+      "sha256": "1c116380e3f7d21a315b3796b3c80c8516639c4d01ca16d3907b38f645ad2882",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 33.519
+    },
+    {
+      "id": "trace_json-0000-benign-long-900-1.0",
+      "family": "trace_json",
+      "pair_id": "trace_json-0000-long-900-1.0",
+      "category": "long_api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "sha256": "429235ff77d485317397f2a11c288174daa8ccd2596e62b24be3d1504e76d0cd",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 70.022,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "trace_json-0001-sensitive",
+      "family": "trace_json",
+      "pair_id": "trace_json-0001",
+      "category": "api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          51,
+          83,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "e15e53b4344f1935d296ed1be73514e8b3305cda6fecf4174866eff945e7662d",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.815
+    },
+    {
+      "id": "trace_json-0001-benign",
+      "family": "trace_json",
+      "pair_id": "trace_json-0001",
+      "category": "api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "d113640dc4ebc99d7358bfc6571164702648a6c2452857d5d4e64ef226eafc8e",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.828
+    },
+    {
+      "id": "trace_json-0002-sensitive",
+      "family": "trace_json",
+      "pair_id": "trace_json-0002",
+      "category": "api_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          51,
+          91,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "71f0460d1295d6fa7eab6043e51db20cdbebf6ce0d65bfa72592f697a300e1ae",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 1.071
+    },
+    {
+      "id": "trace_json-0002-benign",
+      "family": "trace_json",
+      "pair_id": "trace_json-0002",
+      "category": "api_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "eaa82675197d32ace9354600e12c4c0552fa525d757dd4df1f6e48f387d3ec13",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 1.036
+    },
+    {
+      "id": "exported_session-0000-sensitive",
+      "family": "exported_session",
+      "pair_id": "exported_session-0000",
+      "category": "access_token",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          64,
+          185,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          64,
+          185,
+          "api key"
+        ]
+      ],
+      "sha256": "63ec1ae368ef5344d580f2c60350cad3928d4605ba45713c4ec1aede6a70b575",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 2.694
+    },
+    {
+      "id": "exported_session-0000-benign",
+      "family": "exported_session",
+      "pair_id": "exported_session-0000",
+      "category": "access_token",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "3c3ab15b024e9e951339be3ae9eeebc5a493f2b068fbfb5345b3e491cd1220ff",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.562
+    },
+    {
+      "id": "exported_session-0001-sensitive",
+      "family": "exported_session",
+      "pair_id": "exported_session-0001",
+      "category": "access_token",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          64,
+          185,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          64,
+          185,
+          "api key"
+        ]
+      ],
+      "sha256": "5197d45ea799db9932c741f375df8d1591d7ad45dcf6e8be81dcc93f79279544",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 2.874
+    },
+    {
+      "id": "exported_session-0001-benign",
+      "family": "exported_session",
+      "pair_id": "exported_session-0001",
+      "category": "access_token",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "949ea3671ed0d9ddffb1724a6bf177f1fef7a4a838e36c4174bea4333dc87ebe",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.469
+    },
+    {
+      "id": "exported_session-0002-sensitive",
+      "family": "exported_session",
+      "pair_id": "exported_session-0002",
+      "category": "access_token",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          64,
+          204,
+          "api key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "07de825bbd35ce383b2c1e60011558de075107120bcd24d380a3560a77bf1175",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 2.828
+    },
+    {
+      "id": "exported_session-0002-benign",
+      "family": "exported_session",
+      "pair_id": "exported_session-0002",
+      "category": "access_token",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "42be85f5a51a9602e49ee0e8f6c62aa68c90f946e18bfd5d212fa9d2f74a47a0",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.454
+    },
+    {
+      "id": "signer_attachment-0000-sensitive",
+      "family": "signer_attachment",
+      "pair_id": "signer_attachment-0000",
+      "category": "private_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          64,
+          186,
+          "private key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "fa1f52e866ecf0306066f749081ee6cae0ec842cee2a0017e52ca8160e889209",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 1.972
+    },
+    {
+      "id": "signer_attachment-0000-benign",
+      "family": "signer_attachment",
+      "pair_id": "signer_attachment-0000",
+      "category": "private_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "ffac8e3d67de92611a71cc731e37822743dab171de36e1728bc745f00f615fd9",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 2.03
+    },
+    {
+      "id": "signer_attachment-0001-sensitive",
+      "family": "signer_attachment",
+      "pair_id": "signer_attachment-0001",
+      "category": "private_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          64,
+          186,
+          "private key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "0ce19c3dcbfa94ad96329c8524b00e46d96fb3a31ea9a444623f84f4e196fe19",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 2.021
+    },
+    {
+      "id": "signer_attachment-0001-benign",
+      "family": "signer_attachment",
+      "pair_id": "signer_attachment-0001",
+      "category": "private_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "d2bb050ba8ff111764bb0eb53dc3867d9a1d3ed150fde48be932c35d3fa8b835",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 1.961
+    },
+    {
+      "id": "signer_attachment-0002-sensitive",
+      "family": "signer_attachment",
+      "pair_id": "signer_attachment-0002",
+      "category": "private_key",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          64,
+          186,
+          "private key"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "ad5c64f8b086cc0181b762dbed0a88308d3b1ba07ae7e3c4f70b6125769a65e0",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 1.953
+    },
+    {
+      "id": "signer_attachment-0002-benign",
+      "family": "signer_attachment",
+      "pair_id": "signer_attachment-0002",
+      "category": "private_key",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "5cdea59435d1d606ed7b6d2855fdda9133be9ebdf5676f34f26016355c7bd239",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 2.067
+    },
+    {
+      "id": "hiring_summary-0000-sensitive",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000",
+      "category": "compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          66,
+          88,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "28c04e2c610acb406745f6dcc4311d58fff31bcd0f063259ad90158be0dbea98",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.971
+    },
+    {
+      "id": "hiring_summary-0000-sensitive-long-250-0.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-250-0.0",
+      "category": "long_compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          66,
+          88,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "5d78d93afd44b9ed1ad7f0f6e0fdf42959b83c6657b33beaffd97b79569d8196",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 8.353
+    },
+    {
+      "id": "hiring_summary-0000-sensitive-long-250-0.5",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-250-0.5",
+      "category": "long_compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          876,
+          898,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "ac2c3cd1125e08a3587a9d622ce39f5f2fa30fe9f89cb18c11165c73a03ea508",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 8.443
+    },
+    {
+      "id": "hiring_summary-0000-sensitive-long-250-1.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-250-1.0",
+      "category": "long_compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          1734,
+          1756,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "b31c21bfc598385d642e151264e89dbf79aa93664b338fa186d5cdb1320362f9",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 8.384
+    },
+    {
+      "id": "hiring_summary-0000-sensitive-long-900-0.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-900-0.0",
+      "category": "long_compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          66,
+          88,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          0,
+          121,
+          "private compensation"
+        ]
+      ],
+      "sha256": "705e0ce62af7276e365b90f6cc091933fe1e4aaaacb3b5dffbe9a936e0748a09",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 28.737
+    },
+    {
+      "id": "hiring_summary-0000-sensitive-long-900-0.5",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-900-0.5",
+      "category": "long_compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          3071,
+          3093,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          3004,
+          3006,
+          "private compensation"
+        ],
+        [
+          3007,
+          3012,
+          "private compensation"
+        ],
+        [
+          3016,
+          3018,
+          "private compensation"
+        ],
+        [
+          3019,
+          3022,
+          "private compensation"
+        ],
+        [
+          3023,
+          3027,
+          "private compensation"
+        ],
+        [
+          3028,
+          3030,
+          "private compensation"
+        ],
+        [
+          3031,
+          3037,
+          "private compensation"
+        ],
+        [
+          3038,
+          3041,
+          "private compensation"
+        ],
+        [
+          3041,
+          3045,
+          "private compensation"
+        ],
+        [
+          3045,
+          3048,
+          "private compensation"
+        ],
+        [
+          3048,
+          3050,
+          "private compensation"
+        ],
+        [
+          3050,
+          3052,
+          "private compensation"
+        ],
+        [
+          3052,
+          3057,
+          "private compensation"
+        ]
+      ],
+      "sha256": "23f4325241715ce196ba39d9a5042e8a32d6c9886696f5980d330b121ae04241",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 31.712
+    },
+    {
+      "id": "hiring_summary-0000-sensitive-long-900-1.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-900-1.0",
+      "category": "long_compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          6009,
+          6031,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          5942,
+          6064,
+          "private compensation"
+        ]
+      ],
+      "sha256": "effeb9bf2925423dc66a131f9fe2b10cd547ce60cdc90063db1c0d50ef21145f",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 28.992
+    },
+    {
+      "id": "hiring_summary-0000-benign",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000",
+      "category": "compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "a8a9af729c2d16d275e69dfa5d99c70a60464749211662ce2f579c641401ac41",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 1.11
+    },
+    {
+      "id": "hiring_summary-0000-benign-long-250-0.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-250-0.0",
+      "category": "long_compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          1509,
+          1515,
+          "private compensation"
+        ]
+      ],
+      "sha256": "b5acec0b9022b79303b7ba6ab566a679c6ab6f28f70e885f8ffff153ca8389ae",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 8.693
+    },
+    {
+      "id": "hiring_summary-0000-benign-long-250-0.5",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-250-0.5",
+      "category": "long_compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "ab1a5fe0a8e0b7e12d7e919a54516400a94b0d86be6fb093ad26c607d1d80fb2",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 8.537
+    },
+    {
+      "id": "hiring_summary-0000-benign-long-250-1.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-250-1.0",
+      "category": "long_compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "51dbddca027b65d5892a05d1cd2fbab34a36b9b01a66253da9998dece3aa5f4b",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 8.769
+    },
+    {
+      "id": "hiring_summary-0000-benign-long-900-0.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-900-0.0",
+      "category": "long_compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          0,
+          134,
+          "private compensation"
+        ],
+        [
+          4930,
+          4938,
+          "private compensation"
+        ],
+        [
+          4939,
+          4947,
+          "private compensation"
+        ],
+        [
+          4948,
+          4957,
+          "private compensation"
+        ],
+        [
+          5374,
+          5387,
+          "private compensation"
+        ],
+        [
+          5457,
+          5470,
+          "private compensation"
+        ],
+        [
+          5538,
+          5543,
+          "private compensation"
+        ],
+        [
+          5548,
+          5561,
+          "private compensation"
+        ],
+        [
+          5566,
+          5572,
+          "private compensation"
+        ],
+        [
+          5595,
+          5611,
+          "private compensation"
+        ],
+        [
+          5612,
+          5621,
+          "private compensation"
+        ],
+        [
+          5626,
+          5639,
+          "private compensation"
+        ],
+        [
+          5644,
+          5650,
+          "private compensation"
+        ],
+        [
+          5673,
+          5694,
+          "private compensation"
+        ],
+        [
+          5695,
+          5700,
+          "private compensation"
+        ],
+        [
+          5705,
+          5718,
+          "private compensation"
+        ],
+        [
+          5719,
+          5729,
+          "private compensation"
+        ],
+        [
+          5734,
+          5747,
+          "private compensation"
+        ],
+        [
+          5755,
+          5763,
+          "private compensation"
+        ],
+        [
+          5769,
+          5785,
+          "private compensation"
+        ],
+        [
+          5786,
+          5791,
+          "private compensation"
+        ],
+        [
+          5796,
+          5815,
+          "private compensation"
+        ],
+        [
+          5820,
+          5828,
+          "private compensation"
+        ],
+        [
+          5829,
+          5837,
+          "private compensation"
+        ],
+        [
+          5838,
+          5847,
+          "private compensation"
+        ],
+        [
+          5853,
+          5866,
+          "private compensation"
+        ],
+        [
+          5867,
+          5876,
+          "private compensation"
+        ],
+        [
+          5881,
+          5894,
+          "private compensation"
+        ],
+        [
+          5895,
+          5899,
+          "private compensation"
+        ],
+        [
+          5900,
+          5907,
+          "private compensation"
+        ],
+        [
+          5908,
+          5910,
+          "private compensation"
+        ],
+        [
+          5911,
+          5942,
+          "private compensation"
+        ],
+        [
+          5948,
+          5963,
+          "private compensation"
+        ],
+        [
+          5964,
+          5973,
+          "private compensation"
+        ],
+        [
+          5978,
+          5998,
+          "private compensation"
+        ],
+        [
+          5999,
+          6002,
+          "private compensation"
+        ],
+        [
+          6003,
+          6009,
+          "private compensation"
+        ],
+        [
+          6010,
+          6014,
+          "private compensation"
+        ],
+        [
+          6014,
+          6017,
+          "private compensation"
+        ],
+        [
+          6017,
+          6019,
+          "private compensation"
+        ],
+        [
+          6019,
+          6021,
+          "private compensation"
+        ],
+        [
+          6021,
+          6026,
+          "private compensation"
+        ],
+        [
+          6026,
+          6032,
+          "private compensation"
+        ],
+        [
+          6048,
+          6056,
+          "private compensation"
+        ],
+        [
+          6057,
+          6067,
+          "private compensation"
+        ],
+        [
+          6068,
+          6070,
+          "private compensation"
+        ],
+        [
+          6071,
+          6074,
+          "private compensation"
+        ],
+        [
+          6075,
+          6083,
+          "private compensation"
+        ],
+        [
+          6084,
+          6088,
+          "private compensation"
+        ],
+        [
+          6089,
+          6096,
+          "private compensation"
+        ],
+        [
+          6097,
+          6099,
+          "private compensation"
+        ],
+        [
+          6100,
+          6103,
+          "private compensation"
+        ],
+        [
+          6104,
+          6110,
+          "private compensation"
+        ],
+        [
+          6110,
+          6112,
+          "private compensation"
+        ],
+        [
+          6113,
+          6119,
+          "private compensation"
+        ],
+        [
+          6119,
+          6123,
+          "private compensation"
+        ],
+        [
+          6124,
+          6127,
+          "private compensation"
+        ],
+        [
+          6127,
+          6130,
+          "private compensation"
+        ],
+        [
+          6130,
+          6132,
+          "private compensation"
+        ]
+      ],
+      "sha256": "fe8556d10699a397a072e2070419bd66d3e62695d82c450e691369c390443cba",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 44.282
+    },
+    {
+      "id": "hiring_summary-0000-benign-long-900-0.5",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-900-0.5",
+      "category": "long_compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "sha256": "d2dd0fe59634a13df85ff338986ba937e7cc1c1dfb61e67850ee6be61216a73f",
+      "detected": null,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 69.015,
+      "error": "inspection_failed"
+    },
+    {
+      "id": "hiring_summary-0000-benign-long-900-1.0",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0000-long-900-1.0",
+      "category": "long_compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          5660,
+          5662,
+          "private compensation"
+        ],
+        [
+          5662,
+          5665,
+          "private compensation"
+        ],
+        [
+          5665,
+          5668,
+          "private compensation"
+        ],
+        [
+          5668,
+          5670,
+          "private compensation"
+        ],
+        [
+          5670,
+          5676,
+          "private compensation"
+        ],
+        [
+          5676,
+          5679,
+          "private compensation"
+        ],
+        [
+          5684,
+          5692,
+          "private compensation"
+        ],
+        [
+          5717,
+          5730,
+          "private compensation"
+        ],
+        [
+          5759,
+          5771,
+          "private compensation"
+        ],
+        [
+          5812,
+          5827,
+          "private compensation"
+        ],
+        [
+          5863,
+          5890,
+          "private compensation"
+        ],
+        [
+          5896,
+          5911,
+          "private compensation"
+        ],
+        [
+          5948,
+          5960,
+          "private compensation"
+        ],
+        [
+          5997,
+          5999,
+          "private compensation"
+        ],
+        [
+          5999,
+          6002,
+          "private compensation"
+        ],
+        [
+          6002,
+          6005,
+          "private compensation"
+        ],
+        [
+          6006,
+          6008,
+          "private compensation"
+        ],
+        [
+          6009,
+          6011,
+          "private compensation"
+        ],
+        [
+          6011,
+          6014,
+          "private compensation"
+        ],
+        [
+          6014,
+          6018,
+          "private compensation"
+        ],
+        [
+          6018,
+          6021,
+          "private compensation"
+        ],
+        [
+          6021,
+          6023,
+          "private compensation"
+        ],
+        [
+          6024,
+          6027,
+          "private compensation"
+        ],
+        [
+          6027,
+          6029,
+          "private compensation"
+        ],
+        [
+          6030,
+          6032,
+          "private compensation"
+        ],
+        [
+          6032,
+          6035,
+          "private compensation"
+        ],
+        [
+          6035,
+          6038,
+          "private compensation"
+        ],
+        [
+          6039,
+          6042,
+          "private compensation"
+        ],
+        [
+          6043,
+          6047,
+          "private compensation"
+        ],
+        [
+          6047,
+          6050,
+          "private compensation"
+        ],
+        [
+          6050,
+          6052,
+          "private compensation"
+        ],
+        [
+          6052,
+          6055,
+          "private compensation"
+        ],
+        [
+          6056,
+          6059,
+          "private compensation"
+        ],
+        [
+          6059,
+          6062,
+          "private compensation"
+        ],
+        [
+          6062,
+          6065,
+          "private compensation"
+        ],
+        [
+          6065,
+          6067,
+          "private compensation"
+        ],
+        [
+          6067,
+          6071,
+          "private compensation"
+        ],
+        [
+          6072,
+          6075,
+          "private compensation"
+        ],
+        [
+          6076,
+          6079,
+          "private compensation"
+        ],
+        [
+          6080,
+          6082,
+          "private compensation"
+        ],
+        [
+          6082,
+          6087,
+          "private compensation"
+        ],
+        [
+          6088,
+          6090,
+          "private compensation"
+        ],
+        [
+          6091,
+          6093,
+          "private compensation"
+        ],
+        [
+          6093,
+          6098,
+          "private compensation"
+        ],
+        [
+          6098,
+          6100,
+          "private compensation"
+        ],
+        [
+          6100,
+          6102,
+          "private compensation"
+        ],
+        [
+          6103,
+          6110,
+          "private compensation"
+        ],
+        [
+          6111,
+          6115,
+          "private compensation"
+        ],
+        [
+          6115,
+          6117,
+          "private compensation"
+        ],
+        [
+          6117,
+          6121,
+          "private compensation"
+        ],
+        [
+          6122,
+          6129,
+          "private compensation"
+        ],
+        [
+          6129,
+          6131,
+          "private compensation"
+        ]
+      ],
+      "sha256": "6a718ea4b3e99bd1df40e53318d1dddaa41b695e1a2623e31850f61670723a40",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 43.13
+    },
+    {
+      "id": "hiring_summary-0001-sensitive",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0001",
+      "category": "compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          66,
+          83,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "b58037a9c3461a85355a1111958872a3b3ddc6669ed0033a1a7ee710aae2d547",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.938
+    },
+    {
+      "id": "hiring_summary-0001-benign",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0001",
+      "category": "compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "aa4b320193899ebee120dfbca9a740bf875fdc435c6a6a32168018bbeb0be831",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 1.101
+    },
+    {
+      "id": "hiring_summary-0002-sensitive",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0002",
+      "category": "compensation_range",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          66,
+          86,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "0836d582d8beaa424d98a6eb7eba4b863aea0a545786b1df2ac493cd28065b74",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.925
+    },
+    {
+      "id": "hiring_summary-0002-benign",
+      "family": "hiring_summary",
+      "pair_id": "hiring_summary-0002",
+      "category": "compensation_range",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "9cdde3b71883c83b542dd45c955752791111b918eafa2f347c9c22f4f17fb611",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 1.034
+    },
+    {
+      "id": "pay_call-0000-sensitive",
+      "family": "pay_call",
+      "pair_id": "pay_call-0000",
+      "category": "transcript_compensation",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          34,
+          53,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          34,
+          53,
+          "private compensation"
+        ]
+      ],
+      "sha256": "361354e91be05f7eb42d2ab47d3d5aa8f819d9ae349e7a11822f90039432a656",
+      "detected": true,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.923
+    },
+    {
+      "id": "pay_call-0000-benign",
+      "family": "pay_call",
+      "pair_id": "pay_call-0000",
+      "category": "transcript_compensation",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          52,
+          71,
+          "private compensation"
+        ]
+      ],
+      "sha256": "9ac0e25f62a294259c739406cc853034fd356494b5e4789de2e64abf3223a488",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.978
+    },
+    {
+      "id": "pay_call-0001-sensitive",
+      "family": "pay_call",
+      "pair_id": "pay_call-0001",
+      "category": "transcript_compensation",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          34,
+          49,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [],
+      "sha256": "dd80bb48c43ab571cdc02b75942d31f69e61a4aed2c90a199cb89ffa808746bc",
+      "detected": false,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.761
+    },
+    {
+      "id": "pay_call-0001-benign",
+      "family": "pay_call",
+      "pair_id": "pay_call-0001",
+      "category": "transcript_compensation",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "4e25fd0cc180598f3ba61420c72d298b2d01dc4307473b4262b7091492df2df1",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.816
+    },
+    {
+      "id": "pay_call-0002-sensitive",
+      "family": "pay_call",
+      "pair_id": "pay_call-0002",
+      "category": "transcript_compensation",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          34,
+          49,
+          "private compensation"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          34,
+          38,
+          "private compensation"
+        ]
+      ],
+      "sha256": "4f80398fd1180bf1bdfab1c502600e7c2765a293ab974f915bdf487c45320166",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 0.952
+    },
+    {
+      "id": "pay_call-0002-benign",
+      "family": "pay_call",
+      "pair_id": "pay_call-0002",
+      "category": "transcript_compensation",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [],
+      "sha256": "5f979cafc4545378d0e404cf62fb276327b30460e63aefd17f341a27439e4b77",
+      "detected": false,
+      "exact_match": true,
+      "decision_correct": true,
+      "seconds": 0.824
+    },
+    {
+      "id": "bad_ocr-0000-sensitive",
+      "family": "bad_ocr",
+      "pair_id": "bad_ocr-0000",
+      "category": "noisy_credential",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          20,
+          44,
+          "password"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          20,
+          41,
+          "password"
+        ]
+      ],
+      "sha256": "b30066d35c8c13cc285a36a06e8dbab0edae65431c27a6e514aff8ee891caff3",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 0.927
+    },
+    {
+      "id": "bad_ocr-0000-benign",
+      "family": "bad_ocr",
+      "pair_id": "bad_ocr-0000",
+      "category": "noisy_credential",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          21,
+          29,
+          "password"
+        ]
+      ],
+      "sha256": "493cc648f6c3a5bf1194e9865d5f9b1447f61a073d9fcf66073b67158e1d0781",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.738
+    },
+    {
+      "id": "bad_ocr-0001-sensitive",
+      "family": "bad_ocr",
+      "pair_id": "bad_ocr-0001",
+      "category": "noisy_credential",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          20,
+          43,
+          "password"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          20,
+          40,
+          "password"
+        ]
+      ],
+      "sha256": "2f8211085fd1b7ae06a713321a0d51c052a4c2a32edfc410ac368eed61a620c4",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 0.831
+    },
+    {
+      "id": "bad_ocr-0001-benign",
+      "family": "bad_ocr",
+      "pair_id": "bad_ocr-0001",
+      "category": "noisy_credential",
+      "expected_decision": "benign",
+      "expected_spans": [],
+      "predicted_spans": [
+        [
+          20,
+          28,
+          "password"
+        ]
+      ],
+      "sha256": "fa2397acd12db5eb29038f0cd7ccbbd533426592c7d95a4e9d670ad880f5d9fc",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": false,
+      "seconds": 0.621
+    },
+    {
+      "id": "bad_ocr-0002-sensitive",
+      "family": "bad_ocr",
+      "pair_id": "bad_ocr-0002",
+      "category": "noisy_credential",
+      "expected_decision": "sensitive",
+      "expected_spans": [
+        [
+          20,
+          43,
+          "password"
+        ]
+      ],
+      "predicted_spans": [
+        [
+          20,
+          40,
+          "password"
+        ]
+      ],
+      "sha256": "f2ba8f532e9e7e399a9b953dd0fa61edf4e74267a590da678715655435b7cbb3",
+      "detected": true,
+      "exact_match": false,
+      "decision_correct": true,
+      "seconds": 0.914
+    }
+  ],
+  "export_note": "Source text, tagged predictions and exception bodies omitted. Offsets are character offsets into the source identified by sha256."
+}

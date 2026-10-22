@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 import sys
 import time
+from urllib.request import Request
 
 REPO = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(REPO))
@@ -34,6 +35,12 @@ def main():
         print(json.dumps(result, indent=2, ensure_ascii=False))
         return 0 if result["status"] == "allowed" else 2
 
+    try:
+        request = Request(args.endpoint.removesuffix('/api/tag')+'/api/model')
+        with tagger.opener.open(request, timeout=10) as response:
+            metadata = json.loads(response.read(100_001))
+    except Exception:
+        metadata = {'configuration_unavailable': True}
     cases = json.loads((HERE / "cases.json").read_text())
     rows = []
     for case in cases:
@@ -56,8 +63,8 @@ def main():
     }
     report = {"mode": "live-local-spaniel", "timestamp_utc": datetime.now(timezone.utc).isoformat(),
               "note": "Synthetic document-level smoke cases, not a held-out benchmark or span F1. "
-                      "The endpoint does not attest its model revision; record server configuration separately.",
-              "summary": summary, "results": rows}
+                      "Server configuration is declared metadata, not an attestation of weights or accuracy.",
+              "model_configuration": metadata, "summary": summary, "results": rows}
     if args.report:
         args.report.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({"summary": summary}), flush=True)

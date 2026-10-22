@@ -23,5 +23,76 @@
       "rows": 389521,
       "sha256": "d08c6acfb282596c13a1116c201e4cb0cb7dc28ba905dbe980258c359545d868"
     }
+  },
+  "credential_context_experiment": {
+    "id": "credential-context-2026-10-21",
+    "status": "evaluated_experimental_release_screening_failed",
+    "base_model": "Harsh/qwen3-0.6b-pii-sft-v2",
+    "base_revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
+    "data_manifest": "reports/context-manifest.json",
+    "policy": "reports/context-policy.json",
+    "replay_validation": "reports/context-replay.validation.json",
+    "tokenizer_preflight": "reports/context-preflight.json",
+    "protocol": "experiments/credential-context-protocol.json",
+    "generated_splits": {
+      "train": {
+        "rows": 5248,
+        "sha256": "ade5f43374ca14300d77393fa6233bb2cad492279c42a1cc11b193ce8c659201"
+      },
+      "dev": {
+        "rows": 100,
+        "sha256": "e32e0976baffb2726381531a5ce7e5d716c613f70f89237d334faaffdd303ddc"
+      },
+      "test": {
+        "rows": 159,
+        "sha256": "326abcb3435af0de838f3d591e06111932e785275d7b6054fec1f94b71fbbc30"
+      },
+      "review": {
+        "rows": 6,
+        "sha256": "0df19831838d6272f31821cd6bf8d9775bd13989082d690602de4d87d13684e7"
+      }
+    },
+    "replay": {
+      "rows": 1536,
+      "sha256": "71cec1bf6dfcfec2f140ab458353ea86a12b3c1929085e054c822b6e7286f45b"
+    },
+    "note": "The original v2 source artifacts and checkpoint are unchanged; this is a separate continued-SFT experiment.",
+    "training_manifest": "reports/credential-context/run_manifest.json",
+    "invalid_run": "reports/credential-context/invalid-rope-run/INVALIDATED.json",
+    "runtime_repair_protocol": "experiments/credential-context-runtime-repair.json",
+    "required_effective_rope": {
+      "rope_theta": 1000000,
+      "rope_scaling": null
+    },
+    "evaluation_execution_protocol": "experiments/credential-context-evaluation-execution.json",
+    "regression_execution_addendum": "experiments/credential-context-regression-worker.json",
+    "selected_checkpoint": "checkpoint-424",
+    "selected_epoch": 1,
+    "adapter_weights_sha256": "dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504",
+    "best_development_completion_loss": 0.025829212740063667,
+    "execution_outcome": "experiments/credential-context-execution-outcome.json",
+    "adapter_model": "Harsh/spaniel-credential-context-lora-v0.1",
+    "adapter_weights_revision": "6cd01c4f621c1528f00c5f70f9f1c7855f0a434a",
+    "inference_source_revision": "506e0833087cb7861b1b42c71d455866ba92ac1f",
+    "comparison": "reports/credential-context/comparison.json",
+    "screening": {
+      "credential_recall_at_least_0.95": false,
+      "credential_false_blocks_at_most_0.05": false,
+      "no_candidate_inspection_errors": false,
+      "legacy_exact_f1_drop_at_most_0.01": false
+    },
+    "meets_numeric_screening": false,
+    "production_validated": false,
+    "adapter_release_revision": "9b77c5451f4c99ea5292606de91d792237183198"
+  },
+  "v2_configuration_compatibility": {
+    "revision": "fc31a21a2ac54850ba3c12781ae433413691189d",
+    "original_weights_revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
+    "weights_sha256": "3ce13010b5f0430e188be1261654cc41d7f05eafc6cb1ebffa6576c5e020dc6b",
+    "changes": "Equivalent legacy rope_theta=1000000 and rope_scaling=null fields added to root and final config.json; weights unchanged.",
+    "verified_transformers": [
+      "4.57.6",
+      "5.8.0"
+    ]
   }
 }

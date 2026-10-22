@@ -1,0 +1,173 @@
+# Milestone: credentials and contextual compensation
+
+**Harsh Singhal · 21 October 2026 · GPU.ai training and evaluation complete; experimental adapter published.**
+
+This milestone asks whether a small local model can distinguish actual credential exposure from benign lookalikes, and private compensation from public salary information. It follows the [coverage audit](../coverage-audit.md). It is a continued LoRA fine-tune of the existing Spaniel v2 checkpoint, with the original checkpoint retained as the baseline.
+
+```mermaid
+flowchart LR
+    A[Corpus audit and policy] --> B[Scenario families and source offsets]
+    B --> C[Training data plus PII replay]
+    B --> D[Development families]
+    B --> K[Reserved test families]
+    C --> E[GPU.ai LoRA training]
+    D --> F[Select by development loss]
+    E --> F
+    F --> G[Concept test and PII regression]
+    K --> G
+    H[Unchanged Spaniel v2] --> G
+    I[Off-the-shelf GLiNER2.5] --> G
+    G --> J[Evidence, limits and release decision]
+```
+
+## Policy before labels
+
+| Requested label | Sensitive examples | Benign examples |
+|---|---|---|
+| `password` | Actual or purported login passwords, ordinary words used as passphrases, revoked secrets | Unfilled templates, masked values, poem titles and ordinary phrases |
+| `api key` | API secrets, bearer/session tokens and credentials in URLs or JSON | Public catalog IDs, token-format explanations and unfilled placeholders |
+| `private key` | Complete private-key blocks, including delimiters and padding | Public verification keys and descriptions of key formats |
+| `private compensation` | Individual pay, private negotiations and nonpublic compensation budgets, including ranges | Published job advertisements, public market surveys and authorized public pay disclosures |
+
+The policy does not infer secrecy from token entropy or the word “salary.” The same range can be public in a job advertisement and private in an offer negotiation. A private conversation can merely quote a public advertisement; that alone does not make its quoted range private compensation. Conversely, a public survey can be followed by a confidential agreement about an individual's pay.
+
+These are application conventions for this experiment. They do not establish legal confidentiality or a universally correct disclosure policy. Ambiguous cases are explicitly separated for review. Empty model output is not calibrated abstention.
+
+The examples assert public/private status in their text. That is a classification feature, not authenticated disclosure permission. An application must establish permissions through trusted policy or metadata; SPANIEL cannot verify a document's claim that information is public or approved for release.
+
+The concept benchmark requests one of these exact labels at a time. In particular, `private compensation` is different from asking for every `salary` mention. Robustness to alternative names for these new policy concepts, or to many simultaneous labels, is not established by the single-label score. The separate retrieval smoke test exercises a three-label credential request.
+
+## Dataset and splits
+
+The reproducible generator is [sensitive_context/build.py](../../sensitive_context/build.py); authored scenario families are in [scenarios.py](../../sensitive_context/scenarios.py). Values are fictional and non-operational. Private-key bodies exercise the text shape, not cryptographic validity.
+
+| Split | Rows | Scenario families | Role |
+|---|---:|---:|---|
+| New synthetic training | 5,248 | 34 | Sensitive/benign contrasts, formats, transcripts and long-context dilution |
+| Development | 100 | 9 | Checkpoint selection and error investigation |
+| Frozen synthetic test | 159 | 17 | Final candidate comparison after checkpoint selection |
+| Ambiguity review | 6 | 6 | Missing context; never negative training or binary gold |
+| Legacy training replay | 1,536 | Original training texts | 512 validated examples from each public source; no private-source replay |
+| Legacy regression evaluation | 300 | Original evaluation texts | Check for loss of established PII extraction behavior |
+
+Substitutions, positive/negative variants and long forms of one family stay in a single split. Exact duplicates are removed, and the training/replay texts are checked against evaluation texts. Template substitutions are correlated examples, not thousands of independent human-authored scenarios. The new labels have not received independent human adjudication.
+
+The new training rows contain 3,221 sensitive and 2,027 benign documents. Categories are not uniformly balanced: deduplication collapses repeated benign templates more than varied sensitive values. For example, the revoked-credential category has 100 sensitive rows but only four distinct benign rows; access tokens have 200 and five. The [coverage counts](../../reports/context-coverage.json) expose this limitation. More independently authored benign scenarios remain valuable even if this candidate passes the small test. The separate legacy replay accounts for 22.6% of training rows.
+
+Transcript cases include informal number expressions, speaker turns, delayed context, corrections, missing punctuation, spelling errors and line wrapping. **These are simulated text transcripts. No audio, real ASR system or real transcription corpus is evaluated.**
+
+Long variants insert 250 or 900 words of generated public-information filler, with the relevant evidence at the beginning, middle or end. This measures controlled dilution; it is not equivalent to a diverse enterprise-document benchmark.
+
+There are 312 such training rows from seven families, 48 development rows from four families and 60 test rows from five families. The test's 60 long variants contain 30 sensitive and 30 benign cases; its other 99 cases are short. The longest generated document has 936 whitespace-delimited words. Position slices are small correlated subsets, not broad long-context validation.
+
+Annotations store exact source offsets. Companion context ranges describe surrounding evidence, including earlier messages; those ranges are not independent gold rationales. The current model still emits separate, non-overlapping contiguous spans and does not output linked evidence groups.
+
+Coverage remains narrow within some credential categories. Private-key examples use short synthetic `BEGIN PRIVATE KEY` blocks; other delimiters, encrypted keys and full-length real key formats are not validated. Password hashes, encoded secret payloads, partially masked values, Unicode obfuscation and provider-specific credential formats need additional scenarios. The one literal `CHANGEME` password family deduplicates to one positive and one negative example, which is not broad evidence about weak or placeholder-looking actual passwords. Aggregate credential scores must be read alongside per-family results.
+
+## Training and verification
+
+The pinned base is `Harsh/qwen3-0.6b-pii-sft-v2` at `a58063469be8c7b929016d944d8d6d1545bc70a0`. The candidate uses rank-16 LoRA on attention and feed-forward projections, alpha 32, dropout 0.05, two epochs, learning rate `5e-5`, effective batch size 16, bf16 and a 4,096-token maximum.
+
+The tokenizer preflight covers all **6,784 training rows** and the development set. Its maximum sequence is **2,201 tokens**, so nothing is truncated. Prompt tokens have loss mask `-100`; the assistant's tagged completion and chat ending receive loss. The original published training file is never edited.
+
+Checkpoint selection uses development completion loss only. Baseline and candidate then use identical constrained decoding on the same GPU. The [protocol](../../experiments/credential-context-protocol.json) records the proposed screening thresholds and limitations before final test measurements.
+
+The first run was invalidated: the older runtime silently read the checkpoint's newer RoPE configuration incorrectly. Training restarted from the original pinned weights with the correct setting and completed both epochs. See the [compatibility investigation](../runtime-compatibility.md) and [predeclared repair protocol](../../experiments/credential-context-runtime-repair.json). The data, hyperparameters, selection rule and screening thresholds are unchanged; prior reserved-test exposure under the invalid runtime is disclosed.
+
+The first experiment combines targeted augmentation and replay. It does not isolate either component or establish LoRA superiority over full fine-tuning. The [GLiNER2.5 comparison](../gliner-context-baseline.md) is an off-the-shelf baseline; an equal-data architecture comparison requires additional controlled runs.
+
+The corrected run selected **epoch one, step 424**, with development completion loss **0.025829** versus **0.031610** at epoch two. The selected adapter SHA-256 is `dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504`. These losses select a checkpoint; they do not measure detection quality.
+
+## Results and release decision
+
+The [selected adapter](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1) is published separately as **Spaniel Context v0.1**. Both Spaniel models use the verified effective RoPE setting, identical constrained decoding and the same hardware within each paired comparison. No incomplete worker output or invalid first-run result is used.
+
+| Scope | Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---|---:|---:|---:|---:|
+| Credentials | Spaniel v2 | 24/39 (61.5%) | 7/36 (19.4%) | 0.579 | 0 |
+| Credentials | Spaniel Context v0.1 | 33/39 (84.6%) | 3/36 (8.3%) | 0.889 | 0 |
+| Compensation | Spaniel v2 | 10/42 (23.8%) | 6/42 (14.3%) | 0.167 | 0 |
+| Compensation | Spaniel Context v0.1 | 37/42 (88.1%) | 6/42 (14.3%) | 0.851 | 0 |
+
+
+Across all 159 concept cases:
+
+| Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---:|---:|---:|---:|
+| Spaniel v2 | 34/81 (42.0%) | 13/78 (16.7%) | 0.397 | 0 |
+| Spaniel Context v0.1 | 70/81 (86.4%) | 9/78 (11.5%) | 0.869 | 0 |
+| GLiNER2.5, labels | 70/81 (86.4%) | 54/78 (69.2%) | 0.421 | 0 |
+| GLiNER2.5, policy descriptions | 72/81 (88.9%) | 67/78 (85.9%) | 0.415 | 0 |
+
+
+![Context comparison](../coverage/context-comparison.png)
+
+GLiNER2.5 is off the shelf, while Spaniel Context has task-specific training. Both fixed GLiNER schemas are reported. This is a policy-task baseline, not an equal-data architecture comparison or a speed benchmark.
+
+On the 300-document original-source PII regression, exact typed span F1 is **0.937 for v2 and 0.924 for the adapter** (-1.26 percentage points). Inspection errors are 1 and 1, respectively. Every legacy document contains requested entities, so this set cannot measure benign false blocks. It uses original source annotations, not the separately adjudicated historical labels behind v2's 0.918 score.
+
+| Frozen screening requirement | Observed | Outcome |
+|---|---:|---|
+| Credential document recall ≥95% | 84.6% | Fail |
+| Credential benign false blocks ≤5% | 8.3% | Fail |
+| No candidate concept/legacy inspection errors | 1 | Fail |
+| Legacy F1 decline ≤1 percentage point | -1.26 percentage points | Fail |
+
+
+The candidate **fails all four predeclared screening requirements**. Credential recall and false blocks miss their targets; original-source PII span F1 declines from **0.937 to 0.924**, beyond the allowed one-point drop; and one legacy annotation is rejected in each model. It remains a separate experimental adapter; v2 stays the default. These are 159 authored synthetic cases across 17 scenario families, with correlated substitutions and long variants, no independent human adjudication, and a disclosed runtime-repair rerun. They establish progress on this test, not production readiness or a general architecture ranking.
+
+The remaining failures are concrete. The adapter finds only 4/9 sensitive recovery-conversation variants, misses all three sensitive range-correction-call cases, falsely blocks all three authorized-public-pay cases, and blocks both benign README-variable cases. The separate application suite also misses an actual password equal to `CHANGEME` and falsely blocks a public job range. These failures prioritize new independently authored benign examples, indirect login language, corrected spoken ranges and trusted disclosure context.
+
+The controlled long-context slice improves from 7/30 to 23/30 sensitive documents detected, with benign false blocks rising from 0/30 to 2/30; exact span F1 rises from 0.216 to 0.836. The 24-case transcript/noise slice improves from 6/12 to 9/12 sensitive documents detected, with false blocks falling from 3/12 to 1/12. These small synthetic slices do not validate enterprise documents or real ASR.
+
+Correct decisions on both members of a sensitive/benign contrast pair rise from 25/78 to 59/78. For future training, these observed test families must be treated as development evidence and assessed against a newly reserved test; this release did not retrain on its failures.
+
+The [comparison report](../../reports/credential-context/comparison.json) includes all family and position slices. The [invalid first run](../../reports/credential-context/invalid-rope-run/INVALIDATED.json) remains available for audit and contributes no release results. The independent GLiNER baseline was unaffected by that Qwen3 loading fault.
+
+## Application checks on the selected adapter
+
+These are actual file-reader and policy-gate checks on Apple MPS, with the byte-identical selected adapter. They are separate from the frozen GPU benchmark and include expected error cases.
+
+| Integration suite | Corrected v2 | Selected adapter | Sensitive examples released, v2 → adapter | Benign false blocks, v2 → adapter |
+|---|---:|---:|---:|---:|
+| Existing retrieval cases | 12/15 | 14/15 | 1 → 0 | 2 → 1 |
+| New context cases | 9/11 scored | 8/11 scored | 1 → 1 | 1 → 2 |
+
+There were no unexpected inspection errors. The adapter now catches the implicit login passphrase and the private compensation negotiation, and it allows the new suite's unfilled template. However, it still blocks the existing suite's placeholder; it newly blocks a public job range and authorized public pay; and it misses an actual password equal to `CHANGEME`. These are meaningful limitations, even if aggregate synthetic benchmark scores improve. Expected labels were not changed to match the model.
+
+The new context suite also contains one unscored missing-context salary example. The separate [six-case ambiguity review](../../reports/credential-context/ambiguity-review.json) returned four allowed and two blocked decisions; none is scored as correct or incorrect. The API has no calibrated abstention or automatic review decision.
+
+[Existing suite report](../../reports/credential-context/retrieval-existing-smoke.json) · [Context suite report](../../reports/credential-context/retrieval-context-smoke.json)
+
+## Reproduce
+
+```bash
+python -m sensitive_context.build --out context-data
+python -m sensitive_context.replay \
+  --legacy-train sft_data_v2/sft_train_v2.jsonl \
+  --out context-data/replay.jsonl
+```
+
+The replay command validates the complete historical mixture, records rejected row indices/hashes, and samples only public sources. The exact replay hash depends on the exact original mixture; the public three-source rebuild remains a different artifact. To reproduce the 300-document regression, supply the first 300 rows of the recorded `sft_data/sft_eval.jsonl` as `context-data/legacy-eval.jsonl`.
+
+On the prepared GPU.ai CUDA instance, run:
+
+```bash
+bash experiments/run_credential_context.sh
+```
+
+The runner assumes an available CUDA PyTorch installation, a C compiler and Python development headers (Ubuntu packages `build-essential` and `python3-dev`; needed by the image's Triton kernels). It creates a virtual environment, installs pinned experiment dependencies, runs regression tests, trains an adapter and writes separate baseline/candidate reports. No API keys or Hugging Face write credentials are uploaded to the training instance. Provisioning, artifact collection and instance termination are managed separately.
+
+Set `CONTEXT_EVAL_JOBS=3` to run the independent accuracy evaluations in three groups on the same GPU after training. Their data, weights, evaluator and decoding were unchanged. Per-case elapsed times therefore include shared-resource contention and must not be used for latency or throughput comparisons. The runner defaults to sequential execution when that variable is omitted.
+
+The corrected run separates evaluation from training to fit the instances' shutdown deadlines. Development and concept-test baseline/candidate pairs use one RTX 4090; both legacy PII evaluations use a separate RTX 4090. The [initial execution addendum](../../experiments/credential-context-evaluation-execution.json) and [regression-worker addendum](../../experiments/credential-context-regression-worker.json) record the initial scheduling decisions; the [execution outcome](../../experiments/credential-context-execution-outcome.json) records the failed CUDA worker and its replacement. Within each paired comparison the hardware, code, data, weights, precision and scoring rules match. Partial evaluations from the training instance and the superseded legacy evaluation on the concept worker are excluded. The selected adapter is transferred only after training selection and checksum verification.
+
+To use that arrangement, copy the same source and `context-data/` to both prepared workers. On the concept worker, run `CONTEXT_EVAL_SUITE=concept bash experiments/evaluate_credential_context_phase.sh baseline`; use `CONTEXT_EVAL_SUITE=legacy` on the regression worker. Transfer the selected adapter into each worker's `context-results/lora-r16/adapter`, then repeat the corresponding command with `candidate` instead of `baseline`. Collect all six completed reports before exporting the paired comparison. Keep training manifests and adapter checksums with the evidence; elapsed times remain unsuitable for a latency comparison. The suite defaults to `all` for a single-worker run with enough time.
+
+All task GPU.ai instances were terminated after checksum-verified collection. The estimated ready-to-terminated runtime cost was **USD 4.49**, including the invalid initial run, corrected training, evaluations and failed CUDA worker. This is an estimate from quoted hourly rates, not an invoice; the [execution record](../../experiments/credential-context-execution-outcome.json) provides the timestamps and calculation.
+
+## What qualifies as progress
+
+Report sensitive-document recall, benign false blocks, inspection failures, exact typed span F1 and correct contrast-pair decisions separately. A structurally valid tag is not necessarily correct. A parser failure must not become an all-clear result.
+
+Credentials are the first area of deeper investment. Compensation is a deliberately narrower experimental concept. Legal strategy, layoffs, performance reviews and other confidentiality concepts remain unvalidated research targets. See the [capability record](../../CAPABILITIES.md) for the distinction between measured and best-effort behavior.

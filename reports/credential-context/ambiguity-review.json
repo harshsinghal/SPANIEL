@@ -1,0 +1,94 @@
+{
+  "created_at": "2026-10-22T05:01:09.604635+00:00",
+  "scope": "Six missing-context demonstrations. No positive/negative gold, accuracy score, or abstention claim. The gate does not implement automatic semantic review.",
+  "verified_artifacts": {
+    "base_model": "Harsh/qwen3-0.6b-pii-sft-v2",
+    "base_revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
+    "base_weights_sha256": "3ce13010b5f0430e188be1261654cc41d7f05eafc6cb1ebffa6576c5e020dc6b",
+    "adapter_weights_sha256": "dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504",
+    "selected_checkpoint": "context-results/lora-r16/checkpoint-424",
+    "effective_rope": {
+      "rope_theta": 1000000,
+      "rope_scaling": null
+    },
+    "model_compat_sha256": "d8eff2f6a1b5ca43b9fe6a2a397455e1f55e13ba9cbd0141e43165cf92e8fb38",
+    "server_sha256": "36f2acca338ba6ffc04621b7f4f718a684d90374056800025661fea5ac50b0b6",
+    "decoder_sha256": "e4c9399fddd92ba9b0482a717f6f0fe25c906e52c96a858036a35d3d854d64f8",
+    "device": "Apple MPS",
+    "dtype": "bfloat16",
+    "versions": {
+      "torch": "2.14.1",
+      "transformers": "4.57.6",
+      "peft": "0.17.1"
+    },
+    "note": "Selected adapter loaded locally by path; no claim that an HF revision was fetched. Match its verified weights hash to the release. Not a latency benchmark."
+  },
+  "results": [
+    {
+      "id": "unknown_pay_context",
+      "sha256": "3f3b2d8c9552f46f9567847839537e6c8d789e9a29373a6e3ba3d625804fe381",
+      "entities": [
+        "private compensation"
+      ],
+      "gold": "review_required",
+      "observed_status": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true
+    },
+    {
+      "id": "missing_speaker",
+      "sha256": "ca98c8f320073538e26e258da8b82f8dd1bb47631c478aa51f5669ec1d9d916b",
+      "entities": [
+        "private compensation"
+      ],
+      "gold": "review_required",
+      "observed_status": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true
+    },
+    {
+      "id": "unclear_ownership",
+      "sha256": "a7542948c16335914b22e11d4834e43c3e661f7409e20a106c15f89d1a5f1a45",
+      "entities": [
+        "password"
+      ],
+      "gold": "review_required",
+      "observed_status": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true
+    },
+    {
+      "id": "token_without_role",
+      "sha256": "a553ad020a19e1fb0e4e369e1d96894c0fef4bc373db960e70a84abb9e9917c5",
+      "entities": [
+        "api key"
+      ],
+      "gold": "review_required",
+      "observed_status": "allowed",
+      "code": "NO_MATCHES_DETECTED",
+      "content_returned": true
+    },
+    {
+      "id": "severe_asr_loss",
+      "sha256": "134225ca4860b92f3f2249644d6a640501fe900eb1589817fcd46bda74100111",
+      "entities": [
+        "password"
+      ],
+      "gold": "review_required",
+      "observed_status": "blocked",
+      "code": "SENSITIVE_CONTENT_DETECTED",
+      "content_returned": false
+    },
+    {
+      "id": "salary_public_status_unknown",
+      "sha256": "12c2967e9912b3042b9cc5e5068026f89b2f350bf3d6e19885a94716de73c4b5",
+      "entities": [
+        "private compensation"
+      ],
+      "gold": "review_required",
+      "observed_status": "blocked",
+      "code": "SENSITIVE_CONTENT_DETECTED",
+      "content_returned": false
+    }
+  ]
+}

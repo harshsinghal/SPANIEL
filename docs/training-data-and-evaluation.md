@@ -1,10 +1,12 @@
 # SPANIEL training data, attribution, and evaluation
 
-Research by [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/) · Documentation reviewed 13 October 2026
+Research by [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/) · Documentation updated 21 October 2026
 
 [Project overview](../README.md) · [Published model](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2) · [Artifact manifest](../artifact_manifest.json)
 
 This document explains the published SPANIEL v2 training recipe and its evidence. Dataset license statements below were checked against the exact revisions recorded in the manifest, as well as the current source cards. They describe source terms and provenance; this documentation update does not redistribute the datasets or establish a new license for their contents.
+
+The [October coverage audit](coverage-audit.md) and [credential/context experiment](milestones/2026-10-21-credential-context.md) are separate from the historical v2 recipe below. The new experiment uses explicit completion-only masking, 5,248 newly generated contrasts and 1,536 validated public-source replay rows. Its completed GPU.ai run, manifests, family-level results and separate experimental adapter are documented in the milestone. Its scores must not be substituted into v2's historical benchmark tables.
 
 ## Why use a mixture?
 
@@ -63,7 +65,9 @@ The manifest records the artifact's hash. Its contents are not distributed in th
 
 CC BY 4.0 permits sharing and adaptation, including commercial uses, subject to its conditions, including attribution, a license link, and identification of changes. Apache-2.0 also has notice and license obligations. Refer to the linked terms for the intended reuse. The modifications made by SPANIEL are described here and in its converters. Dataset authors do not endorse SPANIEL by virtue of this use.
 
-Base model credit: [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B), pinned to `c1899de289a04d12100db370d81485cdf75e47ca`. Published SPANIEL inference is pinned to `a58063469be8c7b929016d944d8d6d1545bc70a0`. Later model-card commits can update documentation without changing those weights.
+Base model credit: [Qwen/Qwen3-0.6B](https://huggingface.co/Qwen/Qwen3-0.6B), pinned to `c1899de289a04d12100db370d81485cdf75e47ca`. The original published SPANIEL weights were pinned at `a58063469be8c7b929016d944d8d6d1545bc70a0`. Later model-card commits can update documentation without changing those weights.
+
+The October [configuration compatibility correction](runtime-compatibility.md) adds equivalent RoPE metadata at revision `fc31a21a2ac54850ba3c12781ae433413691189d`, now pinned by the Docker definition. The model weights are identical to the original revision. Historical training/evaluation provenance remains tied to its recorded artifacts; the corrected contextual experiment records its effective runtime configuration explicitly.
 
 ## Training-example design
 

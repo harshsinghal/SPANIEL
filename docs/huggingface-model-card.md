@@ -32,6 +32,18 @@ SPANIEL is a 0.6B-parameter Qwen3 fine-tune for English PII extraction. It accep
 
 The intended application is local inspection of text before it is shared with an AI service. The checkpoint provides annotations; an application must implement its own policy, redaction, blocking, or review actions. The original sensitive values remain present in tagged output.
 
+**Runtime compatibility correction, October 2026:** the original checkpoint stores RoPE theta `1000000` in the newer `rope_parameters` format. Transformers 4.57.6 could silently use its older default `10000`. The current configuration now also supplies the equivalent legacy fields; **the model weights are unchanged**. When loading the older pinned revision, use the [corrected source loader](https://github.com/harshsinghal/SPANIEL/tree/eb46193b698b44eb0401b7f35b7ab1237dad703b). The [investigation](https://github.com/harshsinghal/SPANIEL/blob/eb46193b698b44eb0401b7f35b7ab1237dad703b/docs/runtime-compatibility.md) explains verification and why the first contextual fine-tuning run was invalidated and restarted. Reproducing a checkpoint requires its intended effective configuration as well as its weights.
+
+## Research progression: credential and context discrimination
+
+An October 2026 audit examined all 389,521 training rows and identified gaps in benign credential lookalikes, credential diversity, long context and confidentiality supervision. The follow-up **[Spaniel Context v0.1](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1)** is a separate LoRA adapter on this checkpoint, trained on GPU.ai with 5,248 new synthetic contrasts and 1,536 validated public-source replay examples.
+
+On 159 authored synthetic cases from 17 reserved scenario families, the correctly configured v2 baseline scores 0.397 exact span F1 and the adapter scores 0.869. Sensitive detections improve from 34/81 to 70/81; benign false blocks fall from 13/78 to 9/78. These are new context-policy results, separate from the historical PII scores below.
+
+The adapter fails all four predeclared screens: credential recall is 84.6% against a 95% target, with 8.3% benign false blocks against a 5% limit; original-source PII F1 declines from 0.937 to 0.924, beyond the one-point limit; and the candidate has one rejected legacy annotation. Application checks remain mixed, including missed actual `CHANGEME` passwords and false blocks on public pay. **V2 remains the default; the adapter is experimental.** The original v2 weights and historical scores are unchanged.
+
+The [completed milestone](https://github.com/harshsinghal/SPANIEL/blob/main/docs/milestones/2026-10-21-credential-context.md) records data lineage, the GPU.ai recipe, selected checkpoint, paired PII regression, GLiNER2.5 baselines, runtime repair and known failures. Transcript examples are simulated text; real ASR and broader confidentiality concepts remain research targets.
+
 [GitHub repository](https://github.com/harshsinghal/SPANIEL) · [Constrained local demo](https://github.com/harshsinghal/SPANIEL#try-it-the-demo-app) · [Training data and attribution](https://github.com/harshsinghal/SPANIEL/blob/main/docs/training-data-and-evaluation.md) · [Research journal](https://github.com/harshsinghal/SPANIEL#the-journey-as-blog-entries)
 
 ## Model details
@@ -159,7 +171,7 @@ The model's declared Apache-2.0 license does not replace dataset-specific terms.
 
 ## Limitations
 
-- English-only training scope; no multilingual performance claim.
+- English intended scope; no multilingual performance claim. The corpus audit found non-English records carrying English source metadata, so filtering does not prove every training row is English.
 - Evaluation uses synthetic PII data and a small held-out sample; validate on the intended domain.
 - Current annotation rules target personal attributes. General world-fact mentions may deliberately remain untagged.
 - Far paraphrases can fail; occupation and time-related labels were identified as weaker areas in the project reports.

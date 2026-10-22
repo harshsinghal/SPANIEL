@@ -9,6 +9,7 @@ on:
       - pii_tagger/**
       - requirements-demo.txt
       - tokenizer_compat.py
+      - model_compat.py
       - tests/**
       - .github/workflows/docker.yml
   workflow_dispatch:

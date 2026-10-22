@@ -1,0 +1,18 @@
+{
+  "model": "fastino/gliner2.5-base-v1",
+  "revision": "54785d51df8d86a0d8f2eb212fec15871aad2c4d",
+  "library": "gliner2==2.1.0",
+  "transformers": "5.8.0",
+  "threshold": 0.5,
+  "overlap_policy": "flat",
+  "schema_modes": ["labels", "policy-descriptions"],
+  "descriptions": "Existing frozen sensitive_context.schema.POLICY values; no rewriting based on predictions",
+  "data": "Existing frozen 159-row concept test; optional original 300-row PII regression with label-only schema",
+  "test_sha256": "326abcb3435af0de838f3d591e06111932e785275d7b6054fec1f94b71fbbc30",
+  "runtime": "Mac Mini CPU, float32, four threads; local inference only",
+  "length": "Full-input native extraction, no chunking or truncation; preflight every encoded input against checkpoint max_len",
+  "validation": "Returned character offsets must identify nonempty original source spans with exact returned text",
+  "scoring": "Same document decisions and exact typed span metrics as Spaniel; inspection errors are never benign passes",
+  "scope": "Off-the-shelf encoder baseline versus task-adapted decoder candidate, not equal-data architecture comparison; no speed comparison across different hardware. Report both schema modes without selecting the better one as the only result.",
+  "declared_before": "First GLiNER prediction on the frozen concept test; Spaniel fine-tuning remains unchanged and selects by dev loss only"
+}

@@ -1,0 +1,101 @@
+{
+  "seed": 20261021,
+  "policy_version": "credential-context-2026-10-21",
+  "variants_per_train_template": 100,
+  "splits": {
+    "train": {
+      "rows": 5248,
+      "families": 34,
+      "decisions": {
+        "sensitive": 3221,
+        "benign": 2027
+      },
+      "categories": {
+        "explicit_password": 610,
+        "passphrase": 190,
+        "long_passphrase": 48,
+        "transcript_credential": 766,
+        "revoked_credential": 104,
+        "api_key": 405,
+        "long_api_key": 120,
+        "access_token": 205,
+        "credential_url": 200,
+        "private_key": 301,
+        "untrusted_text": 208,
+        "noisy_credential": 304,
+        "compensation_range": 443,
+        "long_compensation_range": 144,
+        "personal_compensation": 566,
+        "transcript_compensation": 464,
+        "noisy_compensation": 170
+      },
+      "sha256": "ade5f43374ca14300d77393fa6233bb2cad492279c42a1cc11b193ce8c659201"
+    },
+    "dev": {
+      "rows": 100,
+      "families": 9,
+      "decisions": {
+        "sensitive": 51,
+        "benign": 49
+      },
+      "categories": {
+        "personal_compensation": 6,
+        "passphrase": 6,
+        "long_passphrase": 12,
+        "api_key": 11,
+        "long_api_key": 24,
+        "access_token": 6,
+        "private_key": 6,
+        "compensation_range": 6,
+        "long_compensation_range": 12,
+        "transcript_compensation": 6,
+        "noisy_credential": 5
+      },
+      "sha256": "e32e0976baffb2726381531a5ce7e5d716c613f70f89237d334faaffdd303ddc"
+    },
+    "test": {
+      "rows": 159,
+      "families": 17,
+      "decisions": {
+        "sensitive": 81,
+        "benign": 78
+      },
+      "categories": {
+        "transcript_compensation": 12,
+        "explicit_password": 11,
+        "personal_compensation": 12,
+        "passphrase": 6,
+        "long_passphrase": 12,
+        "api_key": 6,
+        "long_api_key": 12,
+        "access_token": 4,
+        "revoked_credential": 6,
+        "private_key": 6,
+        "untrusted_text": 6,
+        "noisy_credential": 6,
+        "compensation_range": 18,
+        "long_compensation_range": 36,
+        "noisy_compensation": 6
+      },
+      "sha256": "326abcb3435af0de838f3d591e06111932e785275d7b6054fec1f94b71fbbc30"
+    },
+    "review": {
+      "rows": 6,
+      "families": 6,
+      "decisions": {
+        "review_required": 6
+      },
+      "categories": {
+        "ambiguous": 6
+      },
+      "sha256": "0df19831838d6272f31821cd6bf8d9775bd13989082d690602de4d87d13684e7"
+    }
+  },
+  "scope": "Synthetic authored scenario-family splits. Substitutions are not independent documents; no human gold or real audio validation.",
+  "split_rule": "All substitutions, positive/negative counterfactuals and long variants of a scenario family stay in the assigned split. Dev/test values use separate pools.",
+  "generator_files": {
+    "build.py": "3b4a228db2251ece8360121214aad84c000712960349a03ba50a2fad14e55bb4",
+    "scenarios.py": "92a271bddbf013b094c65996f15bbae6e5fc1d544ac16324084c3a6275f63622",
+    "schema.py": "672dd2b905320100746aa9d99f0d3ab2657bc3d85c8d11777b9cc780ea3ae39a"
+  }
+}

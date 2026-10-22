@@ -1,0 +1,403 @@
+{
+  "source_sha256": "d08c6acfb282596c13a1116c201e4cb0cb7dc28ba905dbe980258c359545d868",
+  "source_rows": 389521,
+  "valid_public_source_rows": {
+    "ai4privacy": 110000,
+    "gravitee": 173571,
+    "nemotron": 99988
+  },
+  "sampled_rows": 1536,
+  "sampled_per_source": {
+    "nemotron": 512,
+    "gravitee": 512,
+    "ai4privacy": 512
+  },
+  "rejected_rows": [
+    {
+      "training_row": 14854,
+      "source": "gravitee",
+      "row_sha256": "226bef45b01e093d5f42ffbdc31c94f1aa1d9c29e7bab6d3a820b67c935d551a",
+      "issue": "unmatched closing tag </internet address>"
+    },
+    {
+      "training_row": 28437,
+      "source": "gravitee",
+      "row_sha256": "ea33eec8451fd66bfb403e8e3e147e10b47f48f53b2022e955d5ea61b69f71c1",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 34788,
+      "source": "gravitee",
+      "row_sha256": "aa5bacdc661f5a5752e22857aed77c681455cdc307806a796f2d1518782b1dbb",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 41727,
+      "source": "gravitee",
+      "row_sha256": "7b164fc543aa8cfdbfd982552af91c6545bc3dac7ecac56874d5754f3a9fa6ce",
+      "issue": "nested tag <geographic area> inside <geographic area>"
+    },
+    {
+      "training_row": 43874,
+      "source": "gravitee",
+      "row_sha256": "5ae933e935c35ce75e3c4a26c2cd2a791eab53965fb587593c207d9df5829445",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 44583,
+      "source": "gravitee",
+      "row_sha256": "457e742f4e9518d660ea37dc75eaf6c6cbb1776688e5d5ecefb7efa575bb7b62",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 46474,
+      "source": "gravitee",
+      "row_sha256": "8363c0ad98759ef80c34dcc4f2d083092c2e9be2c4cfd9f2875ca30e83ab2071",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 61518,
+      "source": "gravitee",
+      "row_sha256": "2dc5cd9fb7354913d83d7316a4a8c83717769f5224e2f067ed80329820a5997c",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 72974,
+      "source": "gravitee",
+      "row_sha256": "9fc098f947bee8fd0a232947b8fb36517a774c379800c3e191079cf93b85defc",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 74862,
+      "source": "gravitee",
+      "row_sha256": "4c98003d0b12e29176167f2b23c36e2a7ea2b4356570793dde84ad79f1ee1dbc",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 87189,
+      "source": "gravitee",
+      "row_sha256": "923177e72f41ed2103a24b615e47d420cb198ca28c83301400582cc5ed6ea0c3",
+      "issue": "source recovery mismatch"
+    },
+    {
+      "training_row": 91685,
+      "source": "gravitee",
+      "row_sha256": "b4b54fd7de79efa6522ef3a8636e632f8b600b13f9bd3a448cfaf8937fc47ef9",
+      "issue": "blank span"
+    },
+    {
+      "training_row": 100879,
+      "source": "gravitee",
+      "row_sha256": "bd55d1aa72adc11002e6a4a4376249c0ed2581dbb7ec113fddc42829be3be575",
+      "issue": "nested tag <forename> inside <cell phone number>"
+    },
+    {
+      "training_row": 103344,
+      "source": "gravitee",
+      "row_sha256": "d1a1752192f37664abe0e9711fbec5a386b793369a83c49d9a99a4e980096e7c",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 106649,
+      "source": "gravitee",
+      "row_sha256": "cbd800080124aac126475ecd086108f22269ad2410e8b2858ace2b6fbcd6bffc",
+      "issue": "nested tag <individual identity> inside <place>"
+    },
+    {
+      "training_row": 108069,
+      "source": "gravitee",
+      "row_sha256": "5f19770d229d430c52c800d8c917d56f99f61424d38231b4a40066f6b96d882c",
+      "issue": "source recovery mismatch"
+    },
+    {
+      "training_row": 114446,
+      "source": "gravitee",
+      "row_sha256": "640cfaa396a847b19fc9146bd2767545b6c9bcb483cc6a24ded2992a9e848a78",
+      "issue": "nested tag <legal entity> inside <legal entity>"
+    },
+    {
+      "training_row": 116074,
+      "source": "gravitee",
+      "row_sha256": "ed03419b6c21580e699fc7f24ed75cbfadd2ef5b3db346dfbaac80b4068a657a",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 117119,
+      "source": "gravitee",
+      "row_sha256": "cad972839e847cf8a7f01320423283145ba4b30ac95990cdd4623120485d0ade",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 118971,
+      "source": "gravitee",
+      "row_sha256": "97ed1ba373db88d0f4b86a63711f4e0783aab0ccc855f9f09259a5024427fda3",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 133097,
+      "source": "gravitee",
+      "row_sha256": "152319f363a6b7281e3a23664f887c5107aba1fef693828420960cb223cf4636",
+      "issue": "unmatched closing tag </mobile phone number>"
+    },
+    {
+      "training_row": 134113,
+      "source": "gravitee",
+      "row_sha256": "7d1a112cfc777d68999c9044a1e9190861bd4caed0e5a231398f131b063347ac",
+      "issue": "nested tag <bank account identification> inside <individual identity>"
+    },
+    {
+      "training_row": 134580,
+      "source": "gravitee",
+      "row_sha256": "2131a0c80b15879febb4d556023966e9e04a7181fd6eae39218703eebcffb847",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 138295,
+      "source": "gravitee",
+      "row_sha256": "8e49bfa3020a7a10c7dd798b11fa1849a06c4d982aa80232bd47ca130b270096",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 138556,
+      "source": "gravitee",
+      "row_sha256": "97f018c74ead0a65bffcfce7150e6fab676b54e59d3e370eda5ecdfb0caa130f",
+      "issue": "unmatched closing tag </passport number>"
+    },
+    {
+      "training_row": 148516,
+      "source": "gravitee",
+      "row_sha256": "b46f47bcb4be7ca6ce764db43b1d525dd0ef5c6dfc7c3ad2ba91e0de3598bbf8",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 148628,
+      "source": "gravitee",
+      "row_sha256": "20e046eb5dab09648edce82a94d2e326be45c9020626a5f4cf7914575ea31222",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 149719,
+      "source": "gravitee",
+      "row_sha256": "78acf8d42101b067da5bcbdee5934d446d96bb6f381c3ad643d16cca8152f0b0",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 151542,
+      "source": "gravitee",
+      "row_sha256": "ab8dc0b61b7d052c1fc1aee83f1ab1425b276c9950f33270551c330b93c029be",
+      "issue": "unmatched closing tag </person>"
+    },
+    {
+      "training_row": 164969,
+      "source": "gravitee",
+      "row_sha256": "32a7695afd791f590bbe9a01ae759c7e54350e64d5c6fab6f7d70ae90bf1f6c5",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 165546,
+      "source": "gravitee",
+      "row_sha256": "b67cd080a47cf9f0d874c8d63c804554018e545d78b53f1c69fafea1b0459147",
+      "issue": "unmatched closing tag </vendor>"
+    },
+    {
+      "training_row": 174155,
+      "source": "gravitee",
+      "row_sha256": "61978285e0654ea85f1f22d5d0c9144d6d42b3c3bb0512c658df62b2b40a12f8",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 184995,
+      "source": "gravitee",
+      "row_sha256": "510b505ec30ac4e734dd6a8daff0048bdb4dfab5d96d42f5bdecc174d53db841",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 207858,
+      "source": "gravitee",
+      "row_sha256": "ba40e18e2d1ff470f9e4a9fcf9f6a6648326a0a2348806c297824b742af864b3",
+      "issue": "unmatched closing tag </recipient email address>"
+    },
+    {
+      "training_row": 209040,
+      "source": "gravitee",
+      "row_sha256": "5ca0454d677a0b04fb4c922bb1fa3bb0510c0890c1e110ffbb905ac7ec65d70a",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 226719,
+      "source": "gravitee",
+      "row_sha256": "f523732b22083c5e1b372494823fc4b2144ec7e072dc6d73114d066642f10b2a",
+      "issue": "source recovery mismatch"
+    },
+    {
+      "training_row": 227930,
+      "source": "gravitee",
+      "row_sha256": "ff4cb12c359558a3b2575344a49dcfb930dceed6430a3d6bbfbbac315203b101",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 228860,
+      "source": "gravitee",
+      "row_sha256": "ffa292835354db1fc5c34d26915b749b9f3d8fcdfa313ff65139790658746199",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 234946,
+      "source": "gravitee",
+      "row_sha256": "ad67f950410c6938539ca864f1fa675fadbf1b51621259d24b7ddb1454636d55",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 239713,
+      "source": "gravitee",
+      "row_sha256": "788bacbf1477f2b4fbf24df580ecfbf0e9425647b46592e82e04ed2136f1e941",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 243700,
+      "source": "gravitee",
+      "row_sha256": "fde73788d4ad1e93f2bfec1189c7b2f48b4c324373de43ba86e060fedd63aa81",
+      "issue": "nested tag <company> inside <company>"
+    },
+    {
+      "training_row": 246620,
+      "source": "gravitee",
+      "row_sha256": "317745e7f1f1b944e3cadacdbbacbf80e5c67db222d7890f9ee3eee9a05dca4a",
+      "issue": "nested tag <personal name> inside <personal name>"
+    },
+    {
+      "training_row": 248738,
+      "source": "gravitee",
+      "row_sha256": "4b5b822c618e35cfc7041eaf1b02b277cac68ce83e340f8e8f4c6e85d1992abb",
+      "issue": "nested tag <cellphone number> inside <email address>"
+    },
+    {
+      "training_row": 251397,
+      "source": "gravitee",
+      "row_sha256": "6e675cb90307774d29183e16496b1b0273e80558b014081115a84479e56766ce",
+      "issue": "unmatched closing tag </geographic location>"
+    },
+    {
+      "training_row": 273193,
+      "source": "gravitee",
+      "row_sha256": "ba5808f80c5f0801e924fc4a5edcbe92e10127889e07dd2f4357cd5b4cf80bed",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 274736,
+      "source": "gravitee",
+      "row_sha256": "988f23e9cd0c5f713783eae0cab2be87887e12e79e29d742dc5507e0d4236e03",
+      "issue": "unmatched closing tag </subject name>"
+    },
+    {
+      "training_row": 275096,
+      "source": "gravitee",
+      "row_sha256": "6f497177ca2067c6e4b616c719d2c4690295b187c98ee2e5643f9d589d31ee3c",
+      "issue": "source recovery mismatch"
+    },
+    {
+      "training_row": 276334,
+      "source": "gravitee",
+      "row_sha256": "27aec3a10d1d07bd585e5ef9740f81c63008d99ca5cb632c284740655aa5bb7a",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 286895,
+      "source": "gravitee",
+      "row_sha256": "3969c41aacdd9a251372678c5ccba2774295fbd63ce8f0ef93bd798965e4dd20",
+      "issue": "unmatched closing tag </organizational entity>"
+    },
+    {
+      "training_row": 289867,
+      "source": "gravitee",
+      "row_sha256": "7308a9deaad72afdf50e6bbb96adab0a60afb076db718d6a8929338f9c1bc304",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 293981,
+      "source": "gravitee",
+      "row_sha256": "435759e52f1e749c71195ef9c21b79d196fc4e445eb9239df99f94ece3c77748",
+      "issue": "nested tag <company> inside <company>"
+    },
+    {
+      "training_row": 297203,
+      "source": "gravitee",
+      "row_sha256": "7a266b08bf68b036f54a4a2e1d80f643ecfda6c4de1e0c4847753bf579ca70e7",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 299493,
+      "source": "gravitee",
+      "row_sha256": "3cb770ece6e706877b5324df520750e6b8584a10e33a7bd19a511a6787ecf0af",
+      "issue": "unmatched closing tag </startup>"
+    },
+    {
+      "training_row": 312743,
+      "source": "gravitee",
+      "row_sha256": "d41a1cdb264fcb56651dafc7fa36ed4e2b7021a99906856f298daa0ead3ecef6",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 318537,
+      "source": "gravitee",
+      "row_sha256": "aaa8066c3ce2aa6ff1beb19a07d07f026291f667820e0c4bee31dd1b063eec25",
+      "issue": "unmatched closing tag </geographic area>"
+    },
+    {
+      "training_row": 322136,
+      "source": "gravitee",
+      "row_sha256": "e897bfa7bcba282463f59242fc29a4d0007ea1ce70ab0682a8deaa9a4df286ed",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 334133,
+      "source": "gravitee",
+      "row_sha256": "0a68095779e8944a91d5165ac4789f7b230c3f6cea1f46a91a0362529f0140c5",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 338984,
+      "source": "gravitee",
+      "row_sha256": "19b757d3abebdad6149415d943d2d6caa85c37487c24a456409745054ecf238b",
+      "issue": "nested tag <contact name> inside <drivers license>"
+    },
+    {
+      "training_row": 362068,
+      "source": "gravitee",
+      "row_sha256": "59b6d533365fbfc726e8bfd2a1116d2f6748d205fbd47c46b1e14a55d93656ab",
+      "issue": "invalid or overlapping span"
+    },
+    {
+      "training_row": 362524,
+      "source": "gravitee",
+      "row_sha256": "e6250ab0178ad82b1868e5f7606b14221c8a19c203ae491cac62a3d574618149",
+      "issue": "nested tag <email identifier> inside <employee name>"
+    },
+    {
+      "training_row": 365368,
+      "source": "gravitee",
+      "row_sha256": "0af09e75e2206a62587a2a3bc1d9bd1261612dd1745661dffe2aca9a33cccbff",
+      "issue": "nested tag <client name> inside <client name>"
+    },
+    {
+      "training_row": 366085,
+      "source": "gravitee",
+      "row_sha256": "f1560149bddef1f597163cd64e4cd168c93504a3d4f2f61e9c97da7673226a61",
+      "issue": "nested tag <association> inside <association>"
+    },
+    {
+      "training_row": 385640,
+      "source": "gravitee",
+      "row_sha256": "e9d0a1a52df90126fea99bfb76dbfa41a59239bd115a9f09253e8649111a2ad1",
+      "issue": "unmatched closing tag </foundation>"
+    },
+    {
+      "training_row": 386374,
+      "source": "gravitee",
+      "row_sha256": "6aa65becee53ba577a46a54a8f3b46dea3d25211434e1a17b0ea3fbd11f84a4f",
+      "issue": "nested tag <surname> inside <appointment date>"
+    }
+  ],
+  "scope": "Full legacy target validation; seeded reservoir sample. Private fourth-source examples excluded from replay export. No source artifact changed.",
+  "replay_sha256": "71cec1bf6dfcfec2f140ab458353ea86a12b3c1929085e054c822b6e7286f45b"
+}

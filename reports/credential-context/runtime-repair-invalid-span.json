@@ -1,0 +1,17 @@
+{
+  "case_id": "legacy-eval-80",
+  "source_sha256": "3865b0d949f2baa5d5a579341cca9e39583c406f45ecee3d22bc02b49e54c8e9",
+  "diagnostic": "Repeated unchanged original-model inference on Apple MPS; annotation source copy matched, but one date span contained only two whitespace characters. The existing evaluator rejects it.",
+  "invalid_spans": [
+    {
+      "start": 331,
+      "end": 333,
+      "label": "date",
+      "characters": 2,
+      "whitespace_only": true
+    }
+  ],
+  "scoring_changed": false,
+  "evaluation_result": "inspection_error; no detection credit; all gold spans counted as missed",
+  "scope": "Single-case runtime diagnostic, not an additional independent sample."
+}

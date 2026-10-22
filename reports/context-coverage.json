@@ -1,0 +1,374 @@
+{
+  "train": {
+    "categories": {
+      "access_token": {
+        "rows": 205,
+        "families": 2,
+        "decisions": {
+          "sensitive": 200,
+          "benign": 5
+        }
+      },
+      "api_key": {
+        "rows": 405,
+        "families": 3,
+        "decisions": {
+          "sensitive": 300,
+          "benign": 105
+        }
+      },
+      "compensation_range": {
+        "rows": 443,
+        "families": 3,
+        "decisions": {
+          "sensitive": 243,
+          "benign": 200
+        }
+      },
+      "credential_url": {
+        "rows": 200,
+        "families": 1,
+        "decisions": {
+          "sensitive": 100,
+          "benign": 100
+        }
+      },
+      "explicit_password": {
+        "rows": 610,
+        "families": 5,
+        "decisions": {
+          "sensitive": 401,
+          "benign": 209
+        }
+      },
+      "long_api_key": {
+        "rows": 120,
+        "families": 3,
+        "decisions": {
+          "sensitive": 72,
+          "benign": 48
+        }
+      },
+      "long_compensation_range": {
+        "rows": 144,
+        "families": 3,
+        "decisions": {
+          "sensitive": 72,
+          "benign": 72
+        }
+      },
+      "long_passphrase": {
+        "rows": 48,
+        "families": 1,
+        "decisions": {
+          "sensitive": 24,
+          "benign": 24
+        }
+      },
+      "noisy_compensation": {
+        "rows": 170,
+        "families": 1,
+        "decisions": {
+          "sensitive": 93,
+          "benign": 77
+        }
+      },
+      "noisy_credential": {
+        "rows": 304,
+        "families": 2,
+        "decisions": {
+          "sensitive": 200,
+          "benign": 104
+        }
+      },
+      "passphrase": {
+        "rows": 190,
+        "families": 1,
+        "decisions": {
+          "sensitive": 95,
+          "benign": 95
+        }
+      },
+      "personal_compensation": {
+        "rows": 566,
+        "families": 4,
+        "decisions": {
+          "sensitive": 306,
+          "benign": 260
+        }
+      },
+      "private_key": {
+        "rows": 301,
+        "families": 2,
+        "decisions": {
+          "sensitive": 200,
+          "benign": 101
+        }
+      },
+      "revoked_credential": {
+        "rows": 104,
+        "families": 1,
+        "decisions": {
+          "sensitive": 100,
+          "benign": 4
+        }
+      },
+      "transcript_compensation": {
+        "rows": 464,
+        "families": 3,
+        "decisions": {
+          "sensitive": 232,
+          "benign": 232
+        }
+      },
+      "transcript_credential": {
+        "rows": 766,
+        "families": 4,
+        "decisions": {
+          "sensitive": 383,
+          "benign": 383
+        }
+      },
+      "untrusted_text": {
+        "rows": 208,
+        "families": 2,
+        "decisions": {
+          "sensitive": 200,
+          "benign": 8
+        }
+      }
+    },
+    "word_count": {
+      "min": 3,
+      "median": 17.0,
+      "max": 936
+    }
+  },
+  "dev": {
+    "categories": {
+      "access_token": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "api_key": {
+        "rows": 11,
+        "families": 2,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 5
+        }
+      },
+      "compensation_range": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "long_api_key": {
+        "rows": 24,
+        "families": 2,
+        "decisions": {
+          "sensitive": 12,
+          "benign": 12
+        }
+      },
+      "long_compensation_range": {
+        "rows": 12,
+        "families": 1,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 6
+        }
+      },
+      "long_passphrase": {
+        "rows": 12,
+        "families": 1,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 6
+        }
+      },
+      "noisy_credential": {
+        "rows": 5,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 2
+        }
+      },
+      "passphrase": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "personal_compensation": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "private_key": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "transcript_compensation": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      }
+    },
+    "word_count": {
+      "min": 4,
+      "median": 21.5,
+      "max": 932
+    }
+  },
+  "test": {
+    "categories": {
+      "access_token": {
+        "rows": 4,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 1
+        }
+      },
+      "api_key": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "compensation_range": {
+        "rows": 18,
+        "families": 3,
+        "decisions": {
+          "sensitive": 9,
+          "benign": 9
+        }
+      },
+      "explicit_password": {
+        "rows": 11,
+        "families": 2,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 5
+        }
+      },
+      "long_api_key": {
+        "rows": 12,
+        "families": 1,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 6
+        }
+      },
+      "long_compensation_range": {
+        "rows": 36,
+        "families": 3,
+        "decisions": {
+          "sensitive": 18,
+          "benign": 18
+        }
+      },
+      "long_passphrase": {
+        "rows": 12,
+        "families": 1,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 6
+        }
+      },
+      "noisy_compensation": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "noisy_credential": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "passphrase": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "personal_compensation": {
+        "rows": 12,
+        "families": 2,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 6
+        }
+      },
+      "private_key": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "revoked_credential": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      },
+      "transcript_compensation": {
+        "rows": 12,
+        "families": 2,
+        "decisions": {
+          "sensitive": 6,
+          "benign": 6
+        }
+      },
+      "untrusted_text": {
+        "rows": 6,
+        "families": 1,
+        "decisions": {
+          "sensitive": 3,
+          "benign": 3
+        }
+      }
+    },
+    "word_count": {
+      "min": 7,
+      "median": 24,
+      "max": 936
+    }
+  },
+  "interpretation": "Exact-text deduplication can collapse repeated benign templates more than varied sensitive values. Counts are correlated substitutions, not independent scenarios. Categories are not uniformly balanced."
+}

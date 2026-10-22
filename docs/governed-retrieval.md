@@ -149,7 +149,7 @@ raw reader. Avoid supplying the original retriever's return annotation (`str`)
 as the wrapper's output schema: the guarded result is a dictionary.
 
 For MCP, the same callable can be exposed by a small local MCP server. For
-example, the official Python SDK v2 uses `MCPServer` and `@mcp.tool()`:
+example, the official Python SDK v2 requires Python 3.11+ and uses `MCPServer` and `@mcp.tool()`:
 
 ```python
 from mcp.server import MCPServer
@@ -217,32 +217,24 @@ means at least one case differed from its expected action. It separately counts
 **sensitive content released**, **false blocks**, and **unexpected errors**; an
 inspection error on a sensitive example does not count as successful detection.
 These are small synthetic document-level smoke cases, not a held-out benchmark
-or span F1. The model endpoint does not report its revision, so record the server
-configuration and hardware alongside any published results.
+or span F1. The report captures the server's declared `/api/model` configuration.
+Record artifact hashes and hardware too; declared metadata is not an accuracy
+attestation.
 
 ### Recorded local run
 
-The [October 13, 2026 report](../examples/governed_retrieval/results/local-smoke-2026-10-13.json)
-records one real run of the published v2 checkpoint at revision
-`a58063469be8c7b929016d944d8d6d1545bc70a0` on an Apple M4 with 16 GiB memory,
-using PyTorch MPS. **13 of 15 cases matched their expected actions**, including
-the two expected error cases. No unexpected inspection errors occurred.
+The [October 21 corrected-baseline report](../reports/credential-context/retrieval-existing-v2.json) records the published v2 weights at revision `a58063469be8c7b929016d944d8d6d1545bc70a0`, loaded with verified RoPE theta `1000000` on Apple MPS. **12 of 15 cases matched their expected actions**, including the two expected error cases. No unexpected inspection errors occurred.
 
 | Observed outcome | Detail |
 |---|---|
 | Sensitive content released | The implicit login passphrase was not tagged and was returned |
-| False block | `YOUR_PASSWORD_HERE` in a documentation template was tagged and withheld |
-| Explicit sensitive cases | The password, API key, personal-data, and Unicode cases were withheld |
+| False blocks | Benign security guidance and an unfilled password template were withheld |
+| Explicit sensitive cases | The password, API key, personal-data and Unicode cases were withheld |
 | Document instruction | The credential was detected despite an instruction to leave the text untagged |
 
-These two accuracy failures are intentionally preserved. They are useful
-targets for future model evaluation, not reasons to change expected labels to
-match predictions. The successful instruction case does not establish general
-prompt-injection resistance. Client timings for the 14 model calls ranged from
-0.430 to 2.507 seconds, including first-call warm-up; these are tiny documents
-in one sequential run, not a throughput or long-document latency benchmark.
-The report includes policy names, outcomes, launch configuration, and fixture
-hashes without raw document content.
+These failures remain visible rather than changing expected labels to match predictions. The successful instruction case does not establish general prompt-injection resistance. The report records effective configuration and verified model identity without document content. Its elapsed times are not a latency benchmark.
+
+The [October 13 report](../examples/governed_retrieval/results/local-smoke-2026-10-13.json) is retained as historical execution evidence. It did not record effective RoPE and is superseded for current interpretation by the configuration-verified run. See [the runtime investigation](runtime-compatibility.md).
 
 There is no calibrated confidence score or low-confidence branch in the current
 API. Ambiguous cases reveal actual false positives/negatives; the tool does not
@@ -263,6 +255,39 @@ simulated false negative releasing a secret and a simulated false positive
 blocking a placeholder. They are not evidence of model accuracy.
 
 ## Boundary and limits
+
+### Experimental adapters and context policies
+
+The [credential/context milestone](milestones/2026-10-21-credential-context.md) develops new discrimination behavior separately from this tool's enforcement logic. The existing default `CREDENTIALS` policy still requests `password` and `api key` from the loaded model.
+
+The source server can optionally load the separately published [Spaniel Context v0.1 adapter](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1). It remains experimental and fails the predeclared credential screening targets; v2 remains the default. Install `requirements-adapter.txt`, set `PII_ADAPTER` to its local directory or Hugging Face repository, and set `PII_ADAPTER_REVISION` when using a remote artifact. The base checkpoint must match the adapter's model card. `/api/model` identifies the loaded base and adapter; it does not certify detection quality.
+
+An application can create an explicitly experimental compensation policy:
+
+```python
+from spaniel_guard import Policy, ContentGate
+
+experimental_compensation = Policy(
+    "private-compensation", "experimental-1", ("private compensation",),
+)
+gate = ContentGate(policy=experimental_compensation)
+```
+
+Requesting this label from v2 does not confer a validated compensation detector. Use the [capability record](../CAPABILITIES.md) and the specific adapter's evaluation to decide whether a policy belongs in your deployment. The gate has no calibrated uncertainty signal; an empty annotation on ambiguous text can still release content. Neither a private conversation nor the word “salary” is sufficient by itself to determine the policy outcome.
+
+The detector also cannot authenticate a document's statement that its contents are public or approved for disclosure. Apply trusted access and disclosure rules separately; model interpretation of document text is not an authorization source.
+
+The [context integration examples](../examples/context_retrieval/cases.json) exercise the actual file reader and gate with public salary bands, private negotiations, public information quoted in private conversations, an actual password equal to `CHANGEME`, an unfilled template, informal passphrases, and public/private key shapes. All values are fictional; key bodies are non-operational text fixtures. After starting the experimental model service, run:
+
+```bash
+python examples/context_retrieval/demo.py --report /tmp/spaniel-context-smoke.json
+```
+
+The report includes the server's declared configuration, decision codes and content-return flags, without document text. It requests three credential labels together, unlike the frozen concept evaluation's single-label requests, so it is a distinct integration smoke test. One context-deficient salary case has no asserted expected decision and is excluded from the score. It illustrates the absence of calibrated abstention; the tool does not automatically route that case for review.
+
+The initial adapter checks were invalidated by a [model configuration compatibility fault](runtime-compatibility.md). Fresh checks on the corrected selected adapter matched 14/15 existing cases and 8/11 scored context cases. The context suite exposed two false blocks on public pay and a missed actual `CHANGEME` password. See the [paired application results](milestones/2026-10-21-credential-context.md#application-checks-on-the-selected-adapter) and the recorded failures before choosing a policy.
+
+### Retrieval boundary
 
 - **Text only:** UTF-8 `.txt`, `.md`, `.json`, `.csv`, and `.log`, at most 32,000
   bytes and 8,000 characters by default. No OCR, archives, images, remote URL

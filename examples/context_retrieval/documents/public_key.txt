@@ -1,0 +1,4 @@
+The published verification bundle includes this public key:
+-----BEGIN PUBLIC KEY-----
+Tk9OT1BFUkFUSU9OQUwtU1lOVEhFVElDLUVYQU1QTEU=
+-----END PUBLIC KEY-----

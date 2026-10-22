@@ -14,6 +14,34 @@ The project connects **LLM fine-tuning, synthetic training data, evaluation, and
 
 [Model on Hugging Face](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2) · [Try locally](#try-it-the-demo-app) · [Governed retrieval](docs/governed-retrieval.md) · [Results](#results) · [Training data and evaluation](docs/training-data-and-evaluation.md) · [Research journal](#the-journey-as-blog-entries)
 
+## Current research milestone: credentials and contextual compensation
+
+**[Spaniel Context v0.1](https://huggingface.co/Harsh/spaniel-credential-context-lora-v0.1) is a separately published experimental LoRA adapter, trained on GPU.ai.** It learns a narrower policy task: actual credentials versus benign lookalikes, and private compensation versus public salary information. The original v2 model remains the default.
+
+The [coverage audit](docs/coverage-audit.md) examined all 389,521 v2 training rows. The follow-up adds **5,248 synthetic training contrasts and 1,536 validated public-source PII replay rows**, with scenario families separated across training, development and test. The selected checkpoint is epoch one of a two-epoch rank-16 LoRA run on an RTX 4090.
+
+On the frozen 159-case synthetic test, overall exact span F1 improves from **0.397 to 0.869**, sensitive-document recall from **34/81 to 70/81**, and benign false blocks from **13/78 to 9/78**.
+
+| Scope | Model | Sensitive documents detected | Benign false blocks | Exact span F1 | Inspection errors |
+|---|---|---:|---:|---:|---:|
+| Credentials | Spaniel v2 | 24/39 (61.5%) | 7/36 (19.4%) | 0.579 | 0 |
+| Credentials | Spaniel Context v0.1 | 33/39 (84.6%) | 3/36 (8.3%) | 0.889 | 0 |
+| Compensation | Spaniel v2 | 10/42 (23.8%) | 6/42 (14.3%) | 0.167 | 0 |
+| Compensation | Spaniel Context v0.1 | 37/42 (88.1%) | 6/42 (14.3%) | 0.851 | 0 |
+
+
+The candidate **fails all four predeclared screening requirements**. Credential recall and false blocks miss their targets; original-source PII span F1 declines from **0.937 to 0.924**, beyond the allowed one-point drop; and one legacy annotation is rejected in each model. It remains a separate experimental adapter; v2 stays the default. These are 159 authored synthetic cases across 17 scenario families, with correlated substitutions and long variants, no independent human adjudication, and a disclosed runtime-repair rerun. They establish progress on this test, not production readiness or a general architecture ranking.
+
+![Context comparison: sensitive recall, benign withholding and exact span F1](docs/coverage/context-comparison.png)
+
+The [GLiNER2.5 comparison](docs/gliner-context-baseline.md) reports both fixed label-only and policy-description configurations. It compares an off-the-shelf encoder with a task-adapted decoder; it does not establish architecture superiority or relative speed. The [full milestone](docs/milestones/2026-10-21-credential-context.md) includes PII retention, per-family failures, application checks, exact hashes and reproduction steps.
+
+Application checks are mixed: the existing retrieval suite improves from 12/15 to 14/15, while the new context suite falls from 9/11 to 8/11. Actual `CHANGEME` passwords and authorized public pay remain failure cases. Simulated transcript text is included, but real audio/ASR, legal strategy, layoffs and performance reviews remain unvalidated.
+
+The experiment also found and fixed a [runtime configuration compatibility fault](docs/runtime-compatibility.md). The first run was invalidated; corrected training restarted from the original base without changing the data, hyperparameters or screening rules. Only the corrected selected adapter is published.
+
+[Use the adapter](docs/huggingface-context-adapter-card.md#local-inference-and-governed-retrieval) · [Capability record](CAPABILITIES.md) · [Progress](CHANGELOG.md) · [Frozen protocol](experiments/credential-context-protocol.json) · [Research roadmap](docs/research-roadmap.md)
+
 ## Why local sensitive-data detection matters
 
 Prompts can include personal records, customer details, employee information, and credentials. Retrieved passages and tool outputs can introduce the same information even when the user's original question contains none of it. A local detector lets an application inspect that content within its own environment.
@@ -170,7 +198,7 @@ See [Training data, attribution, and evaluation](docs/training-data-and-evaluati
 
 ## Results
 
-**Strict typed span exact-match F1 on 300 held-out documents, using constrained decoding.** These are the published July 2026 experiments; this documentation update does not report a new benchmark.
+**Strict typed span exact-match F1 on 300 held-out documents, using constrained decoding.** These are the historical July 2026 experiments. The separate October contextual experiment is reported above and uses different labels and evaluation targets.
 
 | Model | Original gold | Adjudicated gold | Unseen entity names |
 |---|---:|---:|---:|
@@ -188,7 +216,7 @@ The [evaluation notes](docs/training-data-and-evaluation.md#evaluation-and-inter
 
 ## Limitations and deployment scope
 
-- **English only:** multilingual source data was filtered for this release.
+- **English intended scope:** no validated multilingual performance claim. The coverage audit found non-English records with English source metadata, so metadata filtering is not proof every training text is English.
 - **Personal-attribute semantics:** current guidelines target information about people or their records. General world-fact mentions may intentionally remain untagged. See [annotation rules](guidelines_v2.md).
 - **Paraphrase limits:** unfamiliar wording far from the training distribution can fail. Requesting a type does not establish that the model can recognize it reliably.
 - **Output structure:** the current decoder handles non-overlapping contiguous spans and requires at least two characters per entity. Nested and linked discontinuous evidence are research goals.
@@ -201,6 +229,8 @@ The journal records the experiments as they happened, including historical headl
 
 | Research note | What it documents |
 |---|---|
+| [Coverage audit and data gaps](docs/coverage-audit.md) | Full-mixture inspection, embedding clusters, repeated credentials and missing supervision |
+| [Credentials and contextual compensation](docs/milestones/2026-10-21-credential-context.md) | GPU.ai fine-tuning, contrastive data, measured gains, failed screening targets and remaining errors |
 | [Fine-tuning a small model for tagged extraction](journal/2026-07-08-tagged-regeneration-recipe.md) | Training representation, label conditioning, and early size comparisons |
 | [Attribute versus mention semantics](journal/2026-07-09-attribute-vs-mention-semantics.md) | How annotation choices define what counts as PII |
 | [Making copy drift unrepresentable](journal/2026-07-12-constrained-decoding.md) | The copy-or-tag automaton, tokenizer handling, and decoding bugs |
@@ -245,27 +275,29 @@ This runs the original-gold evaluation path; the adjudicated and unfamiliar-name
 
 | Path | Purpose |
 |---|---|
-| `pii_decode.py`, `tokenizer_compat.py` | Constrained decoding and tokenizer compatibility |
+| `pii_decode.py`, `tokenizer_compat.py`, `model_compat.py` | Constrained decoding and tokenizer/model configuration compatibility |
 | `pii_tagger/` | Local FastAPI service and demonstration UI |
 | `spaniel_guard.py`, `examples/governed_retrieval/` | Policy-controlled Python retrieval tool and synthetic smoke cases |
 | `build_sft_dataset_v2.py`, `convert_ai4privacy.py` | Training-mixture construction and source conversion |
 | `guidelines_v2.md`, `label_aliases_v2.json` | Annotation conventions and natural-language labels |
 | `vast_run/train_sft.py` | Full-parameter fine-tuning |
+| `sensitive_context/`, `experiments/` | Contextual data generation, LoRA training, paired evaluation, GLiNER baseline and frozen protocols |
+| `examples/context_retrieval/`, `reports/credential-context/` | Context-policy integration cases and versioned experiment evidence |
 | `pii_eval.py`, `run_constrained_eval.py`, `error_autopsy.py` | Scoring, inference, and error analysis |
 | `artifact_manifest.json`, `verify_artifacts.py` | Source pins and artifact verification |
 | `docs/training-data-and-evaluation.md` | Data provenance, source licenses, and evaluation methodology |
-| `docs/huggingface-model-card.md` | Maintained source for the published model card |
+| `docs/huggingface-model-card.md`, `docs/huggingface-context-adapter-card.md` | Maintained sources for the base and experimental adapter model cards |
 | `journal/`, `tests/` | Experiment records and regression checks |
 
 ## Status & roadmap
 
-The published release establishes a local PII extraction baseline. The next milestones are:
+The published v2 release establishes a local PII extraction baseline. Context v0.1 adds a reproducible, separately versioned experiment with measured improvements and explicit failed screening targets. Next milestones are:
 
 1. **Governed retrieval integration:** the Python example now connects local findings to versioned entity policies and deterministic withholding. Next, validate agent/MCP adapters and broader access-path coverage; redaction and review workflows remain future work.
 2. **Security-focused evaluation:** measure missed disclosures, benign interruptions, input manipulation, inference failures, and local latency on reviewed prompt/context/tool-output cases.
 3. **Semantic evidence:** evaluate encoders, constrained decoders, and hybrids for confidential topics and linked evidence, using a separate benchmark from entity extraction.
 
-The retrieval wrapper is application code around the downloadable v2 checkpoint. Its enforcement behavior and the checkpoint's detection accuracy are separate properties; the remaining milestones are future work.
+The retrieval wrapper uses v2 by default and supports the optional context adapter through the source server. Its enforcement behavior and learned detection accuracy remain separate properties. Next data improvements should target the published failure families and be evaluated on a newly reserved, independently reviewed test.
 
 ## Author and attribution
 

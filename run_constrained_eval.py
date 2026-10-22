@@ -15,6 +15,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 
 from pii_decode import CopyTagConstraint, VocabTrie
 from tokenizer_compat import tokenizer_load_kwargs
+from model_compat import load_model_config
 
 
 def main():
@@ -30,7 +31,7 @@ def main():
     tokenizer = AutoTokenizer.from_pretrained(
         args.model, **tokenizer_load_kwargs(args.model))
     model = AutoModelForCausalLM.from_pretrained(
-        args.model, dtype=torch.bfloat16).to(device).eval()
+        args.model, config=load_model_config(args.model), dtype=torch.bfloat16).to(device).eval()
     print("building vocab trie ...", flush=True)
     t0 = time.time()
     trie = VocabTrie(tokenizer)
@@ -63,6 +64,7 @@ def main():
                     **enc,
                     max_new_tokens=min(6144, prompt_len + 512),
                     do_sample=False,
+                    use_cache=True,
                     pad_token_id=tokenizer.eos_token_id,
                     prefix_allowed_tokens_fn=constraint.make_fn(
                         tokenizer, prompt_len),
