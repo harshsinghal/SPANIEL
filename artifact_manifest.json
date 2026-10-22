@@ -64,7 +64,8 @@
       "rope_theta": 1000000,
       "rope_scaling": null
     },
-    "evaluation_execution_protocol": "experiments/credential-context-evaluation-execution.json"
+    "evaluation_execution_protocol": "experiments/credential-context-evaluation-execution.json",
+    "regression_execution_addendum": "experiments/credential-context-regression-worker.json"
   },
   "v2_configuration_compatibility": {
     "revision": "fc31a21a2ac54850ba3c12781ae433413691189d",
