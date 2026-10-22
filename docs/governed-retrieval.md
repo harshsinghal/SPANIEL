@@ -217,32 +217,24 @@ means at least one case differed from its expected action. It separately counts
 **sensitive content released**, **false blocks**, and **unexpected errors**; an
 inspection error on a sensitive example does not count as successful detection.
 These are small synthetic document-level smoke cases, not a held-out benchmark
-or span F1. The model endpoint does not report its revision, so record the server
-configuration and hardware alongside any published results.
+or span F1. The report captures the server's declared `/api/model` configuration.
+Record artifact hashes and hardware too; declared metadata is not an accuracy
+attestation.
 
 ### Recorded local run
 
-The [October 13, 2026 report](../examples/governed_retrieval/results/local-smoke-2026-10-13.json)
-records one real run of the published v2 checkpoint at revision
-`a58063469be8c7b929016d944d8d6d1545bc70a0` on an Apple M4 with 16 GiB memory,
-using PyTorch MPS. **13 of 15 cases matched their expected actions**, including
-the two expected error cases. No unexpected inspection errors occurred.
+The [October 21 corrected-baseline report](../reports/credential-context/retrieval-existing-v2.json) records the published v2 weights at revision `a58063469be8c7b929016d944d8d6d1545bc70a0`, loaded with verified RoPE theta `1000000` on Apple MPS. **12 of 15 cases matched their expected actions**, including the two expected error cases. No unexpected inspection errors occurred.
 
 | Observed outcome | Detail |
 |---|---|
 | Sensitive content released | The implicit login passphrase was not tagged and was returned |
-| False block | `YOUR_PASSWORD_HERE` in a documentation template was tagged and withheld |
-| Explicit sensitive cases | The password, API key, personal-data, and Unicode cases were withheld |
+| False blocks | Benign security guidance and an unfilled password template were withheld |
+| Explicit sensitive cases | The password, API key, personal-data and Unicode cases were withheld |
 | Document instruction | The credential was detected despite an instruction to leave the text untagged |
 
-These two accuracy failures are intentionally preserved. They are useful
-targets for future model evaluation, not reasons to change expected labels to
-match predictions. The successful instruction case does not establish general
-prompt-injection resistance. Client timings for the 14 model calls ranged from
-0.430 to 2.507 seconds, including first-call warm-up; these are tiny documents
-in one sequential run, not a throughput or long-document latency benchmark.
-The report includes policy names, outcomes, launch configuration, and fixture
-hashes without raw document content.
+These failures remain visible rather than changing expected labels to match predictions. The successful instruction case does not establish general prompt-injection resistance. The report records effective configuration and verified model identity without document content. Its elapsed times are not a latency benchmark.
+
+The [October 13 report](../examples/governed_retrieval/results/local-smoke-2026-10-13.json) is retained as historical execution evidence. It did not record effective RoPE and is superseded for current interpretation by the configuration-verified run. See [the runtime investigation](runtime-compatibility.md).
 
 There is no calibrated confidence score or low-confidence branch in the current
 API. Ambiguous cases reveal actual false positives/negatives; the tool does not

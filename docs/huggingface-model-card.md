@@ -32,6 +32,8 @@ SPANIEL is a 0.6B-parameter Qwen3 fine-tune for English PII extraction. It accep
 
 The intended application is local inspection of text before it is shared with an AI service. The checkpoint provides annotations; an application must implement its own policy, redaction, blocking, or review actions. The original sensitive values remain present in tagged output.
 
+**Runtime compatibility correction, October 2026:** the original checkpoint stores RoPE theta `1000000` in the newer `rope_parameters` format. Transformers 4.57.6 could silently use its older default `10000`. The current configuration now also supplies the equivalent legacy fields; **the model weights are unchanged**. When loading the older pinned revision, use the [corrected source loader](https://github.com/harshsinghal/SPANIEL/tree/eb46193b698b44eb0401b7f35b7ab1237dad703b). The [investigation](https://github.com/harshsinghal/SPANIEL/blob/eb46193b698b44eb0401b7f35b7ab1237dad703b/docs/runtime-compatibility.md) explains verification and why the first contextual fine-tuning run was invalidated and restarted. Reproducing a checkpoint requires its intended effective configuration as well as its weights.
+
 ## Research progression: credential and context discrimination
 
 An October 2026 audit examined all 389,521 training rows and identified specific gaps in benign credential lookalikes, credential diversity, long context and confidentiality supervision. A follow-up experiment prepares 5,248 synthetic training examples, disjoint scenario-family development/test sets, 1,536 validated public-source replay examples and a continued LoRA fine-tune of this checkpoint.

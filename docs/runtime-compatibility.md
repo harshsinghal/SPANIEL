@@ -16,7 +16,33 @@ This was discovered when the fresh PII-retention evaluation diverged from archiv
 
 The shared [model loader](../model_compat.py) translates this supported default-Qwen3 RoPE configuration for older Transformers versions. It refuses unsupported scaling layouts and conflicting values rather than guessing. Native newer loaders retain their configuration format. The source server, constrained evaluation command, contextual trainer and paired evaluator use this loader; the Docker build includes it.
 
+The published v2 [compatibility revision `fc31a21`](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2/commit/fc31a21a2ac54850ba3c12781ae433413691189d) also adds equivalent legacy fields to the root and `final/` configuration files. Both model-weight hashes remain unchanged. Direct configuration loading was checked with Transformers 4.57.6 and 5.8.0: both construct the intended rotary-frequency tensor. The Docker definition now pins this compatible revision. The contextual training experiment retains its original base revision and applies the verified loader, preserving its recorded provenance.
+
 Verification checks the **actual rotary-frequency tensor** against the tensor implied by theta `1000000`, in addition to unit tests for the schema transition, conflicting values and unsupported layouts. New training manifests and evaluation reports record effective RoPE values and the compatibility-helper hash. The comparison refuses missing or incorrect effective RoPE, even when both reports share the same mistake. `/api/model` exposes the effective setting for application diagnostics.
+
+To repeat the configuration check without downloading model weights, run this from the repository with the experiment dependencies installed:
+
+```python
+import torch
+from huggingface_hub import snapshot_download
+from transformers.models.qwen3.modeling_qwen3 import Qwen3RotaryEmbedding
+from model_compat import load_model_config, effective_rope
+
+path = snapshot_download(
+    "Harsh/qwen3-0.6b-pii-sft-v2",
+    revision="a58063469be8c7b929016d944d8d6d1545bc70a0",
+    allow_patterns=["config.json"],
+)
+config = load_model_config(path)
+rotary = Qwen3RotaryEmbedding(config)
+expected = 1 / (1000000 ** (
+    torch.arange(0, config.head_dim, 2).float() / config.head_dim
+))
+assert torch.equal(rotary.inv_freq.cpu(), expected)
+print(effective_rope(config))
+```
+
+This verifies the supported default-RoPE interpretation. It does not verify model weights, detection accuracy or every possible future Qwen configuration.
 
 Inference explicitly records `use_cache=True`. The saved model configuration has `use_cache=False`, but its generation configuration already defaults to caching; this investigation does not claim a caching speedup. Training continues to disable caching while using gradient checkpointing.
 

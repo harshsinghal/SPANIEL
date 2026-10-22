@@ -1,4 +1,5 @@
 {
+  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark.",
   "created_at": "2026-10-22T02:38:24.806038+00:00",
   "model_configuration": {
     "base_model": "local-checkpoint",
@@ -149,6 +150,5 @@
     "selection_note": "The smoke test ran on epoch 1 before the run finished. The final selected adapter is byte-identical. Selection used development completion loss, not these smoke outcomes.",
     "device": "Apple MPS",
     "dtype": "bfloat16"
-  },
-  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark."
+  }
 }

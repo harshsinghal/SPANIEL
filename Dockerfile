@@ -25,7 +25,7 @@ COPY pii_tagger/server.py /app/pii_tagger/
 COPY pii_tagger/static/ /app/pii_tagger/static/
 
 ENV PII_MODEL_ID=Harsh/qwen3-0.6b-pii-sft-v2 \
-    PII_MODEL_REVISION=a58063469be8c7b929016d944d8d6d1545bc70a0 \
+    PII_MODEL_REVISION=fc31a21a2ac54850ba3c12781ae433413691189d \
     PII_MODEL_CACHE=/models \
     HF_HUB_DISABLE_XET=1 \
     PYTHONDONTWRITEBYTECODE=1 \

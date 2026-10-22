@@ -88,12 +88,12 @@ The [source-attribution record](https://github.com/harshsinghal/SPANIEL/blob/mai
 
 Use the matching v2 base and this adapter with the SPANIEL source server. Install the repository's `requirements-adapter.txt` with a PyTorch build appropriate to your machine. Configure `PII_MODEL_ID`, `PII_MODEL_REVISION`, `PII_ADAPTER` and `PII_ADAPTER_REVISION` as documented in the milestone. The service merges the adapter in memory and keeps the same copy-or-tag constrained decoder.
 
-The inference and experiment code is available at [source revision `RUNTIME_REPAIR_SOURCE_REVISION`](https://github.com/harshsinghal/SPANIEL/tree/RUNTIME_REPAIR_SOURCE_REVISION). This revision includes the adapter loader, constrained decoder, data generator and evaluators; later documentation commits record the completed results. The existing Docker image does not include the optional PEFT dependency. Use a source installation for this adapter.
+The inference and experiment code is available at [source revision `eb46193b698b44eb0401b7f35b7ab1237dad703b`](https://github.com/harshsinghal/SPANIEL/tree/eb46193b698b44eb0401b7f35b7ab1237dad703b). This revision includes the adapter loader, constrained decoder, data generator and evaluators; later documentation commits record the completed results. The existing Docker image does not include the optional PEFT dependency. Use a source installation for this adapter.
 
 ```bash
 git clone https://github.com/harshsinghal/SPANIEL.git
 cd SPANIEL
-git checkout RUNTIME_REPAIR_SOURCE_REVISION
+git checkout eb46193b698b44eb0401b7f35b7ab1237dad703b
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-adapter.txt

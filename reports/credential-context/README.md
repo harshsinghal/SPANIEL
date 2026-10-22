@@ -15,6 +15,7 @@ These files support the [October milestone](../../docs/milestones/2026-10-21-cre
 | `run_manifest.json`, `training_history.json` | GPU.ai training recipe, data hashes, completion-only supervision, epoch losses and selected checkpoint |
 | `evaluation-execution.json`, `environment.txt` | Evaluation scheduling and dependency environment; concurrent jobs make elapsed times unsuitable as latency benchmarks |
 | `retrieval-existing-smoke.json`, `retrieval-context-smoke.json` | Actual local file-reader and policy-gate checks on Apple MPS; illustrative integration cases, not the frozen GPU benchmark |
+| `retrieval-existing-v2.json`, `retrieval-context-v2.json` | The same integration suites on the original v2 weights with verified corrected RoPE configuration |
 | `ambiguity-review.json` | Six observations with insufficient context and no binary gold; no accuracy score or calibrated abstention claim |
 | `report-hashes.json` | Checksums for the six exported Spaniel evaluations and the comparison |
 

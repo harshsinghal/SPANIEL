@@ -1,4 +1,5 @@
 {
+  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark.",
   "created_at": "2026-10-22T03:05:15.305772+00:00",
   "scope": "Six missing-context demonstrations. No positive/negative gold, accuracy score, or abstention claim. The gate does not implement automatic semantic review.",
   "verified_artifacts": {
@@ -78,6 +79,5 @@
       "code": "SENSITIVE_CONTENT_DETECTED",
       "content_returned": false
     }
-  ],
-  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark."
+  ]
 }

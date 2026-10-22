@@ -1,4 +1,5 @@
 {
+  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark.",
   "runtime": {
     "created_at": "2026-10-22T03:11:42.265990+00:00",
     "model": "Harsh/qwen3-0.6b-pii-sft-v2",
@@ -2503,6 +2504,5 @@
       "seconds": 0.784
     }
   ],
-  "export_note": "Source text, tagged predictions and exception bodies omitted. Offsets are character offsets into the source identified by sha256.",
-  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark."
+  "export_note": "Source text, tagged predictions and exception bodies omitted. Offsets are character offsets into the source identified by sha256."
 }
