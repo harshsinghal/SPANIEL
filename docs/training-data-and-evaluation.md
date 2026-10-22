@@ -1,10 +1,12 @@
 # SPANIEL training data, attribution, and evaluation
 
-Research by [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/) · Documentation reviewed 13 October 2026
+Research by [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/) · Documentation updated 21 October 2026
 
 [Project overview](../README.md) · [Published model](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2) · [Artifact manifest](../artifact_manifest.json)
 
 This document explains the published SPANIEL v2 training recipe and its evidence. Dataset license statements below were checked against the exact revisions recorded in the manifest, as well as the current source cards. They describe source terms and provenance; this documentation update does not redistribute the datasets or establish a new license for their contents.
+
+The [October coverage audit](coverage-audit.md) and [credential/context experiment](milestones/2026-10-21-credential-context.md) are separate from the historical v2 recipe below. The new experiment uses explicit completion-only masking, 5,248 newly generated contrasts and 1,536 validated public-source replay rows. Its own manifests, splits and eventual results must not be substituted into v2's historical benchmark tables.
 
 ## Why use a mixture?
 

@@ -14,6 +14,16 @@ The project connects **LLM fine-tuning, synthetic training data, evaluation, and
 
 [Model on Hugging Face](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2) · [Try locally](#try-it-the-demo-app) · [Governed retrieval](docs/governed-retrieval.md) · [Results](#results) · [Training data and evaluation](docs/training-data-and-evaluation.md) · [Research journal](#the-journey-as-blog-entries)
 
+## Current research milestone: credentials and contextual compensation
+
+The next milestone develops **local sensitive-content detection that depends on context**: credentials versus placeholders and public identifiers; private pay or negotiation ranges versus public job advertisements; informal conversation and noisy transcript text. A salary range can be sensitive even without a person's name, while a private conversation can simply quote public information.
+
+The [coverage audit](docs/coverage-audit.md) examined all 389,521 v2 training rows and used embeddings, cluster inspection and corpus retrieval to identify gaps. The [credential and compensation experiment](docs/milestones/2026-10-21-credential-context.md) adds 5,248 synthetic training examples, separate scenario-family evaluation splits, validated PII replay, a LoRA training recipe and a common constrained evaluator. **Training and candidate results are in progress; these preparation artifacts do not establish an accuracy gain.**
+
+The project distinguishes measured capabilities from experimental and best-effort behavior. Credentials are the first area of deeper investment; broader legal, layoff and review confidentiality remain research targets. Transcript examples are simulated text, not a real audio benchmark.
+
+[Capability and evidence record](CAPABILITIES.md) · [Progress and releases](CHANGELOG.md) · [Experiment protocol](experiments/credential-context-protocol.json)
+
 ## Why local sensitive-data detection matters
 
 Prompts can include personal records, customer details, employee information, and credentials. Retrieved passages and tool outputs can introduce the same information even when the user's original question contains none of it. A local detector lets an application inspect that content within its own environment.
@@ -188,7 +198,7 @@ The [evaluation notes](docs/training-data-and-evaluation.md#evaluation-and-inter
 
 ## Limitations and deployment scope
 
-- **English only:** multilingual source data was filtered for this release.
+- **English intended scope:** no validated multilingual performance claim. The coverage audit found non-English records with English source metadata, so metadata filtering is not proof every training text is English.
 - **Personal-attribute semantics:** current guidelines target information about people or their records. General world-fact mentions may intentionally remain untagged. See [annotation rules](guidelines_v2.md).
 - **Paraphrase limits:** unfamiliar wording far from the training distribution can fail. Requesting a type does not establish that the model can recognize it reliably.
 - **Output structure:** the current decoder handles non-overlapping contiguous spans and requires at least two characters per entity. Nested and linked discontinuous evidence are research goals.
@@ -201,6 +211,8 @@ The journal records the experiments as they happened, including historical headl
 
 | Research note | What it documents |
 |---|---|
+| [Coverage audit and data gaps](docs/coverage-audit.md) | Full-mixture inspection, embedding clusters, repeated credentials and missing supervision |
+| [Credentials and contextual compensation](docs/milestones/2026-10-21-credential-context.md) | Contrastive data, transcript cases, validation and the next fine-tuning experiment |
 | [Fine-tuning a small model for tagged extraction](journal/2026-07-08-tagged-regeneration-recipe.md) | Training representation, label conditioning, and early size comparisons |
 | [Attribute versus mention semantics](journal/2026-07-09-attribute-vs-mention-semantics.md) | How annotation choices define what counts as PII |
 | [Making copy drift unrepresentable](journal/2026-07-12-constrained-decoding.md) | The copy-or-tag automaton, tokenizer handling, and decoding bugs |

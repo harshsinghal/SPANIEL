@@ -1,0 +1,6 @@
+# Install the appropriate CUDA torch wheel separately on the GPU.ai instance.
+transformers==4.57.6
+peft==0.17.1
+accelerate==1.10.1
+safetensors==0.6.2
+huggingface-hub==0.36.0

@@ -32,6 +32,14 @@ SPANIEL is a 0.6B-parameter Qwen3 fine-tune for English PII extraction. It accep
 
 The intended application is local inspection of text before it is shared with an AI service. The checkpoint provides annotations; an application must implement its own policy, redaction, blocking, or review actions. The original sensitive values remain present in tagged output.
 
+## Research progression: credential and context discrimination
+
+An October 2026 audit examined all 389,521 training rows and identified specific gaps in benign credential lookalikes, credential diversity, long context and confidentiality supervision. A follow-up experiment prepares 5,248 synthetic training examples, disjoint scenario-family development/test sets, 1,536 validated public-source replay examples and a continued LoRA fine-tune of this checkpoint.
+
+The new task distinguishes private compensation from public salary ranges, including informal and noisy transcript text. This is a separate experimental concept; the PII results below do not validate it. The original v2 weights and their historical results remain unchanged. Candidate training/results are in progress; no accuracy gain is claimed yet.
+
+The GitHub [progress record](https://github.com/harshsinghal/SPANIEL) tracks the audit, data, policies, fine-tuning recipe, evaluation and capability limits. Credentials are the first area of deeper investment. Broader confidential-topic detection and real audio/ASR robustness remain research targets.
+
 [GitHub repository](https://github.com/harshsinghal/SPANIEL) · [Constrained local demo](https://github.com/harshsinghal/SPANIEL#try-it-the-demo-app) · [Training data and attribution](https://github.com/harshsinghal/SPANIEL/blob/main/docs/training-data-and-evaluation.md) · [Research journal](https://github.com/harshsinghal/SPANIEL#the-journey-as-blog-entries)
 
 ## Model details
@@ -159,7 +167,7 @@ The model's declared Apache-2.0 license does not replace dataset-specific terms.
 
 ## Limitations
 
-- English-only training scope; no multilingual performance claim.
+- English intended scope; no multilingual performance claim. The corpus audit found non-English records carrying English source metadata, so filtering does not prove every training row is English.
 - Evaluation uses synthetic PII data and a small held-out sample; validate on the intended domain.
 - Current annotation rules target personal attributes. General world-fact mentions may deliberately remain untagged.
 - Far paraphrases can fail; occupation and time-related labels were identified as weaker areas in the project reports.

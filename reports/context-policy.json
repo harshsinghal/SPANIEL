@@ -1,0 +1,10 @@
+{
+  "version": "credential-context-2026-10-21",
+  "password": "An actual or purported authentication secret, including natural-language passphrases and revoked secrets. Exclude explicit unfilled placeholders, masked values, and ordinary phrases without authentication context.",
+  "api key": "An actual or purported API credential, bearer token or session token. Exclude unfilled placeholders, public identifiers and format descriptions. Token validity is not checked.",
+  "private key": "The complete private-key block, including delimiters and padding. Exclude public keys and certificates. Cryptographic validity is not checked.",
+  "private compensation": "A pay amount or range tied to an individual's pay, a private negotiation, a nonpublic internal budget or a confidential compensation conversation. Public advertisements and published general market ranges are benign. A range can be sensitive. Missing disclosure context is ambiguous and must not be silently labeled benign.",
+  "uncertainty": "Ambiguous cases are a separate review set, not negative training labels. This model has no calibrated abstention mechanism; empty output cannot resolve ambiguity.",
+  "evidence": "Extraction targets are non-overlapping source-contiguous spans. Sidecar evidence groups can link spans to contextual cues; the current model does not output those groups.",
+  "transcripts": "Text-only simulated transcripts. Preserve ASR-like errors and source spelling exactly; no audio, ASR model, or real transcription corpus was evaluated."
+}

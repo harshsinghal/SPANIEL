@@ -1,0 +1,15 @@
+{
+  "train_rows": 6784,
+  "dev_rows": 100,
+  "maximum_sequence_tokens": 2201,
+  "supervised_completion_tokens": 755380,
+  "mask": "All prompt tokens masked with -100; only assistant completion and chat ending supervised; no truncation or packing",
+  "selection": "Minimum development completion loss across 2 epochs; no test-set selection",
+  "training_script_sha256": "8244d1aad59f914146149b57065526f8c3778ccb5032628ddcff903428d3d31e",
+  "input_sha256": {
+    "train.jsonl": "ade5f43374ca14300d77393fa6233bb2cad492279c42a1cc11b193ce8c659201",
+    "replay.jsonl": "71cec1bf6dfcfec2f140ab458353ea86a12b3c1929085e054c822b6e7286f45b",
+    "dev.jsonl": "e32e0976baffb2726381531a5ce7e5d716c613f70f89237d334faaffdd303ddc"
+  },
+  "note": "Tokenizer and validation preflight only; not a training result."
+}

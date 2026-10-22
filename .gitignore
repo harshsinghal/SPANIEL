@@ -19,3 +19,8 @@ __pycache__/
 
 # packaged training data (reproducible from builders)
 vast_run/data/
+
+# Rebuildable context experiment data, model checkpoints, and remote runtime.
+context-data/
+context-results/
+.context-venv/

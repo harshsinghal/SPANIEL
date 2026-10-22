@@ -264,6 +264,27 @@ blocking a placeholder. They are not evidence of model accuracy.
 
 ## Boundary and limits
 
+### Experimental adapters and context policies
+
+The [credential/context milestone](milestones/2026-10-21-credential-context.md) develops new discrimination behavior separately from this tool's enforcement logic. The existing default `CREDENTIALS` policy still requests `password` and `api key` from the loaded model.
+
+The source server can optionally load a matching LoRA adapter. Install `requirements-adapter.txt`, set `PII_ADAPTER` to its local directory or Hugging Face repository, and set `PII_ADAPTER_REVISION` when using a remote artifact. The base checkpoint must match the adapter's model card. `/api/model` identifies the loaded base and adapter; it does not certify detection quality.
+
+An application can create an explicitly experimental compensation policy:
+
+```python
+from spaniel_guard import Policy, ContentGate
+
+experimental_compensation = Policy(
+    "private-compensation", "experimental-1", ("private compensation",),
+)
+gate = ContentGate(policy=experimental_compensation)
+```
+
+Requesting this label from v2 does not confer a validated compensation detector. Use the [capability record](../CAPABILITIES.md) and the specific adapter's evaluation to decide whether a policy belongs in your deployment. The gate has no calibrated uncertainty signal; an empty annotation on ambiguous text can still release content. Neither a private conversation nor the word “salary” is sufficient by itself to determine the policy outcome.
+
+### Retrieval boundary
+
 - **Text only:** UTF-8 `.txt`, `.md`, `.json`, `.csv`, and `.log`, at most 32,000
   bytes and 8,000 characters by default. No OCR, archives, images, remote URL
   fetching, chunking, or silent truncation. Oversized documents are withheld.

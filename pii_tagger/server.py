@@ -55,6 +55,16 @@ tokenizer = AutoTokenizer.from_pretrained(
     MODEL_DIR, **tokenizer_load_kwargs(MODEL_DIR))
 model = AutoModelForCausalLM.from_pretrained(
     MODEL_DIR, dtype=torch.bfloat16).to(DEVICE).eval()
+ADAPTER = os.environ.get("PII_ADAPTER")
+ADAPTER_REVISION = os.environ.get("PII_ADAPTER_REVISION")
+if ADAPTER:
+    try:
+        from peft import PeftModel
+    except ImportError as exc:
+        raise RuntimeError("PII_ADAPTER requires requirements-adapter.txt") from exc
+    adapter_kwargs = {"revision": ADAPTER_REVISION} if ADAPTER_REVISION else {}
+    model = PeftModel.from_pretrained(model, ADAPTER, **adapter_kwargs) \
+        .merge_and_unload().to(DEVICE).eval()
 print("building vocab trie ...")
 TRIE = VocabTrie(tokenizer)
 print("model ready")
@@ -66,6 +76,19 @@ MAX_ENTITIES = int(os.environ.get("PII_MAX_ENTITIES", "32"))
 MAX_LABEL_CHARS = int(os.environ.get("PII_MAX_LABEL_CHARS", "64"))
 MAX_NEW_TOKENS = int(os.environ.get("PII_MAX_NEW_TOKENS", "6144"))
 ALLOW_UNCONSTRAINED = os.environ.get("PII_ALLOW_UNCONSTRAINED") == "1"
+
+
+@app.get("/api/model")
+def model_metadata():
+    """Identify loaded artifacts without exposing local filesystem paths."""
+    return {
+        "base_model": MODEL_ID or "local-checkpoint",
+        "base_revision": MODEL_REVISION,
+        "adapter": ("local-adapter" if ADAPTER and Path(ADAPTER).is_dir() else ADAPTER),
+        "adapter_revision": ADAPTER_REVISION,
+        "source_preserving_decoder": True,
+        "note": "Artifact identity does not establish detection accuracy; consult the model card.",
+    }
 
 
 class TagRequest(BaseModel):
