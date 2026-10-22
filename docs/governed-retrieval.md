@@ -285,7 +285,7 @@ python examples/context_retrieval/demo.py --report /tmp/spaniel-context-smoke.js
 
 The report includes the server's declared configuration, decision codes and content-return flags, without document text. It requests three credential labels together, unlike the frozen concept evaluation's single-label requests, so it is a distinct integration smoke test. One context-deficient salary case has no asserted expected decision and is excluded from the score. It illustrates the absence of calibrated abstention; the tool does not automatically route that case for review.
 
-The initial adapter checks were invalidated by a [model configuration compatibility fault](runtime-compatibility.md). Corrected application results will be recorded in the milestone before a new adapter is released.
+The initial adapter checks were invalidated by a [model configuration compatibility fault](runtime-compatibility.md). Fresh checks on the corrected selected adapter matched 14/15 existing cases and 8/11 scored context cases. The context suite exposed two false blocks on public pay and a missed actual `CHANGEME` password. See the [paired application results](milestones/2026-10-21-credential-context.md#application-checks-on-the-selected-adapter) and the recorded failures before choosing a policy.
 
 ### Retrieval boundary
 

@@ -82,6 +82,21 @@ The corrected run selected **epoch one, step 424**, with development completion 
 
 Corrected development, reserved-test, PII-retention and application checks are pending. The [invalid first run](../../reports/credential-context/invalid-rope-run/INVALIDATED.json) is retained for audit and must not be presented as evidence about the correctly configured model. The independent GLiNER baseline is unaffected by this Qwen3 loading issue.
 
+## Application checks on the selected adapter
+
+These are actual file-reader and policy-gate checks on Apple MPS, with the byte-identical selected adapter. They are separate from the frozen GPU benchmark and include expected error cases.
+
+| Integration suite | Corrected v2 | Selected adapter | Sensitive examples released, v2 → adapter | Benign false blocks, v2 → adapter |
+|---|---:|---:|---:|---:|
+| Existing retrieval cases | 12/15 | 14/15 | 1 → 0 | 2 → 1 |
+| New context cases | 9/11 scored | 8/11 scored | 1 → 1 | 1 → 2 |
+
+There were no unexpected inspection errors. The adapter now catches the implicit login passphrase and the private compensation negotiation, and it allows the new suite's unfilled template. However, it still blocks the existing suite's placeholder; it newly blocks a public job range and authorized public pay; and it misses an actual password equal to `CHANGEME`. These are meaningful limitations, even if aggregate synthetic benchmark scores improve. Expected labels were not changed to match the model.
+
+The new context suite also contains one unscored missing-context salary example. The separate [six-case ambiguity review](../../reports/credential-context/ambiguity-review.json) returned four allowed and two blocked decisions; none is scored as correct or incorrect. The API has no calibrated abstention or automatic review decision.
+
+[Existing suite report](../../reports/credential-context/retrieval-existing-smoke.json) · [Context suite report](../../reports/credential-context/retrieval-context-smoke.json)
+
 ## Reproduce
 
 ```bash

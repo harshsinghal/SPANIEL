@@ -33,7 +33,7 @@ tags:
 
 This adapter investigates whether a 0.6B local language model can distinguish sensitive credentials from benign lookalikes and private compensation from public salary information. It continues supervised fine-tuning of [Spaniel v2](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2), using source-grounded synthetic contrasts and validated PII replay. It is an experimental artifact, not a production disclosure-prevention guarantee.
 
-**Draft: corrected training is in progress. The first run was invalidated by a RoPE configuration mismatch. Do not publish this draft or the invalid adapter as a completed-model release.**
+**Draft: corrected training is complete and the selected adapter is staged privately. Final paired evaluations are in progress; this card is not yet a public release. The first, misconfigured run was discarded.**
 
 ## Task and policy
 
@@ -70,7 +70,9 @@ Candidate results are pending. The original Spaniel v2 PII scores do not establi
 | Recipe | Two epochs, learning rate 5e-5, effective batch 16, bf16, seed 20261021 |
 | Sequence handling | 4,096-token limit; maximum observed 2,201; overflow rejected, no truncation |
 | Loss | Assistant completion and chat ending only; all prompt tokens masked |
-| Checkpoint selection | Lowest development completion loss; no test-set checkpoint selection |
+| Checkpoint selection | Epoch one, step 424; development completion loss 0.025829 versus 0.031610 at epoch two; no test-set selection |
+| Adapter weights SHA-256 | `dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504` |
+| Adapter weights revision | `6cd01c4f621c1528f00c5f70f9f1c7855f0a434a` |
 
 The v2 base was originally fully fine-tuned from Qwen3-0.6B. This experiment uses a LoRA adapter on that already trained model; it is not an adapter trained directly on the original Qwen checkpoint. The combined augmentation/replay experiment does not isolate either component or establish that LoRA is better than full fine-tuning.
 
@@ -103,7 +105,7 @@ export PII_MODEL_REVISION=a58063469be8c7b929016d944d8d6d1545bc70a0
 export PII_MODEL_CACHE="$PWD/.model-cache"
 export PII_ADAPTER=Harsh/spaniel-credential-context-lora-v0.1
 # Pin the selected weights; later card edits do not change this artifact.
-export PII_ADAPTER_REVISION=CORRECTED_ADAPTER_REVISION
+export PII_ADAPTER_REVISION=6cd01c4f621c1528f00c5f70f9f1c7855f0a434a
 python -m uvicorn server:app --app-dir pii_tagger --host 127.0.0.1 --port 8377
 ```
 
