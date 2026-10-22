@@ -7,7 +7,7 @@ These files support the [October milestone](../../docs/milestones/2026-10-21-cre
 | Files | Evidence |
 |---|---|
 | `v2-dev.json`, `candidate-dev.json` | 100 authored development cases; appropriate for diagnosis, not an untouched accuracy claim |
-| `candidate-dev-mps.json` | Additional development observation on Apple MPS with the byte-identical selected adapter; not substituted into the matched GPU comparison |
+| `runtime-repair-v2-legacy-mps.json` | Corrected original-model regression diagnostic on Apple MPS; not substituted into the matched GPU comparison |
 | `v2-test.json`, `candidate-test.json`, `comparison.json` | 159 reserved cases from 17 scenario families, with matched baseline/candidate decoding and frozen screening rules |
 | `v2-legacy.json`, `candidate-legacy.json` | The same 300 original PII evaluation documents, checking retention of the original source annotations |
 | `gliner-labels-test.json`, `gliner-policy-test.json` | Off-the-shelf GLiNER2.5 on the same concept cases, at threshold 0.5; both predeclared schema modes are reported |
