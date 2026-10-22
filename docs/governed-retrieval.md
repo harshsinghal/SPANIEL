@@ -149,7 +149,7 @@ raw reader. Avoid supplying the original retriever's return annotation (`str`)
 as the wrapper's output schema: the guarded result is a dictionary.
 
 For MCP, the same callable can be exposed by a small local MCP server. For
-example, the official Python SDK v2 uses `MCPServer` and `@mcp.tool()`:
+example, the official Python SDK v2 requires Python 3.11+ and uses `MCPServer` and `@mcp.tool()`:
 
 ```python
 from mcp.server import MCPServer

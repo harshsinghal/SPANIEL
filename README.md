@@ -261,16 +261,18 @@ This runs the original-gold evaluation path; the adjudicated and unfamiliar-name
 
 | Path | Purpose |
 |---|---|
-| `pii_decode.py`, `tokenizer_compat.py` | Constrained decoding and tokenizer compatibility |
+| `pii_decode.py`, `tokenizer_compat.py`, `model_compat.py` | Constrained decoding and tokenizer/model configuration compatibility |
 | `pii_tagger/` | Local FastAPI service and demonstration UI |
 | `spaniel_guard.py`, `examples/governed_retrieval/` | Policy-controlled Python retrieval tool and synthetic smoke cases |
 | `build_sft_dataset_v2.py`, `convert_ai4privacy.py` | Training-mixture construction and source conversion |
 | `guidelines_v2.md`, `label_aliases_v2.json` | Annotation conventions and natural-language labels |
 | `vast_run/train_sft.py` | Full-parameter fine-tuning |
+| `sensitive_context/`, `experiments/` | Contextual data generation, LoRA training, paired evaluation, GLiNER baseline and frozen protocols |
+| `examples/context_retrieval/`, `reports/credential-context/` | Context-policy integration cases and versioned experiment evidence |
 | `pii_eval.py`, `run_constrained_eval.py`, `error_autopsy.py` | Scoring, inference, and error analysis |
 | `artifact_manifest.json`, `verify_artifacts.py` | Source pins and artifact verification |
 | `docs/training-data-and-evaluation.md` | Data provenance, source licenses, and evaluation methodology |
-| `docs/huggingface-model-card.md` | Maintained source for the published model card |
+| `docs/huggingface-model-card.md`, `docs/huggingface-context-adapter-card.md` | Maintained sources for the base and experimental adapter model cards |
 | `journal/`, `tests/` | Experiment records and regression checks |
 
 ## Status & roadmap

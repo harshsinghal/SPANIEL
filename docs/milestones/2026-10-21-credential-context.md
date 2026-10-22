@@ -101,6 +101,10 @@ The runner assumes an available CUDA PyTorch installation, a C compiler and Pyth
 
 Set `CONTEXT_EVAL_JOBS=3` to run the independent accuracy evaluations in three groups on the same GPU after training. Their data, weights, evaluator and decoding were unchanged. Per-case elapsed times therefore include shared-resource contention and must not be used for latency or throughput comparisons. The runner defaults to sequential execution when that variable is omitted.
 
+The corrected run uses a separate RTX 4090 evaluation worker to fit within the training instance's shutdown deadline. The [execution addendum](../../experiments/credential-context-evaluation-execution.json) records this scheduling decision before those evaluations. The original-model development, test and legacy evaluations run concurrently on that worker; the three candidate evaluations run on the same worker after the selected adapter is transferred and its checksum verified. Any partial evaluations started on the training instance are excluded from the matched comparison. The code, data, weights, precision and scoring rules are unchanged.
+
+To use that arrangement, copy the same source and `context-data/` to a prepared worker and run `bash experiments/evaluate_credential_context_phase.sh baseline`. Transfer the selected adapter into `context-results/lora-r16/adapter`, then run `bash experiments/evaluate_credential_context_phase.sh candidate`. Both phases must finish before exporting the paired report. Keep training manifests and adapter checksums with the evaluation evidence; elapsed times remain unsuitable for a latency comparison.
+
 ## What qualifies as progress
 
 Report sensitive-document recall, benign false blocks, inspection failures, exact typed span F1 and correct contrast-pair decisions separately. A structurally valid tag is not necessarily correct. A parser failure must not become an all-clear result.
