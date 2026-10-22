@@ -63,7 +63,8 @@
     "required_effective_rope": {
       "rope_theta": 1000000,
       "rope_scaling": null
-    }
+    },
+    "evaluation_execution_protocol": "experiments/credential-context-evaluation-execution.json"
   },
   "v2_configuration_compatibility": {
     "revision": "fc31a21a2ac54850ba3c12781ae433413691189d",
