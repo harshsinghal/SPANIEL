@@ -1,0 +1,4 @@
+# Separate environment from the Spaniel runtime.
+gliner2[local]==2.1.0
+transformers==5.8.0
+torch==2.14.1

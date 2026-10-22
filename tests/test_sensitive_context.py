@@ -8,6 +8,7 @@ from sensitive_context.replay import convert
 from sensitive_context.evaluate import summarize
 from sensitive_context.compare import aligned
 from sensitive_context.report import public_report
+from sensitive_context.evaluate_gliner import source_spans
 
 
 class CharacterTokenizer:
@@ -105,6 +106,13 @@ class SensitiveContextTests(unittest.TestCase):
         self.assertEqual(exported['results'],[{'id':'case','sha256':'hash','detected':None,'error':'inspection_failed'}])
         self.assertNotIn('secret',str(exported))
         with self.assertRaises(ValueError):public_report({'status':'running'})
+
+    def test_encoder_predictions_must_match_source_offsets(self):
+        match={'start':3,'end':7,'text':'word'}
+        self.assertEqual(source_spans('a: word',['password'],{'entities':{'password':[match]}}),[(3,7,'password')])
+        for invalid in ({**match,'text':'invented'},{**match,'end':8},{**match,'start':7}):
+            with self.assertRaises(ValueError):source_spans('a: word',['password'],{'entities':{'password':[invalid]}})
+        with self.assertRaises(ValueError):source_spans('a: word',['password'],{'entities':{'unrequested':[match]}})
 
 
 if __name__=='__main__':unittest.main()

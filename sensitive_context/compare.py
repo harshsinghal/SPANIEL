@@ -25,6 +25,7 @@ def compare(baseline,candidate,legacy_base,legacy_candidate):
     a,b=aligned(baseline,candidate);aligned(legacy_base,legacy_candidate)
     selectors={
         'all':lambda r:True,
+        'short_context':lambda r:not r['category'].startswith('long_'),
         'credentials':lambda r:'compensation' not in r['category'],
         'compensation':lambda r:'compensation' in r['category'],
         'transcript_or_noise':lambda r:any(w in r['category'] for w in ('transcript','noisy')),
