@@ -1,6 +1,6 @@
 # Milestone: credentials and contextual compensation
 
-**Harsh Singhal · 21 October 2026 · Corrected GPU.ai training in progress after a model-loading compatibility failure.**
+**Harsh Singhal · 21 October 2026 · Corrected GPU.ai training complete; final evaluation in progress.**
 
 This milestone asks whether a small local model can distinguish actual credential exposure from benign lookalikes, and private compensation from public salary information. It follows the [coverage audit](../coverage-audit.md). It is a continued LoRA fine-tune of the existing Spaniel v2 checkpoint, with the original checkpoint retained as the baseline.
 
@@ -72,9 +72,11 @@ The tokenizer preflight covers all **6,784 training rows** and the development s
 
 Checkpoint selection uses development completion loss only. Baseline and candidate then use identical constrained decoding on the same GPU. The [protocol](../../experiments/credential-context-protocol.json) records the proposed screening thresholds and limitations before final test measurements.
 
-The first run was invalidated: the older runtime silently read the checkpoint's newer RoPE configuration incorrectly. Training has restarted from the original pinned weights with the correct setting. See the [compatibility investigation](../runtime-compatibility.md) and [predeclared repair protocol](../../experiments/credential-context-runtime-repair.json). The data, hyperparameters, selection rule and screening thresholds are unchanged; prior reserved-test exposure under the invalid runtime is disclosed.
+The first run was invalidated: the older runtime silently read the checkpoint's newer RoPE configuration incorrectly. Training restarted from the original pinned weights with the correct setting and completed both epochs. See the [compatibility investigation](../runtime-compatibility.md) and [predeclared repair protocol](../../experiments/credential-context-runtime-repair.json). The data, hyperparameters, selection rule and screening thresholds are unchanged; prior reserved-test exposure under the invalid runtime is disclosed.
 
 The first experiment combines targeted augmentation and replay. It does not isolate either component or establish LoRA superiority over full fine-tuning. The [GLiNER2.5 comparison](../gliner-context-baseline.md) is an off-the-shelf baseline; an equal-data architecture comparison requires additional controlled runs.
+
+The corrected run selected **epoch one, step 424**, with development completion loss **0.025829** versus **0.031610** at epoch two. The selected adapter SHA-256 is `dfb60b5f56dea06094a73e9de7d8175d70ea9eb252ae8db0cb3ac3721077b504`. These losses select a checkpoint; they do not measure detection quality.
 
 ## Evaluation status
 

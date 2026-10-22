@@ -1,0 +1,60 @@
+{
+  "status": "trained_not_evaluated",
+  "created_at": "2026-10-22T03:39:11.425393+00:00",
+  "base_model": "Harsh/qwen3-0.6b-pii-sft-v2",
+  "base_revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
+  "seed": 20261021,
+  "parameters": {
+    "train": "context-data/train.jsonl",
+    "replay": "context-data/replay.jsonl",
+    "dev": "context-data/dev.jsonl",
+    "out": "context-results/lora-r16",
+    "model": "Harsh/qwen3-0.6b-pii-sft-v2",
+    "revision": "a58063469be8c7b929016d944d8d6d1545bc70a0",
+    "max_length": 4096,
+    "epochs": 2.0,
+    "batch_size": 1,
+    "accumulation": 16,
+    "learning_rate": 5e-05,
+    "rank": 16,
+    "seed": 20261021,
+    "dry_run": false
+  },
+  "input_sha256": {
+    "context-data/train.jsonl": "ade5f43374ca14300d77393fa6233bb2cad492279c42a1cc11b193ce8c659201",
+    "context-data/replay.jsonl": "71cec1bf6dfcfec2f140ab458353ea86a12b3c1929085e054c822b6e7286f45b",
+    "context-data/dev.jsonl": "e32e0976baffb2726381531a5ce7e5d716c613f70f89237d334faaffdd303ddc"
+  },
+  "train_rows": 6784,
+  "dev_rows": 100,
+  "maximum_sequence_tokens": 2201,
+  "supervised_completion_tokens": 755380,
+  "mask": "All prompt tokens masked with -100; only assistant completion and chat ending supervised; no truncation or packing",
+  "selection": "Minimum development completion loss across 2 epochs; no test-set selection",
+  "python": "3.10.12",
+  "training_script_sha256": "e9386dec0a429b34226ee583cfb523409a179df515653578da2a2677a5df7218",
+  "gpu": "NVIDIA GeForce RTX 4090",
+  "gpu_vram_bytes": 25252724736,
+  "versions": {
+    "torch": "2.13.0+cu126",
+    "transformers": "4.57.6",
+    "peft": "0.17.1"
+  },
+  "trainable_parameters": 10092544,
+  "effective_rope": {
+    "rope_theta": 1000000,
+    "rope_scaling": null
+  },
+  "model_compat_sha256": "d8eff2f6a1b5ca43b9fe6a2a397455e1f55e13ba9cbd0141e43165cf92e8fb38",
+  "training_metrics": {
+    "train_runtime": 4678.5657,
+    "train_samples_per_second": 2.9,
+    "train_steps_per_second": 0.181,
+    "total_flos": 1.150393761792e+16,
+    "train_loss": 0.004974513356398158,
+    "epoch": 2.0
+  },
+  "best_dev_loss": 0.025829212740063667,
+  "best_checkpoint": "context-results/lora-r16/checkpoint-424",
+  "finished_at": "2026-10-22T04:57:13.089420+00:00"
+}
