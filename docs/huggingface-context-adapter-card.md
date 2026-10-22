@@ -17,21 +17,23 @@ tags:
   - sensitive-data-detection
   - credential-detection
   - pii-detection
+  - named-entity-recognition
   - data-loss-prevention
   - local-inference
   - constrained-decoding
   - lora
+  - qwen3
   - synthetic-data
   - experimental
 ---
 
-# Spaniel Context v0.1 — experimental credential and compensation LoRA
+# Spaniel Context v0.1 — Qwen3-0.6B credential and compensation LoRA
 
 **Applied AI governance and AI security research by [Harsh Singhal](https://www.linkedin.com/in/harshsinghal/).**
 
 This adapter investigates whether a 0.6B local language model can distinguish sensitive credentials from benign lookalikes and private compensation from public salary information. It continues supervised fine-tuning of [Spaniel v2](https://huggingface.co/Harsh/qwen3-0.6b-pii-sft-v2), using source-grounded synthetic contrasts and validated PII replay. It is an experimental artifact, not a production disclosure-prevention guarantee.
 
-**Draft: training/evaluation in progress. Do not publish this draft as a completed-model release.**
+**Draft: corrected training is in progress. The first run was invalidated by a RoPE configuration mismatch. Do not publish this draft or the invalid adapter as a completed-model release.**
 
 ## Task and policy
 
@@ -69,9 +71,6 @@ Candidate results are pending. The original Spaniel v2 PII scores do not establi
 | Sequence handling | 4,096-token limit; maximum observed 2,201; overflow rejected, no truncation |
 | Loss | Assistant completion and chat ending only; all prompt tokens masked |
 | Checkpoint selection | Lowest development completion loss; no test-set checkpoint selection |
-| Selected checkpoint | Epoch one, step 424 of 848; dev loss 0.033813 versus 0.043643 after epoch two |
-| Training runtime | 4,797.8 seconds, approximately 80 minutes |
-| Adapter SHA-256 | `8e4e99c32a5051d34d1a1d41ca73e52b00b59eef8e39453c24d92fe2b1d53b85` |
 
 The v2 base was originally fully fine-tuned from Qwen3-0.6B. This experiment uses a LoRA adapter on that already trained model; it is not an adapter trained directly on the original Qwen checkpoint. The combined augmentation/replay experiment does not isolate either component or establish that LoRA is better than full fine-tuning.
 
@@ -83,18 +82,18 @@ The training mixture adds 1,536 validated original-training replay rows: 512 eac
 
 Credit [NVIDIA Nemotron-PII](https://huggingface.co/datasets/nvidia/Nemotron-PII) (CC BY 4.0), [Gravitee PII Detection](https://huggingface.co/datasets/gravitee-io/pii-detection-dataset) (Apache-2.0, with its upstream attributions), and [Ai4Privacy / Ai Suisse SA OpenPII 1.5M](https://huggingface.co/datasets/ai4privacy/pii-masking-openpii-1.5m) (CC BY 4.0; Copyright © 2026 Ai Suisse SA as stated in its card). SPANIEL converts source annotations into exact-source tagged completions, validates them, excludes incompatible targets and samples replay. Preserve source-specific attribution and notices; the model license does not replace dataset terms. These sources do not imply endorsement.
 
-The repository's source-attribution record contains the exact source revisions, upstream creators, modifications and license links. Data hashes, the public coverage audit, policy definitions and experiment reports trace the changes from corpus inspection to training and evaluation.
+The [source-attribution record](https://github.com/harshsinghal/SPANIEL/blob/main/docs/training-data-and-evaluation.md#source-attribution-and-license-record) contains the exact source revisions, upstream creators, modifications and license links. [Data hashes](https://github.com/harshsinghal/SPANIEL/blob/main/reports/context-manifest.json), the [coverage audit](https://github.com/harshsinghal/SPANIEL/blob/main/docs/coverage-audit.md), [policy definitions](https://github.com/harshsinghal/SPANIEL/blob/main/reports/context-policy.json) and [experiment evidence](https://github.com/harshsinghal/SPANIEL/tree/main/reports/credential-context) trace the changes from corpus inspection to training and evaluation.
 
 ## Local inference and governed retrieval
 
 Use the matching v2 base and this adapter with the SPANIEL source server. Install the repository's `requirements-adapter.txt` with a PyTorch build appropriate to your machine. Configure `PII_MODEL_ID`, `PII_MODEL_REVISION`, `PII_ADAPTER` and `PII_ADAPTER_REVISION` as documented in the milestone. The service merges the adapter in memory and keeps the same copy-or-tag constrained decoder.
 
-The inference and experiment code is available at [source revision `318ebb1`](https://github.com/harshsinghal/SPANIEL/tree/318ebb1fe5fa9056adebd569228375e578143c5f). This revision includes the adapter loader, constrained decoder, data generator and evaluators; later documentation commits record the completed results. The existing Docker image does not include the optional PEFT dependency. Use a source installation for this adapter.
+The inference and experiment code is available at [source revision `RUNTIME_REPAIR_SOURCE_REVISION`](https://github.com/harshsinghal/SPANIEL/tree/RUNTIME_REPAIR_SOURCE_REVISION). This revision includes the adapter loader, constrained decoder, data generator and evaluators; later documentation commits record the completed results. The existing Docker image does not include the optional PEFT dependency. Use a source installation for this adapter.
 
 ```bash
 git clone https://github.com/harshsinghal/SPANIEL.git
 cd SPANIEL
-git checkout 318ebb1fe5fa9056adebd569228375e578143c5f
+git checkout RUNTIME_REPAIR_SOURCE_REVISION
 python3 -m venv .venv
 source .venv/bin/activate
 pip install -r requirements-adapter.txt
@@ -103,14 +102,14 @@ export PII_MODEL_ID=Harsh/qwen3-0.6b-pii-sft-v2
 export PII_MODEL_REVISION=a58063469be8c7b929016d944d8d6d1545bc70a0
 export PII_MODEL_CACHE="$PWD/.model-cache"
 export PII_ADAPTER=Harsh/spaniel-credential-context-lora-v0.1
-# Resolve once, then pin this process to that exact repository revision.
-export PII_ADAPTER_REVISION="$(python -c 'from huggingface_hub import HfApi; print(HfApi().model_info("Harsh/spaniel-credential-context-lora-v0.1").sha)')"
+# Pin the selected weights; later card edits do not change this artifact.
+export PII_ADAPTER_REVISION=CORRECTED_ADAPTER_REVISION
 python -m uvicorn server:app --app-dir pii_tagger --host 127.0.0.1 --port 8377
 ```
 
 Use a CUDA-compatible PyTorch installation on an NVIDIA host. The recorded training/evaluation environment used PyTorch 2.13.0+cu126; the separate application checks used Apple MPS. Record `/api/model` and the adapter hash when reproducing an application result.
 
-In a second terminal, run `python examples/context_retrieval/demo.py --report context-smoke.json` from the checkout with its environment activated. The demo intentionally reports the observed failures described above and returns a nonzero status when expectations are missed. Do not interpret a successful service startup as a passed detector evaluation.
+In a second terminal, run `python examples/context_retrieval/demo.py --report context-smoke.json` from the checkout with its environment activated. The demo returns a nonzero status when expectations are missed. Do not interpret a successful service startup as a passed detector evaluation.
 
 The intended integration is a local retrieval tool: read the document inside the trusted tool, call SPANIEL, validate exact source recovery and nonempty requested spans, and return `content: null` on a policy match or inspection failure. Only the captured original text is returned when no match is found. The model's tagged output still contains sensitive values; it is not redacted text.
 
@@ -120,10 +119,8 @@ Completed constrained annotations preserve the source. This requires the project
 
 - English is the intended scope. No multilingual capability is established.
 - Transcript cases are simulated text with colloquial wording and transcription-like noise. No audio, real ASR system or real transcript corpus is evaluated.
-- Long-context cases use 250 or 900 words of synthetic public-information filler; they are not representative enterprise documents.
+- Long-context cases use 250 or 900 words of synthetic public-information filler. The 60 long test variants come from five families; the maximum document length is 936 words. These are not representative enterprise documents.
 - Benign scenarios are unevenly represented after deduplication. Independent benign examples and annotation review remain priorities.
-- Actual passwords that resemble placeholders, indirect ordinary-word passphrases and mixed public/private pay statements remain observed failure areas. In application smoke checks, this adapter released a private negotiation and an actual `CHANGEME` password, and falsely blocked a public job range and an unfilled template.
-- Six missing-context examples produced three blocks and three releases. They have no asserted binary gold; these are observations, not accuracy scores. No semantic review or clarification mechanism is implemented.
 - The format supports non-overlapping contiguous spans of at least two source characters. Linked/discontinuous evidence groups are a data sidecar, not a model output capability.
 - Legal strategy, layoffs, performance reviews and broad business confidentiality remain unvalidated research targets. Supplying an arbitrary entity label does not confer a validated capability.
 - No calibrated uncertainty or general adversarial-security claim is established. An initial GLiNER2.5 off-the-shelf baseline uses the same scenarios; it is not an equal-data architecture comparison or a speed benchmark.

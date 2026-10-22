@@ -51,5 +51,6 @@
   },
   "best_dev_loss": 0.03381258621811867,
   "best_checkpoint": "context-results/lora-r16/checkpoint-424",
-  "finished_at": "2026-10-22T02:56:29.626230+00:00"
+  "finished_at": "2026-10-22T02:56:29.626230+00:00",
+  "validity": "INVALID: Transformers 4.57.6 used RoPE theta=10000 instead of the checkpoint value 1000000. Diagnostic evidence only; not a release benchmark."
 }

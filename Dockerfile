@@ -20,6 +20,7 @@ RUN pip install --no-cache-dir -r requirements-demo.txt
 
 COPY pii_decode.py /app/
 COPY tokenizer_compat.py /app/
+COPY model_compat.py /app/
 COPY pii_tagger/server.py /app/pii_tagger/
 COPY pii_tagger/static/ /app/pii_tagger/static/
 

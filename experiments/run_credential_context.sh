@@ -18,22 +18,8 @@ mkdir -p context-results
   --dev context-data/dev.jsonl --out context-results/lora-r16 \
   --epochs 2 --rank 16 --learning-rate 0.00005 --batch-size 1 --accumulation 16
 
-# The checkpoint is selected only by dev completion loss. Test results are read
-# after training/selection. Baseline and candidate use the same GPU and decoder.
-for SPLIT in dev test; do
-  "$PYTHON" -m sensitive_context.evaluate --data "context-data/$SPLIT.jsonl" \
-    --out "context-results/v2-$SPLIT.json" \
-    --exclude context-data/train.jsonl --exclude context-data/replay.jsonl
-  "$PYTHON" -m sensitive_context.evaluate --data "context-data/$SPLIT.jsonl" \
-    --adapter context-results/lora-r16/adapter --out "context-results/candidate-$SPLIT.json" \
-    --exclude context-data/train.jsonl --exclude context-data/replay.jsonl
-done
-if [[ -f context-data/legacy-eval.jsonl ]]; then
-  "$PYTHON" -m sensitive_context.evaluate --data context-data/legacy-eval.jsonl --legacy --limit 300 \
-    --out context-results/v2-legacy.json --exclude context-data/train.jsonl --exclude context-data/replay.jsonl
-  "$PYTHON" -m sensitive_context.evaluate --data context-data/legacy-eval.jsonl --legacy --limit 300 \
-    --adapter context-results/lora-r16/adapter --out context-results/candidate-legacy.json \
-    --exclude context-data/train.jsonl --exclude context-data/replay.jsonl
-fi
+# Checkpoint selection uses development completion loss. The paired evaluations
+# use the same GPU, corrected model configuration and constrained decoder.
+CONTEXT_PYTHON="$PYTHON" bash experiments/evaluate_credential_context.sh
 "$PYTHON" -m pip freeze > context-results/environment.txt
 date -u '+%Y-%m-%dT%H:%M:%SZ' > context-results/COMPLETED

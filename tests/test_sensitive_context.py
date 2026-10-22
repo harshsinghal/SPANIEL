@@ -89,9 +89,13 @@ class SensitiveContextTests(unittest.TestCase):
         self.assertEqual(s['inspection_errors'],2)
 
     def test_comparison_requires_same_gold_and_runtime(self):
-        original={'status':'complete','runtime':{'data_sha256':'x','device':'cuda'},'results':[
+        original={'status':'complete','runtime':{'data_sha256':'x','device':'cuda','effective_rope':{'rope_theta':1000000,'rope_scaling':None}},'results':[
             {'id':'one','sha256':'s','expected_decision':'benign','expected_spans':[],'category':'api_key','family':'f'}]}
         aligned(original,copy.deepcopy(original))
+        changed=copy.deepcopy(original);changed['runtime'].pop('effective_rope')
+        with self.assertRaises(ValueError):aligned(changed,copy.deepcopy(changed))
+        changed=copy.deepcopy(original);changed['runtime']['effective_rope']['rope_theta']=10000
+        with self.assertRaises(ValueError):aligned(changed,copy.deepcopy(changed))
         changed=copy.deepcopy(original);changed['results'][0]['expected_decision']='sensitive'
         with self.assertRaises(ValueError):aligned(original,changed)
         changed=copy.deepcopy(original);changed['runtime']['device']='mps'

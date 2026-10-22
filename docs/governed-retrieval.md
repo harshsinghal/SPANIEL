@@ -293,7 +293,7 @@ python examples/context_retrieval/demo.py --report /tmp/spaniel-context-smoke.js
 
 The report includes the server's declared configuration, decision codes and content-return flags, without document text. It requests three credential labels together, unlike the frozen concept evaluation's single-label requests, so it is a distinct integration smoke test. One context-deficient salary case has no asserted expected decision and is excluded from the score. It illustrates the absence of calibrated abstention; the tool does not automatically route that case for review.
 
-The selected October adapter met **7 of 11 scored contextual expectations**: it released a private negotiation and an actual `CHANGEME` password, and falsely blocked a public job range and an unfilled template. It met **14 of 15 older expectations**, with one placeholder false block. These are recorded [integration results](milestones/2026-10-21-credential-context.md#application-checks-on-the-selected-adapter), not a validated security guarantee. The gate correctly withholds matches and errors, but cannot turn missed detections into reliable protection.
+The initial adapter checks were invalidated by a [model configuration compatibility fault](runtime-compatibility.md). Corrected application results will be recorded in the milestone before a new adapter is released.
 
 ### Retrieval boundary
 

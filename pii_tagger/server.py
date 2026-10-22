@@ -23,6 +23,7 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 sys.path.insert(0, str(Path(__file__).parent.parent))
 from pii_decode import CopyTagConstraint, VocabTrie
 from tokenizer_compat import tokenizer_load_kwargs
+from model_compat import load_model_config, effective_rope
 
 MODEL_ID = os.environ.get("PII_MODEL_ID")          # HF repo id (docker path)
 MODEL_REVISION = os.environ.get("PII_MODEL_REVISION")
@@ -54,7 +55,8 @@ print(f"loading {MODEL_DIR} on {DEVICE} ...")
 tokenizer = AutoTokenizer.from_pretrained(
     MODEL_DIR, **tokenizer_load_kwargs(MODEL_DIR))
 model = AutoModelForCausalLM.from_pretrained(
-    MODEL_DIR, dtype=torch.bfloat16).to(DEVICE).eval()
+    MODEL_DIR, config=load_model_config(MODEL_DIR), dtype=torch.bfloat16).to(DEVICE).eval()
+model.config.use_cache = True
 ADAPTER = os.environ.get("PII_ADAPTER")
 ADAPTER_REVISION = os.environ.get("PII_ADAPTER_REVISION")
 ADAPTER_ID = "local-adapter" if ADAPTER and Path(ADAPTER).is_dir() else ADAPTER
@@ -87,6 +89,7 @@ def model_metadata():
         "base_revision": MODEL_REVISION,
         "adapter": ADAPTER_ID,
         "adapter_revision": ADAPTER_REVISION,
+        "effective_rope": effective_rope(model.config),
         "constrained_by_default": True,
         "unconstrained_enabled": ALLOW_UNCONSTRAINED,
         "note": "Artifact identity does not establish detection accuracy; consult the model card.",

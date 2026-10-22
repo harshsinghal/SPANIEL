@@ -1,0 +1,8 @@
+{
+  "status": "invalid_model_configuration",
+  "reason": "Stored rope_parameters.rope_theta=1000000 was ignored by the older loader, which used rope_theta=10000. Both training and evaluation were affected.",
+  "adapter_sha256": "8e4e99c32a5051d34d1a1d41ca73e52b00b59eef8e39453c24d92fe2b1d53b85",
+  "archive_sha256": "13a265d39e6584cda808f184b16c26a9905ab157211f7076d70acb8a2e1a4e3d",
+  "public_release": false,
+  "corrected_run": "Same data and training recipe restarted from the pinned base with a verified configuration. See experiments/credential-context-runtime-repair.json."
+}

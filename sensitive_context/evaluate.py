@@ -72,6 +72,7 @@ def main():
     from transformers import AutoModelForCausalLM,AutoTokenizer
     from pii_decode import VocabTrie,CopyTagConstraint
     from tokenizer_compat import tokenizer_load_kwargs
+    from model_compat import load_model_config, effective_rope
     kwargs={} if Path(a.model).is_dir() else {'revision':a.revision}
     if Path(a.model).is_dir():model_dir=a.model
     else:
@@ -80,7 +81,7 @@ def main():
     device='cuda' if torch.cuda.is_available() else ('mps' if torch.backends.mps.is_available() else 'cpu')
     dtype=torch.bfloat16 if device!='cpu' else torch.float32
     tok=AutoTokenizer.from_pretrained(model_dir,**tokenizer_load_kwargs(model_dir))
-    model=AutoModelForCausalLM.from_pretrained(model_dir,dtype=dtype,attn_implementation='sdpa').to(device).eval()
+    model=AutoModelForCausalLM.from_pretrained(model_dir,config=load_model_config(model_dir),dtype=dtype,attn_implementation='sdpa').to(device).eval()
     if a.adapter:
         from peft import PeftModel
         model=PeftModel.from_pretrained(model,a.adapter).merge_and_unload().to(device).eval()
@@ -95,7 +96,9 @@ def main():
                  device=device,dtype=str(dtype),data_sha256=sha(a.data.read_text()),
                  model_weights_sha256=file_hash(weights) if weights.exists() else None,
                  adapter_weights_sha256=file_hash(Path(a.adapter)/'adapter_model.safetensors') if a.adapter and Path(a.adapter).is_dir() else None,
-                 evaluator_sha256=sha(Path(__file__).read_text()),decoding='greedy copy-or-tag constraint; full source and span validation')
+                 evaluator_sha256=sha(Path(__file__).read_text()),effective_rope=effective_rope(model.config),use_cache=True,
+                 model_compat_sha256=sha((Path(__file__).resolve().parents[1]/'model_compat.py').read_text()),
+                 decoding='greedy copy-or-tag constraint; full source and span validation')
     for i,row in enumerate(rows):
         t0=time.monotonic();text=row['text'];names=row['entities']
         expected=[(s['start'],s['end'],s['label']) for s in row['spans']]
@@ -112,7 +115,7 @@ def main():
             if available<=source_tokens:raise ValueError('unsupported input length')
             constraint=CopyTagConstraint(trie,text,names,tok.eos_token_id)
             with torch.inference_mode():
-                output=model.generate(**enc,do_sample=False,pad_token_id=tok.eos_token_id,
+                output=model.generate(**enc,do_sample=False,use_cache=True,pad_token_id=tok.eos_token_id,
                     max_new_tokens=min(a.max_new_tokens,available,max(512,2*source_tokens+256)),
                     prefix_allowed_tokens_fn=constraint.make_fn(tok,plen))
             tagged=tok.decode(output[0][plen:],skip_special_tokens=True)

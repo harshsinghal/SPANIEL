@@ -10,6 +10,7 @@ This file records artifacts and evidence, including negative results. Historical
 - Validated the historical mixture; rejected 64 incompatible targets from replay eligibility and sampled 1,536 public-source training rows.
 - Added explicit completion-loss masking, no-truncation preflight, a LoRA trainer, a common constrained evaluator and a GPU.ai run recipe.
 - Measured a pinned GLiNER2.5 off-the-shelf baseline with fixed label-only and policy-description configurations, plus original PII regression; documented false blocks separately from recall.
+- Found and fixed a Qwen3 RoPE configuration mismatch between a newer saved checkpoint and the older runtime. Invalidated the first run, preserved its diagnostic records, added effective-configuration checks and restarted training from the original base. See [the investigation](docs/runtime-compatibility.md).
 - Training and candidate performance are pending. No new checkpoint quality is claimed by these preparation results.
 
 ## 2026-10-16 — Coverage audit

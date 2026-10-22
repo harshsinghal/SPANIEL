@@ -57,6 +57,7 @@ def main():
     a=p.parse_args()
     from transformers import AutoTokenizer
     from tokenizer_compat import tokenizer_load_kwargs
+    from model_compat import load_model_config, effective_rope
     load_args={} if Path(a.model).is_dir() else {"revision":a.revision}
     # The v2 tokenizer stores an empty special-token list; compatibility is local-only.
     if not Path(a.model).is_dir():
@@ -94,7 +95,7 @@ def main():
     if not torch.cuda.is_available():raise RuntimeError("This experiment must train on the authorized GPU.ai CUDA instance")
     if not torch.cuda.is_bf16_supported():raise RuntimeError("This recipe requires CUDA bf16 support")
     set_seed(a.seed);random.shuffle(tokenized_train)
-    model=AutoModelForCausalLM.from_pretrained(a.model,dtype=torch.bfloat16,attn_implementation="sdpa",**load_args)
+    model=AutoModelForCausalLM.from_pretrained(a.model,config=load_model_config(model_dir),dtype=torch.bfloat16,attn_implementation="sdpa",**load_args)
     model.config.use_cache=False
     config=LoraConfig(task_type="CAUSAL_LM",r=a.rank,lora_alpha=2*a.rank,lora_dropout=0.05,bias="none",
                       target_modules=["q_proj","k_proj","v_proj","o_proj","gate_proj","up_proj","down_proj"],revision=a.revision)
@@ -109,7 +110,8 @@ def main():
                     data_collator=DataCollatorForSeq2Seq(tok,padding=True,label_pad_token_id=-100),processing_class=tok)
     manifest.update(status="running",gpu=torch.cuda.get_device_name(0),gpu_vram_bytes=torch.cuda.get_device_properties(0).total_memory,
                     versions={"torch":torch.__version__,"transformers":transformers.__version__,"peft":peft.__version__},
-                    trainable_parameters=model.get_nb_trainable_parameters()[0])
+                    trainable_parameters=model.get_nb_trainable_parameters()[0],effective_rope=effective_rope(model.config),
+                    model_compat_sha256=sha((Path(__file__).resolve().parents[1]/'model_compat.py').read_text()))
     manifest_path.write_text(json.dumps(manifest,indent=2)+"\n")
     try:
         result=trainer.train()

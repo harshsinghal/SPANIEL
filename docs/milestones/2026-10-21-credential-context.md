@@ -1,6 +1,6 @@
 # Milestone: credentials and contextual compensation
 
-**Harsh Singhal · 21 October 2026 · GPU.ai training completed; matched evaluation in progress.**
+**Harsh Singhal · 21 October 2026 · Corrected GPU.ai training in progress after a model-loading compatibility failure.**
 
 This milestone asks whether a small local model can distinguish actual credential exposure from benign lookalikes, and private compensation from public salary information. It follows the [coverage audit](../coverage-audit.md). It is a continued LoRA fine-tune of the existing Spaniel v2 checkpoint, with the original checkpoint retained as the baseline.
 
@@ -58,6 +58,8 @@ Transcript cases include informal number expressions, speaker turns, delayed con
 
 Long variants insert 250 or 900 words of generated public-information filler, with the relevant evidence at the beginning, middle or end. This measures controlled dilution; it is not equivalent to a diverse enterprise-document benchmark.
 
+There are 312 such training rows from seven families, 48 development rows from four families and 60 test rows from five families. The test's 60 long variants contain 30 sensitive and 30 benign cases; its other 99 cases are short. The longest generated document has 936 whitespace-delimited words. Position slices are small correlated subsets, not broad long-context validation.
+
 Annotations store exact source offsets. Companion context ranges describe surrounding evidence, including earlier messages; those ranges are not independent gold rationales. The current model still emits separate, non-overlapping contiguous spans and does not output linked evidence groups.
 
 Coverage remains narrow within some credential categories. Private-key examples use short synthetic `BEGIN PRIVATE KEY` blocks; other delimiters, encrypted keys and full-length real key formats are not validated. Password hashes, encoded secret payloads, partially masked values, Unicode obfuscation and provider-specific credential formats need additional scenarios. The one literal `CHANGEME` password family deduplicates to one positive and one negative example, which is not broad evidence about weak or placeholder-looking actual passwords. Aggregate credential scores must be read alongside per-family results.
@@ -70,42 +72,13 @@ The tokenizer preflight covers all **6,784 training rows** and the development s
 
 Checkpoint selection uses development completion loss only. Baseline and candidate then use identical constrained decoding on the same GPU. The [protocol](../../experiments/credential-context-protocol.json) records the proposed screening thresholds and limitations before final test measurements.
 
-Training completed on a GPU.ai RTX 4090 with 24 GB of memory in 4,797.8 seconds, about 80 minutes. Of 848 optimizer steps across two epochs, **step 424 (epoch one)** was selected: development completion loss was 0.033813 after epoch one and 0.043643 after epoch two. More training did not improve this selection measure. The selected adapter has 10,092,544 trainable parameters and SHA-256 `8e4e99c32a5051d34d1a1d41ca73e52b00b59eef8e39453c24d92fe2b1d53b85`.
-
-Completion loss includes copied source tokens as well as tags. It is the frozen selection rule for this run, not a direct measure of missed disclosures or benign interruptions. Future experiments can predeclare development selection by those application metrics; this run does not change its rule after seeing results.
-
-The [run manifest](../../reports/credential-context/run_manifest.json) and [training history](../../reports/credential-context/training_history.json) record the completed run. The training-stage manifest deliberately retains `trained_not_evaluated`; evaluation and release decisions are separate artifacts. The initial environment failed before optimization because a C compiler was missing. Installing the image's compiler prerequisites resolved that bootstrap error without changing the recipe.
+The first run was invalidated: the older runtime silently read the checkpoint's newer RoPE configuration incorrectly. Training has restarted from the original pinned weights with the correct setting. See the [compatibility investigation](../runtime-compatibility.md) and [predeclared repair protocol](../../experiments/credential-context-runtime-repair.json). The data, hyperparameters, selection rule and screening thresholds are unchanged; prior reserved-test exposure under the invalid runtime is disclosed.
 
 The first experiment combines targeted augmentation and replay. It does not isolate either component or establish LoRA superiority over full fine-tuning. The [GLiNER2.5 comparison](../gliner-context-baseline.md) is an off-the-shelf baseline; an equal-data architecture comparison requires additional controlled runs.
 
-## Application checks on the selected adapter
+## Evaluation status
 
-The final selected weights were also exercised through the actual local retrieval tool on Apple MPS with bf16. These are small integration checks, separate from the reserved synthetic benchmark and GPU comparison.
-
-| Suite | Expectations met | Sensitive documents released | Benign false blocks | Unexpected errors |
-|---|---:|---:|---:|---:|
-| [Existing retrieval examples](../../reports/credential-context/retrieval-existing-smoke.json) | 14/15 | 0 | 1 | 0 |
-| [New contextual examples](../../reports/credential-context/retrieval-context-smoke.json) | 7/11 scored; one unscored | 2 | 2 | 0 |
-
-The contextual suite missed a private negotiation and an actual password equal to `CHANGEME`. It blocked a public job range and an unfilled template. The older suite's failure was also an unfilled placeholder. Requested credential labels differ between the suites and the single-label benchmark, so these counts are not interchangeable.
-
-The contextual smoke ran on the epoch-one artifact before training ended; its weights were later verified byte-for-byte identical to the selected final adapter. Checkpoint selection still used development completion loss only. These observed failures rule out presenting this artifact as reliable disclosure prevention merely because its output passes source validation.
-
-In the [six missing-context demonstrations](../../reports/credential-context/ambiguity-review.json), the tool blocked three texts and released three. These cases have no asserted binary gold, so neither count is an accuracy score. They confirm a separate product limitation: the tool does not request clarification or route semantically uncertain text for review. A complete source-preserving annotation can still express an unsupported judgment about sensitivity.
-
-## What the observed failures imply for the next data revision
-
-These are next-iteration priorities, not claims that another training run has already fixed the failures.
-
-| Evidence from this iteration | Data revision to investigate | Separate check needed |
-|---|---|---|
-| `CHANGEME` used as an actual password was missed; unfilled templates were blocked | Independently worded positive and negative contexts for the same low-entropy values, including indirect references and multiple requested labels | Hold out both scenario families and values; report literal-password misses separately from placeholder false blocks |
-| Ordinary-word handover passphrases were missed in development | More ways of expressing authentication use, with benign titles, reminders and ordinary phrases using identical words | Contrast actual access instructions with noncredential uses, including delayed speaker turns |
-| Public job range falsely blocked; private negotiation released | Separate the amount from its role: public quotation, individual agreement, confidential range, budget and authorized publication | Include mixed public/private paragraphs and repeated identical amounts; require correct source occurrence |
-| Development private-key detections excluded delimiters or padding | Consistent complete-block annotation across independently reviewed key shapes and formats | Exact-boundary scoring in addition to document withholding; no claim of cryptographic validation |
-| Three releases and three blocks on missing-context cases | Keep unresolved context separate from binary negatives; design a review signal with independent gold | Measure review coverage and error costs; an empty span list is not abstention |
-
-Deduplicating 5,248 rows still leaves only 34 training families, and some benign categories collapse to very few distinct contexts. Increasing value substitutions alone would not resolve that limitation. Once observed test failures inform new training, this test becomes development evidence for that next iteration; a new untouched scenario-family test is required. [The research roadmap](../research-roadmap.md) separates independent annotation, equal-data architecture comparisons and real transcript evaluation from this completed training experiment.
+Corrected development, reserved-test, PII-retention and application checks are pending. The [invalid first run](../../reports/credential-context/invalid-rope-run/INVALIDATED.json) is retained for audit and must not be presented as evidence about the correctly configured model. The independent GLiNER baseline is unaffected by this Qwen3 loading issue.
 
 ## Reproduce
 
@@ -126,7 +99,7 @@ bash experiments/run_credential_context.sh
 
 The runner assumes an available CUDA PyTorch installation, a C compiler and Python development headers (Ubuntu packages `build-essential` and `python3-dev`; needed by the image's Triton kernels). It creates a virtual environment, installs pinned experiment dependencies, runs regression tests, trains an adapter and writes separate baseline/candidate reports. No API keys or Hugging Face write credentials are uploaded to the training instance. Provisioning, artifact collection and instance termination are managed separately.
 
-The published run's independent evaluation jobs shared the same GPU concurrently after training to use idle capacity. Their data, weights, evaluator and decoding were unchanged. Per-case elapsed times therefore include shared-resource contention and must not be used for latency or throughput comparisons. The reproduction runner above executes the same evaluations sequentially.
+Set `CONTEXT_EVAL_JOBS=3` to run the independent accuracy evaluations in three groups on the same GPU after training. Their data, weights, evaluator and decoding were unchanged. Per-case elapsed times therefore include shared-resource contention and must not be used for latency or throughput comparisons. The runner defaults to sequential execution when that variable is omitted.
 
 ## What qualifies as progress
 
